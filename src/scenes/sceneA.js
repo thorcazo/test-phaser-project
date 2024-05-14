@@ -10,6 +10,8 @@ export default class SceneA extends Phaser.Scene {
   }
 
   preload() {
+
+
   }
 
 
@@ -163,7 +165,7 @@ export default class SceneA extends Phaser.Scene {
       const randomY = Phaser.Math.Between(0, this.game.config.height);
       // Create a new enemy at the specified x and y coordinates
       const enemy = new Enemy(this, 1000, randomY, "Enemy")
-        .setScale(0.1);
+        .setScale(0.5);
         enemy.setAngle(180);
       // Add the enemy to the group
       this.enemies.add(enemy);
