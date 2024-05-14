@@ -1,14 +1,15 @@
 import Player from "../gameObjects/player.js";
 import Enemy from "../gameObjects/enemy.js";
-import UIScene from "../scenes/MainMenu.js";
 
 export default class SceneA extends Phaser.Scene {
+
+  enemigosMatados = 0;
+
   constructor() {
     super({ key: "SceneA" });
   }
 
   preload() {
-    console.log('Cargando SceneA...')
   }
 
 
@@ -40,9 +41,7 @@ export default class SceneA extends Phaser.Scene {
       const enemy = child
       enemy.setTarget(this.Player)
     })
-    this.Bullet = this.physics.add.image(300, 400, "Bullet")
-      .setScale(0.1)
-      .setVelocityX(100)
+    
     // Physics
     this.physics.add.collider(this.projectiles, this.enemies, this.dealDamage, null, this)
     // this.physics.add.collider(this.projectiles, this.Player, this.dealDamage, null, this)
@@ -63,14 +62,23 @@ export default class SceneA extends Phaser.Scene {
       // Check if the object is an enemy
       if (object.texture.key === "Enemy") {
         // Decrease the enemy's health by the bullet's damage
-        object.health -= bullet
-          .damage;
+        object.health -= bullet.damage;
         // Update the enemy's health text
         object.healthText.text = "Health: " + object.health;
         // Destroy the enemy if its health is <= 0
         if (object.health <= 0) {
           object.healthText.destroy();
+
+          
           object.destroy();
+          this.enemigosMatados += 1;
+
+          /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
+          if (this.enemigosMatados == 5) {
+            this.scene.stop('SceneA');
+            this.scene.start('Gameover');
+          }
+
         }
       }
     }
