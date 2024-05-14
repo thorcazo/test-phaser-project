@@ -41,12 +41,10 @@ export default class SceneA extends Phaser.Scene {
       const enemy = child
       enemy.setTarget(this.Player)
     })
-    
+
     // Physics
     this.physics.add.collider(this.projectiles, this.enemies, this.dealDamage, null, this)
     // this.physics.add.collider(this.projectiles, this.Player, this.dealDamage, null, this)
-
-
 
   }
 
@@ -69,7 +67,7 @@ export default class SceneA extends Phaser.Scene {
         if (object.health <= 0) {
           object.healthText.destroy();
 
-          
+
           object.destroy();
           this.enemigosMatados += 1;
 
@@ -88,6 +86,8 @@ export default class SceneA extends Phaser.Scene {
 
   // Para controlar los updates de los enemigos, esta es la manera comprovada más efectiva para hacerlo comentada por otros desarrolladores; sobretodo si hablamos de grupos indefinidos de muchos enemigos.
   update(time, delta) {
+
+    /* CONTROL del jugador */
     this.Player.body.setVelocity(0)
     if (this.keys.A.isDown) {
       this.Player.body.setVelocityX(-300);
@@ -99,6 +99,9 @@ export default class SceneA extends Phaser.Scene {
     } else if (this.keys.S.isDown) {
       this.Player.body.setVelocityY(300);
     }
+
+
+    /* CONTROL de la bala*/
     if (this.keys.SPACE.isDown && !this.isFiring) {
       const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet")
         .setScale(0.05)
@@ -161,6 +164,7 @@ export default class SceneA extends Phaser.Scene {
       // Create a new enemy at the specified x and y coordinates
       const enemy = new Enemy(this, 1000, randomY, "Enemy")
         .setScale(0.1);
+        enemy.setAngle(180);
       // Add the enemy to the group
       this.enemies.add(enemy);
       // Reset the enemy spawn timer
