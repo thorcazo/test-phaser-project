@@ -1,7 +1,7 @@
 export default class Enemy extends Phaser.GameObjects.Sprite {
 
 
-   palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago"];
+  //  Movidas las palabras a la escena para controlar si se repiten en pantalla o no
 
 
   constructor(scene, x, y, type) {
@@ -12,7 +12,9 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.health = 100
     this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "16px Arial", fill: "#000" });
 
-    this.wordText = scene.add.text(this.x - 50, this.y - 100, this.palabras[Math.floor(Math.random() * this.palabras.length)], { font: "16px Arial", fill: "#000" })
+    // Comentamos la asignación de la palabra aquí y la asignamos al crear el enemigo en la escena
+    // Esto es porque así podémos comprovar que la palabra no existe ya en pantalla
+    this.wordText = scene.add.text(this.x - 50, this.y - 100, "", { font: "16px Arial", fill: "#000" })
 
 
     this.speed = 50

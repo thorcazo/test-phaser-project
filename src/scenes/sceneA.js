@@ -17,8 +17,8 @@ export default class SceneA extends Phaser.Scene {
 
   create() {
     /* Mostrar la UIScene */
+    this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pong", "pica", "rasca"];
     this.scene.launch('UIScene');
-
     this.enemySpawnTimer = 0;
     this.isFiring = false;
     this.maxEnemies = 5;
@@ -58,6 +58,9 @@ export default class SceneA extends Phaser.Scene {
     })
 
     // Physics
+    
+    // TODO: CAMBIAR EL SISTEMA DE COLISIÓN PARA QUE LA BALA SOLO COLISIONE CON OBJETIVOS QUE COMPARTEN EL MISMO this.currentWord.
+
     this.physics.add.collider(this.projectiles, this.enemies, this.dealDamage, null, this)
     // this.physics.add.collider(this.projectiles, this.Player, this.dealDamage, null, this)
 
@@ -101,7 +104,7 @@ export default class SceneA extends Phaser.Scene {
   // Para controlar los updates de los enemigos, esta es la manera comprovada más efectiva para hacerlo comentada por otros desarrolladores; sobretodo si hablamos de grupos indefinidos de muchos enemigos.
   update(time, delta) {
 
-    // /* CONTROL del jugador */
+    // /* CONTROL DEL JUGADOR */
     // this.Player.body.setVelocity(0)
     // if (this.keys.A.isDown) {
     //   this.Player.body.setVelocityX(-300);
@@ -128,7 +131,6 @@ export default class SceneA extends Phaser.Scene {
     // this.input.keyboard.on("keyup-SPACE", () => {
     //   this.isFiring = false;
     // })
-
 
     var target = this.Player
     // Iterate through all enemies and update their healthText positions
@@ -177,22 +179,11 @@ export default class SceneA extends Phaser.Scene {
       // enemy.body.setVelocityX(enemy.speed * Math.cos(rotation))
       // enemy.body.setVelocityY(enemy.speed * Math.sin(rotation))
     });
-
+// LÓGICA DE CREACIÓN DE ENEMIGOS
     this.enemySpawnTimer += delta;
     // Create a new enemy every second if there are less than 5 enemies on the screen
     if (this.enemySpawnTimer >= 1700 && this.enemies.getLength() < this.maxEnemies) {
-      // Generate a random y-coordinate for the enemy
-      const randomY = Phaser.Math.Between(0, this.game.config.height);
-      // Create a new enemy at the specified x and y coordinates
-      const enemy = new Enemy(this, 1000, randomY, "Enemy")
-        .setScale(0.5);
-      enemy.setAngle(180);
-      console.log(enemy);
-
-      // Add the enemy to the group
-      this.enemies.add(enemy);
-      // Reset the enemy spawn timer
-      this.enemySpawnTimer = 0;
+      this.createEnemy()
     }
 
     // LÓGICA DE ESCRITURA
@@ -216,6 +207,7 @@ export default class SceneA extends Phaser.Scene {
           // Set the bullet's velocity based on the angle
           bullet.setVelocity(Math.cos(angle) * 800, Math.sin(angle) * 800);
           bullet.type = "player";
+          bullet.currentWord = this.currentWord;
           bullet.damage = 50;
           this.projectiles.add(bullet);
           this.Player.angle = angle * (180 / Math.PI) + 90;
@@ -238,5 +230,40 @@ export default class SceneA extends Phaser.Scene {
       this.currentWord += event.key;
     }
 
+  }
+  // MOVIDA LA LÓGICA DE CREACIÓN DE ENEMIGOS A UNA FUNCIÓN
+  createEnemy() {
+// COMPRUEBA QUE LA PALABRA ESCOGIDA ALEATORIAMENTE NO ESTÁ YA EN EL GRUPO DE ENEMIGOS
+    let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
+    let palabraUnica = true
+    this.enemies.getChildren().forEach((enemy) => {
+      if (enemy.wordText.text === palabraAleatoria) {
+        palabraUnica = false;
+        while (!palabraUnica) {
+          palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
+          palabraUnica = true
+          this.enemies.getChildren().forEach((enemy) => {
+            if (enemy.wordText.text === palabraAleatoria) {
+              palabraUnica = false;
+            }
+          });
+        }
+      }
+    });
+    
+// GENERA UNA COORDENADA ALEATORIA PARA EL ENEMIGO Y LO AÑADE AL GRUPO
+    // Generate a random y-coordinate for the enemy
+    const randomY = Phaser.Math.Between(0, this.game.config.height);
+    // Create a new enemy at the specified x and y coordinates
+    const enemy = new Enemy(this, 1000, randomY, "Enemy")
+      .setScale(0.5);
+    enemy.setAngle(180);
+    enemy.wordText.text = palabraAleatoria;
+    console.log(enemy);
+
+    // Add the enemy to the group
+    this.enemies.add(enemy);
+    // Reset the enemy spawn timer
+    this.enemySpawnTimer = 0;
   }
 }
