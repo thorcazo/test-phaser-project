@@ -6,9 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="/src/init.js"></script>
     <script type="module" src="/src/main.js"></script>
-    <title>Vite App</title>
+    <title>Type Space</title>
   </head>
   <body>
     <div id="container"></div>
-  </body>
+   <!-- Add a button to trigger the leaderboard -->
+   <button id="leaderboardBttn">Show Leaderboard</button>
+   <!-- Add a table to display the leaderboard -->
+   <table id="leaderboard-table">
+     <thead>
+       <tr>
+         <th>Name</th>
+         <th>Score</th>
+       </tr>
+     </thead>
+     <tbody>
+       <!-- Leaderboard data will be inserted here by the JavaScript -->
+     </tbody>
+   </table>
+ </body>
 </html>
