@@ -10,13 +10,14 @@ const config = {
   type: Phaser.AUTO,
   width:window.innerWidth,
   height: window.innerHeight,
+  backgroundColor: "#000",  
   parent: "container",
   scene: [Bootloader, MainMenu, SceneA, UIScene, Gameover],
   physics: {
     default: 'arcade',
     arcade: {
       gravity: { y: 0 },
-      debug: true
+      debug: false
     }
   },
   scale: {

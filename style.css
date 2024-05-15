@@ -18,9 +18,8 @@
   box-sizing: border-box;
 }
 
-main {}
 
-#container {
+.container {
   position: relative;
 }
 

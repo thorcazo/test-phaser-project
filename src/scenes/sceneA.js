@@ -4,7 +4,7 @@ import Enemy from "../gameObjects/enemy.js";
 export default class SceneA extends Phaser.Scene {
 
   enemigosMatados = 0;
-  maximoEnemigos = 2;
+  maximoEnemigos = 20;
 
 
 
@@ -19,18 +19,24 @@ export default class SceneA extends Phaser.Scene {
 
     const { width, height } = this.sys.game.config;
 
-
     this.scene.launch('UIScene');
     document.querySelector('.tabla-jugadores').classList.add('hidden');
+
+    /* Cargar fondo "bg" */
+    this.bg = this.add.image(width / 2, height / 2, "bg");
+    this.stars = this.add.tileSprite(width / 2, height / 2, window.innerWidth, window.innerHeight, "stars");
+    this.stars.alpha = 0.3;
+    this.stars.tileScaleX = 0.4;
+    this.stars.tileScaleY = 0.4;
+
 
     this.enemySpawnTimer = 0;
     this.isFiring = false;
     this.maxEnemies = 5;
     this.keys = this.input.keyboard.addKeys("W,A,S,D,SPACE");
-    this.cameras.main.setBackgroundColor('d3d3d3');
+    this.cameras.main.setBackgroundColor('#000');
     this.Player = new Player(this, 200, 400, "Player")
-      .setScale(0.1)
-      .setAngle(90)
+    this.Player.setScale(0.6)
 
     this.enemies = this.add.group()
     this.projectiles = this.add.group()
@@ -69,7 +75,6 @@ export default class SceneA extends Phaser.Scene {
             /* reset enemigos */
             this.enemigosMatados = 0;
           }
-
         }
       }
     }
@@ -79,16 +84,20 @@ export default class SceneA extends Phaser.Scene {
 
     /* CONTROL del jugador */
     this.Player.body.setVelocity(0)
+    // Movimiento horizontal con A y D
     if (this.keys.A.isDown) {
       this.Player.body.setVelocityX(-300);
     } else if (this.keys.D.isDown) {
       this.Player.body.setVelocityX(300);
     }
+
+    // Movimiento vertical con W y S
     if (this.keys.W.isDown) {
       this.Player.body.setVelocityY(-300);
     } else if (this.keys.S.isDown) {
       this.Player.body.setVelocityY(300);
     }
+
 
 
     /* CONTROL de la bala*/
@@ -106,12 +115,8 @@ export default class SceneA extends Phaser.Scene {
     })
     var target = this.Player
     this.enemies.getChildren().forEach((enemy) => {
-      enemy.healthText.setPosition((enemy.x - 35), (enemy.y + 50));
-
-
-      enemy.wordText.setPosition((enemy.x - 55), (enemy.y + 50));
-
-
+      enemy.healthText.setPosition((enemy.x - 50), (enemy.y - 55));
+      enemy.wordText.setPosition((enemy.x - 25), (enemy.y + 45));
 
       const tx = target.x
       const ty = target.y
@@ -139,8 +144,8 @@ export default class SceneA extends Phaser.Scene {
       // Generate a random y-coordinate for the enemy
       const randomY = Phaser.Math.Between(0, this.game.config.height);
       // Create a new enemy at the specified x and y coordinates
-      const enemy = new Enemy(this, 1000, randomY, "Enemy")
-        .setScale(0.5);
+      const enemy = new Enemy(this, window.innerWidth + 10, randomY, "Enemy")
+        .setScale(0.4);
       enemy.setAngle(180);
       console.log(enemy);
 
@@ -149,6 +154,13 @@ export default class SceneA extends Phaser.Scene {
       // Reset the enemy spawn timer
       this.enemySpawnTimer = 0;
     }
+
+
+    /* Movimiento de la estrellas rapido */
+    this.stars.tilePositionX += 4;
+
+
+
   } // FINAL UPDATE
 
 
@@ -157,8 +169,6 @@ export default class SceneA extends Phaser.Scene {
   shutdown() {
     // Mostrar la tabla de jugadores cuando la escena ya no está activa
     document.querySelector('.tabla-jugadores').classList.remove('hidden');
-
   }
-
 
 }

@@ -64,8 +64,9 @@ class MainMenu extends Phaser.Scene {
       console.log(event.key);
 
       if (event.key === 'Enter' && event.target.value.toUpperCase() === 'START') {
+        
         this.scene.start('SceneA');
-        inputElement.remove(); // Asegúrate de remover el input cuando ya no es necesario
+        event.target.value = '';
       }
     });
 
@@ -75,8 +76,8 @@ class MainMenu extends Phaser.Scene {
 
   update() {
     // Desplazar las estrellas lentamente en diagonal
-    this.stars.tilePositionX += 0.5;
-    this.stars.tilePositionY += 0.2;
+    this.stars.tilePositionX += 0.1;
+    this.stars.tilePositionY += 0.05;
 
 
     /* hacer rotar planetMenu  */

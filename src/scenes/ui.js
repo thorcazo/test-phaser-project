@@ -11,7 +11,7 @@ export default class UIScene extends Phaser.Scene {
 
   create() {
     // Create a pause/resume button
-    this.pauseButton = this.add.text(50, 50, 'Pause', { fill: '#000' })
+    this.pauseButton = this.add.text(50, 50, 'PAUSE', { fill: '#fff' })
       .setInteractive()
       .on('pointerdown', () => this.togglePause());
   }
@@ -21,12 +21,12 @@ export default class UIScene extends Phaser.Scene {
       // If the game is paused, resume it
       this.scene.resume('SceneA');
       // Change the button text to 'Pause'
-      this.pauseButton.setText('Pause');
+      this.pauseButton.setText('PAUSE');
     } else {
       // If the game is running, pause it
       this.scene.pause('SceneA');
       // Change the button text to 'Resume'
-      this.pauseButton.setText('Resume');
+      this.pauseButton.setText('RESUME');
     }
   }
 }
