@@ -8,10 +8,9 @@ import Gameover from './scenes/Gameover.js';
 
 const config = {
   type: Phaser.AUTO,
-  width: window.innerWidth,
+  width:window.innerWidth,
   height: window.innerHeight,
   parent: "container",
-  backgroundColor: '#d3d3d3',
   scene: [Bootloader, MainMenu, SceneA, UIScene, Gameover],
   physics: {
     default: 'arcade',
