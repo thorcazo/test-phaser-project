@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 import Bootloader from './bootloader.js';
 import MainMenu from './scenes/MainMenu.js';
 import SceneA from './scenes/sceneA.js';
