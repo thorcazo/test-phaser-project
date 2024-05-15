@@ -68,6 +68,7 @@ export default class SceneA extends Phaser.Scene {
         // Destroy the enemy if its health is <= 0
         if (object.health <= 0) {
           object.healthText.destroy();
+          object.wordText.destroy();
 
 
           object.destroy();
@@ -120,6 +121,12 @@ export default class SceneA extends Phaser.Scene {
     // Iterate through all enemies and update their healthText positions
     this.enemies.getChildren().forEach((enemy) => {
       enemy.healthText.setPosition((enemy.x - 35), (enemy.y + 50));
+
+
+      enemy.wordText.setPosition((enemy.x - 55), (enemy.y + 50));
+
+     
+
       const tx = target.x
       const ty = target.y
       const x = enemy.x
@@ -167,11 +174,13 @@ export default class SceneA extends Phaser.Scene {
       const enemy = new Enemy(this, 1000, randomY, "Enemy")
         .setScale(0.5);
         enemy.setAngle(180);
+        console.log(enemy);
+
       // Add the enemy to the group
       this.enemies.add(enemy);
       // Reset the enemy spawn timer
       this.enemySpawnTimer = 0;
     }
-  }
+  } // FINAL UPDATE
 
 }

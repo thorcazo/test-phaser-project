@@ -1,12 +1,20 @@
 export default class Enemy extends Phaser.GameObjects.Sprite {
 
+
+   palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago"];
+
+
   constructor(scene, x, y, type) {
     super(scene, x, y, type)
     scene.add.existing(this)
     scene.physics.world.enable(this)
     this.body.setImmovable(true)
     this.health = 100
-    this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "16px Arial", fill: "#000" })
+    this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "16px Arial", fill: "#000" });
+
+    this.wordText = scene.add.text(this.x - 50, this.y - 50, this.palabras[Math.floor(Math.random() * this.palabras.length)], { font: "16px Arial", fill: "#000" })
+
+
     this.speed = 100
     this.target = null
     this.turn_rate = 1
