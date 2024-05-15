@@ -8,17 +8,43 @@ class MainMenu extends Phaser.Scene {
   }
 
   create() {
-      // Aquí puedes crear los objetos de tu escena, como botones, texto, etc.
-      this.add.text(100, 100, 'Main Menu', { fill: '#000' });
+      // Dimensiones de la pantalla
+      const { width, height } = this.sys.game.config;
 
-      // Por ejemplo, puedes crear un botón de inicio de partida así:
-      let startButton = this.add.text(100, 200, 'Start Game', { fill: '#000' });
+      // Añadir y centrar el texto del título 'Main Menu'
+      const titleText = 'Type Space';
+      this.add.text(width / 2, height / 2 - 100, titleText, { 
+          fill: '#000', 
+          fontSize: '32px',
+          fontFamily: 'PressStart2P',
+          fontStyle: 'bold'
+      }).setOrigin(0.5);  // Centrar el texto horizontalmente
+
+      // Añadir y centrar el botón 'Start Game'
+      const startButtonText = 'Start Game';
+      let startButton = this.add.text(width / 2, height / 2, startButtonText, { 
+          fill: '#0f0',
+          fontSize: '24px',
+          fontFamily: 'PressStart2P',
+          backgroundColor: '#000',
+          padding: { left: 10, right: 10, top: 5, bottom: 5 },
+          borderRadius: 5
+      }).setOrigin(0.5);  // Centrar el botón horizontalmente
+
       startButton.setInteractive();
       startButton.on('pointerdown', () => this.startGame());
+
+      // Añadir un efecto visual al pasar el mouse sobre el botón
+      startButton.on('pointerover', () => {
+          startButton.setStyle({ fill: '#fff' });
+      });
+      startButton.on('pointerout', () => {
+          startButton.setStyle({ fill: '#0f0' });
+      });
   }
 
   startGame() {
-      // Aquí puedes definir lo que sucede cuando se inicia la partida
+      // Definir lo que sucede cuando se inicia la partida
       this.scene.start('SceneA');
   }
 }

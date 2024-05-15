@@ -13,10 +13,34 @@ export default class Gameover extends Phaser.Scene {
       .setOrigin(0.5)
       .setInteractive();
 
+
+
+    const returnMainMenuButton = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 100, 'Return to Main Menu', { fontSize: '20px', color: '#ffffff' })
+      .setOrigin(0.5)
+      .setInteractive();
+
+
     // Cuando se hace clic en el botón de reinicio, reinicia la escena del juego
     restartButton.on('pointerdown', () => {
       this.scene.stop('Gameover');
       this.scene.start('SceneA');
     });
+
+    returnMainMenuButton.on('pointerdown', () => {
+      this.scene.stop('Gameover');
+      this.scene.start('MainMenu');
+      this.shutdown();
+
+    });
   }
+
+
+
+
+
+  shutdown() {
+    // Mostrar la tabla de jugadores cuando la escena ya no está activa
+    document.querySelector('.tabla-jugadores').classList.remove('hidden');
+  }
+
 }

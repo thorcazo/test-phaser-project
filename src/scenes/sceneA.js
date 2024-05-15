@@ -4,7 +4,7 @@ import Enemy from "../gameObjects/enemy.js";
 export default class SceneA extends Phaser.Scene {
 
   enemigosMatados = 0;
-  maximoEnemigos = 5; 
+  maximoEnemigos = 5;
 
 
 
@@ -17,6 +17,7 @@ export default class SceneA extends Phaser.Scene {
 
   create() {
     this.scene.launch('UIScene');
+    document.querySelector('.tabla-jugadores').classList.add('hidden');
 
     this.enemySpawnTimer = 0;
     this.isFiring = false;
@@ -103,7 +104,7 @@ export default class SceneA extends Phaser.Scene {
 
       enemy.wordText.setPosition((enemy.x - 55), (enemy.y + 50));
 
-     
+
 
       const tx = target.x
       const ty = target.y
@@ -133,8 +134,8 @@ export default class SceneA extends Phaser.Scene {
       // Create a new enemy at the specified x and y coordinates
       const enemy = new Enemy(this, 1000, randomY, "Enemy")
         .setScale(0.5);
-        enemy.setAngle(180);
-        console.log(enemy);
+      enemy.setAngle(180);
+      console.log(enemy);
 
       // Add the enemy to the group
       this.enemies.add(enemy);
@@ -142,5 +143,14 @@ export default class SceneA extends Phaser.Scene {
       this.enemySpawnTimer = 0;
     }
   } // FINAL UPDATE
+
+
+
+  /* FUNCIONES EXTRAS */
+  shutdown() {
+    // Mostrar la tabla de jugadores cuando la escena ya no está activa
+    document.querySelector('.tabla-jugadores').classList.remove('hidden');
+  }
+
 
 }
