@@ -10,13 +10,9 @@ export default class SceneA extends Phaser.Scene {
   }
 
   preload() {
-
-
   }
 
-
   create() {
-    /* Mostrar la UIScene */
     this.scene.launch('UIScene');
 
     this.enemySpawnTimer = 0;
@@ -28,17 +24,8 @@ export default class SceneA extends Phaser.Scene {
       .setScale(0.1)
       .setAngle(90)
 
-    // Para darle físicas a un objeto podémos añadir physics en el .add (this.physics.add) 
-    // y en elo aplicar la lógica de la física usando 'this.body.funcionFísica()' 
-    // en cuestión (dar velocidad, gravedad..)
-
-    // En este caso, enemy.js tiene ya funciones que definen su física usando .body.
-    // Estas se sobreescribirían si pongo this.physics.add.group() en la linea siguiente.
     this.enemies = this.add.group()
     this.projectiles = this.add.group()
-    // this.Enemy = new Enemy(this, 1000, 700, "Enemy")
-    //     .setScale(0.1)
-    // this.enemies.add(this.Enemy)
     this.enemies.children.each(child => {
       const enemy = child
       enemy.setTarget(this.Player)
@@ -46,17 +33,10 @@ export default class SceneA extends Phaser.Scene {
 
     // Physics
     this.physics.add.collider(this.projectiles, this.enemies, this.dealDamage, null, this)
-    // this.physics.add.collider(this.projectiles, this.Player, this.dealDamage, null, this)
 
   }
 
   dealDamage(bullet, object) {
-    // Destroy the bullet only if the type and the object.texture.key isn't the same
-    // This way we avoid bullets shot from the player to affect the player
-    // Or bullets shot by the enemies affecting the enemies
-    // Our bullet now receives the damage and type parameters, which help us tell how fast it is, how much damage it deals and who it affects uppon impact
-
-    // Destroy the bullet only if the type and the object's texture key are different
     if (bullet.type !== object.texture.key) {
       bullet.destroy();
       // Check if the object is an enemy
@@ -69,7 +49,6 @@ export default class SceneA extends Phaser.Scene {
         if (object.health <= 0) {
           object.healthText.destroy();
           object.wordText.destroy();
-
 
           object.destroy();
           this.enemigosMatados += 1;
@@ -85,9 +64,6 @@ export default class SceneA extends Phaser.Scene {
     }
   }
 
-
-
-  // Para controlar los updates de los enemigos, esta es la manera comprovada más efectiva para hacerlo comentada por otros desarrolladores; sobretodo si hablamos de grupos indefinidos de muchos enemigos.
   update(time, delta) {
 
     /* CONTROL del jugador */
@@ -118,7 +94,6 @@ export default class SceneA extends Phaser.Scene {
       this.isFiring = false;
     })
     var target = this.Player
-    // Iterate through all enemies and update their healthText positions
     this.enemies.getChildren().forEach((enemy) => {
       enemy.healthText.setPosition((enemy.x - 35), (enemy.y + 50));
 
@@ -145,24 +120,6 @@ export default class SceneA extends Phaser.Scene {
       enemy.body.setVelocityX(enemy.speed * Math.cos(enemy.rotation))
       enemy.body.setVelocityY(enemy.speed * Math.sin(enemy.rotation))
 
-      // TODO: AÑADIR WOBBLE A LOS ENEMIGOS, HACER QUE SE DESTRUYAN AL IMPACTAR, IMPLEMENTAR GAME OVER
-
-
-      // angleDiff tampoco es necesario de momento.
-      // const angleDiff = Phaser.Math.Angle.Wrap(angleToPlayer - enemy.rotation)
-      // Nota: Este cálculo de la velocidad no necesita ser tan complejo. Está pensado para usar setAcceleration y no setVelocity. Se va a quedar así de momento.
-
-      // enemy.setRotation(angleToPlayer)
-      // const acceleration = new Phaser.Math.Vector2(
-      //     enemy.speed * Math.cos(angleToPlayer),
-      //     enemy.speed * Math.sin(angleToPlayer)
-      // );
-      // enemy.body.setVelocity(acceleration.x, acceleration.y)
-
-      // enemy.body.setAngularVelocity(Phaser.Math.DegToRad(360));
-      // enemy.body.setAcceleration((enemy.speed * Math.cos(rotation) * 2), (enemy.speed * Math.sin(rotation) * 2))
-      // enemy.body.setVelocityX(enemy.speed * Math.cos(rotation))
-      // enemy.body.setVelocityY(enemy.speed * Math.sin(rotation))
     });
 
     this.enemySpawnTimer += delta;
