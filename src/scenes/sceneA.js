@@ -4,7 +4,7 @@ import Enemy from "../gameObjects/enemy.js";
 export default class SceneA extends Phaser.Scene {
 
   enemigosMatados = 0;
-  maximoEnemigos = 5;
+  maximoEnemigos = 2;
 
 
 
@@ -16,6 +16,10 @@ export default class SceneA extends Phaser.Scene {
   }
 
   create() {
+
+    const { width, height } = this.sys.game.config;
+
+
     this.scene.launch('UIScene');
     document.querySelector('.tabla-jugadores').classList.add('hidden');
 
@@ -38,7 +42,7 @@ export default class SceneA extends Phaser.Scene {
     // Physics
     this.physics.add.collider(this.projectiles, this.enemies, this.dealDamage, null, this)
 
-  }
+  } // FINAL CREATE
 
   dealDamage(bullet, object) {
     if (bullet.type !== object.texture.key) {
@@ -59,8 +63,11 @@ export default class SceneA extends Phaser.Scene {
 
           /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
           if (this.enemigosMatados == this.maximoEnemigos) {
+
             this.scene.stop('SceneA');
             this.scene.start('Gameover');
+            /* reset enemigos */
+            this.enemigosMatados = 0;
           }
 
         }
@@ -150,6 +157,7 @@ export default class SceneA extends Phaser.Scene {
   shutdown() {
     // Mostrar la tabla de jugadores cuando la escena ya no está activa
     document.querySelector('.tabla-jugadores').classList.remove('hidden');
+
   }
 
 

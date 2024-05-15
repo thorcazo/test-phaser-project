@@ -4,6 +4,10 @@ export default class Gameover extends Phaser.Scene {
   }
 
   create() {
+
+    const { width, height } = this.sys.game.config;
+
+
     // Añade un texto de Game Over en el centro de la pantalla
     this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'Game Over', { fontSize: '32px', color: '#ff0000' })
       .setOrigin(0.5);
@@ -27,10 +31,21 @@ export default class Gameover extends Phaser.Scene {
     });
 
     returnMainMenuButton.on('pointerdown', () => {
+      this.shutdown();
       this.scene.stop('Gameover');
       this.scene.start('MainMenu');
-      this.shutdown();
 
+    });
+
+
+
+    // Añadir input de texto HTML visible
+    let inputElement = this.add.dom(width / 2, 200).createFromHTML('<input type="text" style="font-family: Arial; width: 300px; height: 50px; font-size: 20px; text-align: center; background-color: white; color: black;" placeholder="Enter your name">');
+    inputElement.addListener('input');
+    inputElement.on('input', function (event) {
+      if (event.target.value.length > 10) {  // Limitar la cantidad de caracteres
+        event.target.value = event.target.value.substr(0, 10);
+      }
     });
   }
 
@@ -41,6 +56,9 @@ export default class Gameover extends Phaser.Scene {
   shutdown() {
     // Mostrar la tabla de jugadores cuando la escena ya no está activa
     document.querySelector('.tabla-jugadores').classList.remove('hidden');
+
+    // Desactivar las teclas
+    
   }
 
 }

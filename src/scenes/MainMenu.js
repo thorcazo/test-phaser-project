@@ -18,7 +18,7 @@ class MainMenu extends Phaser.Scene {
     this.stars.alpha = 0.5;
     this.stars.tileScaleX = 0.4;
     this.stars.tileScaleY = 0.4;
-    
+
     // Añadir y centrar el texto del título 'Main Menu'
     const titleText = 'Type Space';
     this.title = this.add.text((width - 250) / 2, height / 2 - 100, titleText, {
@@ -27,7 +27,7 @@ class MainMenu extends Phaser.Scene {
       fontFamily: 'PressStart2P',
       fontStyle: 'bold'
     }).setOrigin(0.5);  // Centrar el texto horizontalmente
-    
+
     this.planetMenu = this.add.image(this.title.x + 500, this.title.y, "planetMenu");
     // Añadir y centrar el botón 'Start Game'
     const startButtonText = 'Start Game';
@@ -50,13 +50,33 @@ class MainMenu extends Phaser.Scene {
     startButton.on('pointerout', () => {
       startButton.setStyle({ fill: '#0f0' });
     });
+
+    /* crear un input */
+    let inputElement = document.createElement('input');
+    let container = document.getElementById('container');
+    inputElement.type = 'text';
+    inputElement.classList.add('input');
+
+    container.appendChild(inputElement);
+
+    inputElement.addEventListener('keydown', (event) => {
+
+      console.log(event.key);
+
+      if (event.key === 'Enter' && event.target.value.toUpperCase() === 'START') {
+        this.scene.start('SceneA');
+        inputElement.remove(); // Asegúrate de remover el input cuando ya no es necesario
+      }
+    });
+
+
   } // FINAL CREATE
 
 
   update() {
     // Desplazar las estrellas lentamente en diagonal
-    this.stars.tilePositionX += 0.3;
-    this.stars.tilePositionY += 0.02;
+    this.stars.tilePositionX += 0.5;
+    this.stars.tilePositionY += 0.2;
 
 
     /* hacer rotar planetMenu  */
@@ -65,12 +85,22 @@ class MainMenu extends Phaser.Scene {
     this.planetMenu.y = this.title.y + Math.sin(this.planetMenu.angle) * 2;
 
 
+
+
+
+
   }
 
   startGame() {
     // Definir lo que sucede cuando se inicia la partida
     this.scene.start('SceneA');
   }
+
+
+  startMenu() {
+    this.input.keyboard
+  }
+
 }
 
 export default MainMenu;

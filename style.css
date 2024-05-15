@@ -52,3 +52,25 @@ main {}
 .hidden {
   display: none;
 }
+
+
+.input{
+  position: absolute;
+  z-index: 10;
+  border: 2px solid white;
+  /* posicionar al centro*/
+  left: 50%;
+  bottom: calc(0px + 2rem);  
+  transform: translate(-50%, -50%);
+
+  width: 550px;
+  padding: 1rem 2rem;
+  background: transparent;
+
+  font-size: 2rem;
+  font-family: 'PressStart2P', sans-serif;
+  color: white;
+  text-transform: uppercase;
+
+
+}
