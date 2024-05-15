@@ -4,6 +4,9 @@ import Enemy from "../gameObjects/enemy.js";
 export default class SceneA extends Phaser.Scene {
 
   enemigosMatados = 0;
+  maximoEnemigos = 5; 
+
+
 
   constructor() {
     super({ key: "SceneA" });
@@ -54,7 +57,7 @@ export default class SceneA extends Phaser.Scene {
           this.enemigosMatados += 1;
 
           /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
-          if (this.enemigosMatados == 5) {
+          if (this.enemigosMatados == this.maximoEnemigos) {
             this.scene.stop('SceneA');
             this.scene.start('Gameover');
           }
