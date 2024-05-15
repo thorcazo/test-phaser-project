@@ -12,10 +12,10 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.health = 100
     this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "16px Arial", fill: "#000" });
 
-    this.wordText = scene.add.text(this.x - 50, this.y - 50, this.palabras[Math.floor(Math.random() * this.palabras.length)], { font: "16px Arial", fill: "#000" })
+    this.wordText = scene.add.text(this.x - 50, this.y - 100, this.palabras[Math.floor(Math.random() * this.palabras.length)], { font: "16px Arial", fill: "#000" })
 
 
-    this.speed = 100
+    this.speed = 50
     this.target = null
     this.turn_rate = 1
     // Grados que el enemigo oscila
@@ -51,7 +51,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
     const x = this.x
     const y = this.y
-
+s
     const rotation = Phaser.Math.Angle.Between(x, y, tx, ty)
     this.setRotation(rotation);
     this.scene.physics.moveToObject(this, this.target, 50) // 100 es la velocidad
