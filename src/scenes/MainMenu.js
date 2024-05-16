@@ -50,11 +50,6 @@ class MainMenu extends Phaser.Scene {
     });
     startButton.setInteractive();
     startButton.on('pointerdown', () => this.startGame());
-
-
-
-
-
   }
 
   update() {

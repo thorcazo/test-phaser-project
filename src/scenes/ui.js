@@ -11,7 +11,7 @@ export default class UIScene extends Phaser.Scene {
 
   create() {
     // Create a pause/resume button
-    this.pauseButton = this.add.text(50, 50, 'Pause', { fill: '#000' })
+    this.pauseButton = this.add.text(50, 50, 'Pause', { fill: '#fff' })
       .setInteractive()
       .on('pointerdown', () => this.togglePause());
   }

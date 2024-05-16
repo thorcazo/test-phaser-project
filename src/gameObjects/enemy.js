@@ -10,11 +10,11 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     scene.physics.world.enable(this)
     this.body.setImmovable(true)
     this.health = 100
-    this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "16px Arial", fill: "#000" });
+    this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "16px Arial", fill: "#fff" });
 
     // Comentamos la asignación de la palabra aquí y la asignamos al crear el enemigo en la escena
     // Esto es porque así podémos comprovar que la palabra no existe ya en pantalla
-    this.wordText = scene.add.text(this.x - 50, this.y - 100, "", { font: "16px Arial", fill: "#000" })
+    this.wordText = scene.add.text(this.x - 50, this.y - 100, "", { font: "16px Arial", fill: "#fff" })
 
 
     this.speed = 50

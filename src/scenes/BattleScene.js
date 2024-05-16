@@ -12,8 +12,20 @@ export default class BattleScene extends Phaser.Scene {
   preload() {
   }
 
-
   create() {
+
+    /* Añadir imagen de fondo */
+    this.bg = this.add.image(0, 0, 'bg')
+      .setOrigin(0, 0)
+
+    /* añadir stars pero con animacion mas rapida en horizontal */
+    this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars')
+      .setOrigin(0, 0)
+
+
+
+
+
 
     /* Mostrar la UIScene */
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pong", "pica", "rasca"];
@@ -25,8 +37,9 @@ export default class BattleScene extends Phaser.Scene {
     // this.keys = this.input.keyboard.addKeys("W,A,S,D,SPACE");
     this.cameras.main.setBackgroundColor('d3d3d3');
     this.Player = new Player(this, 200, 400, "Player")
-      .setScale(0.1)
-      .setAngle(90)
+      .setScale(0.5)
+    this.Player.setAngle(180);
+  
 
     this.input.keyboard.on('keydown', this.handlekeyInput, this)
     this.currentKey = null
@@ -36,7 +49,7 @@ export default class BattleScene extends Phaser.Scene {
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
     this.currentWordText = this.add.text(400, 200, "", {
       fontSize: '16px',
-      fill: '#000'
+      fill: '#fff'
     });
     // ***********************************************
 
@@ -207,7 +220,7 @@ export default class BattleScene extends Phaser.Scene {
           bullet.setVelocity(Math.cos(angle) * 800, Math.sin(angle) * 800);
           bullet.type = "player";
           bullet.currentWord = this.currentWord;
-          bullet.damage = 50;
+          bullet.damage = 100;
           this.projectiles.add(bullet);
           this.Player.angle = angle * (180 / Math.PI) + 90;
           this.currentWord = "";
@@ -218,6 +231,8 @@ export default class BattleScene extends Phaser.Scene {
 
     this.currentWordText.setText("Current Word: " + this.currentWord);
 
+    /* animacion stars */
+    this.stars.tilePositionX += 4;
 
   } // FINAL UPDATE
 
