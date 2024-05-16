@@ -24,10 +24,18 @@ class MainMenu extends Phaser.Scene {
     this.bg.setOrigin(0.5, 0.5);
 
     // Crea un TileSprite, que se repite automáticamente
-    this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars');
+    this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars1');
     this.stars
       .setOrigin(0, 0)
-      .setScale(1);
+      .setScale(1)
+      .alpha = 0;
+
+    this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2')
+      .setOrigin(0, 0)
+      .setScale(1)
+
+
+
 
     // Texto princpipal TITLE
     this.title = this.add.text(this.centerX - 100, (this.centerY - 100), 'Type Space', {
@@ -58,8 +66,10 @@ class MainMenu extends Phaser.Scene {
 
   update() {
     // Desplazar el TileSprite
-    this.stars.tilePositionY += 0.2;
-    this.stars.tilePositionX -= 0.1;
+    this.stars.tilePositionY += 0.03;
+    this.stars.tilePositionX -= 0.01;
+
+    this.stars2.tilePositionY += 0.05;
 
 
     /* Animar logo */

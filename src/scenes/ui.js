@@ -1,42 +1,86 @@
 export default class UIScene extends Phaser.Scene {
+
+
+
+
   constructor() {
     super({ key: 'UIScene', active: false });
+
+    this.tablaJugadores = document.querySelector('.tabla-jugadores')
   }
 
   preload() {
-
+    console.log('Cargando UIScene');
   }
 
   create() {
-    // Create a pause/resume button
-    this.pauseButton = this.add.text(50, 50, 'Pause', { fill: '#fff' })
-      .setInteractive()
-      .on('pointerdown', () => this.togglePause());
+    this.createPauseButton(400, 50);
+    this.createGameOverButton(500, 50);
+    this.createMainMenuButton(600, 50);
 
-    // Create buttons for each scene
-    this.createSceneButton(370, 50, 'BattleScene', 'BattleScene');
-    this.createSceneButton(500, 50, 'Gameover', 'Gameover');
-    this.createSceneButton(600, 50, 'MainMenu', 'MainMenu');
+    this.ocultarTablaJugadores()
+
   }
 
-  createSceneButton(x, y, text, sceneKey) {
-    // Create a button and associate it with a scene
-    this.add.text(x, y, text, { fill: '#fff',  })
-      .setInteractive()
-      .on('pointerdown', () => this.scene.start(sceneKey));
+  createPauseButton(x, y) {
+    if (this.scene.isActive('BattleScene')) {
+      this.pauseButton = this.add.text(x, y, 'PAUSE', {
+        fill: '#000',
+        padding: 10,
+        backgroundColor: '#fff',
+      }).setInteractive()
+        .on('pointerdown', () => {
+          this.togglePause();
+        });
+    }
   }
 
   togglePause() {
-    if (this.scene.isPaused('BattleScene')) {
-      // If the game is paused, resume it
+    const newText = this.pauseButton.text === 'PAUSE' ? 'RESUME' : 'PAUSE';
+    console.log(newText === 'PAUSE' ? 'REANUDADO' : 'PAUSADO');
+    this.scene.pause('BattleScene');
+    this.pauseButton.setText(newText);
+    if (newText === 'PAUSE') {
       this.scene.resume('BattleScene');
-      // Change the button text to 'Pause'
-      this.pauseButton.setText('Pause');
-    } else {
-      // If the game is running, pause it
-      this.scene.pause('BattleScene');
-      // Change the button text to 'Resume'
-      this.pauseButton.setText('Resume');
     }
   }
+
+  createGameOverButton(x, y) {
+    this.add.text(x, y, 'GAMEOVER', {
+      fill: '#fff',
+      padding: 10,
+      backgroundColor: '#000'
+    }).setInteractive()
+      .on('pointerdown', () => {
+        this.transitionTo('Gameover');
+      });
+  }
+
+  createMainMenuButton(x, y) {
+    this.add.text(x, y, 'MAIN MENU', {
+      fill: '#fff',
+      padding: 10,
+      backgroundColor: '#000'
+    }).setInteractive()
+      .on('pointerdown', () => {
+        this.transitionTo('MainMenu');
+      });
+  }
+
+  transitionTo(sceneKey) {
+    this.scene.stop('BattleScene');
+    this.scene.stop('Gameover');
+    this.scene.start(sceneKey);
+  }
+
+  ocultarTablaJugadores() {
+    /* Si la escena es "BattleScene" entonces añadir la clase hidden a tablaJugadores */
+    if (this.scene.isActive('BattleScene')) {
+      this.tablaJugadores.classList.add('hidden')
+    } else {
+      this.tablaJugadores.classList.remove('hidden')
+    }
+  }
+
+
 }

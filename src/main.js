@@ -19,4 +19,4 @@ function printLeaderBoard() {
     document.getElementById('leaderboard-table').innerHTML = leaderboard.map((player) => `<tr><td>${player.Name}</td><td>${player.Score}</td></tr>`).join('')
   })
 }
-leaderboardBttn.addEventListener('click', printLeaderBoard)
+// leaderboardBttn.addEventListener('click', printLeaderBoard)
