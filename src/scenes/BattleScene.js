@@ -10,12 +10,11 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   preload() {
-
-
   }
 
 
   create() {
+
     /* Mostrar la UIScene */
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pong", "pica", "rasca"];
     this.scene.launch('UIScene');
@@ -58,7 +57,7 @@ export default class BattleScene extends Phaser.Scene {
     })
 
     // Physics
-    
+
     // TODO: CAMBIAR EL SISTEMA DE COLISIÓN PARA QUE LA BALA SOLO COLISIONE CON OBJETIVOS QUE COMPARTEN EL MISMO this.currentWord.
 
     this.physics.add.collider(this.projectiles, this.enemies, this.dealDamage, null, this)
@@ -179,7 +178,7 @@ export default class BattleScene extends Phaser.Scene {
       // enemy.body.setVelocityX(enemy.speed * Math.cos(rotation))
       // enemy.body.setVelocityY(enemy.speed * Math.sin(rotation))
     });
-// LÓGICA DE CREACIÓN DE ENEMIGOS
+    // LÓGICA DE CREACIÓN DE ENEMIGOS
     this.enemySpawnTimer += delta;
     // Create a new enemy every second if there are less than 5 enemies on the screen
     if (this.enemySpawnTimer >= 1700 && this.enemies.getLength() < this.maxEnemies) {
@@ -196,9 +195,9 @@ export default class BattleScene extends Phaser.Scene {
         }
         return;
       });
-        if (!wordPossible) {
-          this.currentWord = "";
-        }
+      if (!wordPossible) {
+        this.currentWord = "";
+      }
       this.enemies.getChildren().forEach((enemy) => {
         if (this.currentWord === enemy.wordText.text) {
           const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet")
@@ -233,7 +232,7 @@ export default class BattleScene extends Phaser.Scene {
   }
   // MOVIDA LA LÓGICA DE CREACIÓN DE ENEMIGOS A UNA FUNCIÓN
   createEnemy() {
-// COMPRUEBA QUE LA PALABRA ESCOGIDA ALEATORIAMENTE NO ESTÁ YA EN EL GRUPO DE ENEMIGOS
+    // COMPRUEBA QUE LA PALABRA ESCOGIDA ALEATORIAMENTE NO ESTÁ YA EN EL GRUPO DE ENEMIGOS
     let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
     let palabraUnica = true
     this.enemies.getChildren().forEach((enemy) => {
@@ -250,8 +249,8 @@ export default class BattleScene extends Phaser.Scene {
         }
       }
     });
-    
-// GENERA UNA COORDENADA ALEATORIA PARA EL ENEMIGO Y LO AÑADE AL GRUPO
+
+    // GENERA UNA COORDENADA ALEATORIA PARA EL ENEMIGO Y LO AÑADE AL GRUPO
     // Generate a random y-coordinate for the enemy
     const randomY = Phaser.Math.Between(0, this.game.config.height);
     // Create a new enemy at the specified x and y coordinates

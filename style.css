@@ -19,6 +19,17 @@
 }
 
 
+
+main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #000;
+
+}
+
+
 .container {
   position: relative;
 }
@@ -31,10 +42,6 @@
   top: calc(0px + 3rem);
 }
 
-
-
-
-
  table thead tr th {
   text-align: start;
   padding-bottom: 10px;
@@ -46,12 +53,9 @@
   padding: 2rem 0;
 }
 
-
-
 .hidden {
   display: none;
 }
-
 
 .input{
   position: absolute;
