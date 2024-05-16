@@ -8,8 +8,8 @@ import Gameover from './scenes/Gameover.js';
 
 const config = {
   type: Phaser.AUTO,
-  width: 1280,
-  height: 720,
+  width: window.innerWidth,
+  height: window.innerHeight,
   parent: "container",
   backgroundColor: '#d3d3d3',
   scene: [Bootloader, MainMenu, BattleScene, UIScene, Gameover],
@@ -22,7 +22,7 @@ const config = {
   },
   scale: {
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    zoom: 1.1
+    zoom: 1
   }
 }
 new Phaser.Game(config);

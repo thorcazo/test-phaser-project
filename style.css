@@ -35,6 +35,7 @@ main{
 }
 
 .tabla-jugadores {
+  font-size: 0.7rem;
   color: white;
   position: absolute;
   width: 250px;
