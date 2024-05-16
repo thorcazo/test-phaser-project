@@ -15,6 +15,10 @@ class MainMenu extends Phaser.Scene {
   }
 
   create() {
+
+    this.scene.launch('UIScene');
+
+
     // Fondo de pantalla
     this.bg = this.add.image(this.centerX, this.centerY, 'bg');
     this.bg.setOrigin(0.5, 0.5);

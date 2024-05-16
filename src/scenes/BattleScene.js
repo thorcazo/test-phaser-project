@@ -22,11 +22,6 @@ export default class BattleScene extends Phaser.Scene {
     this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars')
       .setOrigin(0, 0)
 
-
-
-
-
-
     /* Mostrar la UIScene */
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pong", "pica", "rasca"];
     this.scene.launch('UIScene');
@@ -38,7 +33,7 @@ export default class BattleScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('d3d3d3');
     this.Player = new Player(this, 200, 400, "Player")
       .setScale(0.5)
-    this.Player.setAngle(180);
+      .setAngle(90)
   
 
     this.input.keyboard.on('keydown', this.handlekeyInput, this)
@@ -47,7 +42,7 @@ export default class BattleScene extends Phaser.Scene {
 
     // **********************************************
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
-    this.currentWordText = this.add.text(400, 200, "", {
+    this.currentWordText = this.add.text(150, 50, "", {
       fontSize: '16px',
       fill: '#fff'
     });
@@ -101,10 +96,10 @@ export default class BattleScene extends Phaser.Scene {
           this.enemigosMatados += 1;
 
           /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
-          // if (this.enemigosMatados == 5) {
-          //   this.scene.stop('BattleScene');
-          //   this.scene.start('Gameover');
-          // }
+          if (this.enemigosMatados == this.maxEnemies) {
+            this.scene.stop('BattleScene');
+            this.scene.start('Gameover');
+          }
 
         }
       }

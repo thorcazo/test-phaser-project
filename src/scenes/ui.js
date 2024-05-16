@@ -3,9 +3,7 @@ export default class UIScene extends Phaser.Scene {
     super({ key: 'UIScene', active: false });
   }
 
-
   preload() {
-    console.log('Cargando UIScene...');
 
   }
 
@@ -14,6 +12,18 @@ export default class UIScene extends Phaser.Scene {
     this.pauseButton = this.add.text(50, 50, 'Pause', { fill: '#fff' })
       .setInteractive()
       .on('pointerdown', () => this.togglePause());
+
+    // Create buttons for each scene
+    this.createSceneButton(370, 50, 'BattleScene', 'BattleScene');
+    this.createSceneButton(500, 50, 'Gameover', 'Gameover');
+    this.createSceneButton(600, 50, 'MainMenu', 'MainMenu');
+  }
+
+  createSceneButton(x, y, text, sceneKey) {
+    // Create a button and associate it with a scene
+    this.add.text(x, y, text, { fill: '#fff',  })
+      .setInteractive()
+      .on('pointerdown', () => this.scene.start(sceneKey));
   }
 
   togglePause() {
