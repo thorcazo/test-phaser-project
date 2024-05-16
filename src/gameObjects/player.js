@@ -6,4 +6,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
         scene.physics.world.enable(this)
         this.body.setImmovable(true)
     }
+
+
+
+
 }

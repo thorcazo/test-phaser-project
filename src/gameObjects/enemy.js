@@ -1,7 +1,7 @@
 export default class Enemy extends Phaser.GameObjects.Sprite {
 
 
-   palabras = ["CASA", "PERRO", "LUZ", "MESA", "PARQUE", "SOL", "AUTO", "FLOR", "PAN", "LAGO"];
+  //  Movidas las palabras a la escena para controlar si se repiten en pantalla o no
 
 
   constructor(scene, x, y, type) {
@@ -10,12 +10,14 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     scene.physics.world.enable(this)
     this.body.setImmovable(true)
     this.health = 100
-    this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "10px PressStart2P", fill: "#fff" });
+    this.healthText = scene.add.text((this.x - 35), (this.y + 50), "Health: " + this.health, { font: "16px Arial", fill: "#000" });
 
-    this.wordText = scene.add.text(this.x, this.y, this.palabras[Math.floor(Math.random() * this.palabras.length)], { font: "14px PressStart2P", fill: "#fff" })
+    // Comentamos la asignación de la palabra aquí y la asignamos al crear el enemigo en la escena
+    // Esto es porque así podémos comprovar que la palabra no existe ya en pantalla
+    this.wordText = scene.add.text(this.x - 50, this.y - 100, "", { font: "16px Arial", fill: "#000" })
 
 
-    this.speed = 90
+    this.speed = 50
     this.target = null
     this.turn_rate = 1
     // Grados que el enemigo oscila
@@ -51,7 +53,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
     const x = this.x
     const y = this.y
-
+s
     const rotation = Phaser.Math.Angle.Between(x, y, tx, ty)
     this.setRotation(rotation);
     this.scene.physics.moveToObject(this, this.target, 50) // 100 es la velocidad
