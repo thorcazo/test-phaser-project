@@ -1,3 +1,4 @@
 Changelog 0.0.1: Ahora los enemigos se aturden y parpadean al ser impactados
 Changelog 0.0.1: Ahora los enemigos cambian su palabra al ser golpeados
     ¬ Las balas ahora ignoran a todas las entidades menos a la que van destinada, así que no chocan contra objetivos no intencionados
+Changelog 0.0.1: Añadido vida del jugador y condición de game over

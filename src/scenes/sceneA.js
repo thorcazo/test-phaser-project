@@ -62,6 +62,7 @@ export default class SceneA extends Phaser.Scene {
     // TODO: CAMBIAR EL SISTEMA DE COLISIÓN PARA QUE LA BALA SOLO COLISIONE CON OBJETIVOS QUE COMPARTEN EL MISMO this.currentWord.
 
     this.physics.add.overlap(this.projectiles, this.enemies, this.dealDamage, null, this)
+    this.physics.add.collider(this.Player, this.enemies, this.takeDamage, null, this )
     // this.physics.add.collider(this.projectiles, this.Player, this.dealDamage, null, this)
 
   }
@@ -125,6 +126,20 @@ export default class SceneA extends Phaser.Scene {
           }
 
         }
+      }
+    }
+  }
+
+  takeDamage(player, enemy) {
+    if (enemy.texture.key === "Enemy") {
+      enemy.destroy();
+      enemy.healthText.destroy();
+      enemy.wordText.destroy();
+      player.health -= 1;
+      player.healthText.text = "Health: " + player.health;
+      if (player.health <= 0) {
+        this.scene.pause('SceneA');
+        this.scene.bringToTop('Gameover');
       }
     }
   }
@@ -286,7 +301,7 @@ export default class SceneA extends Phaser.Scene {
     const randomY = Phaser.Math.Between(0, this.game.config.height);
     // Create a new enemy at the specified x and y coordinates
     const enemy = new Enemy(this, 1000, randomY, "Enemy")
-      .setScale(0.5);
+      .setScale(0.4);
     enemy.setAngle(180);
     this.randomizarPalabra(enemy);
     console.log(enemy);
