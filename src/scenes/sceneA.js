@@ -58,10 +58,10 @@ export default class SceneA extends Phaser.Scene {
     })
 
     // Physics
-    
+
     // TODO: CAMBIAR EL SISTEMA DE COLISIÓN PARA QUE LA BALA SOLO COLISIONE CON OBJETIVOS QUE COMPARTEN EL MISMO this.currentWord.
 
-    this.physics.add.collider(this.projectiles, this.enemies, this.dealDamage, null, this)
+    this.physics.add.overlap(this.projectiles, this.enemies, this.dealDamage, null, this)
     // this.physics.add.collider(this.projectiles, this.Player, this.dealDamage, null, this)
 
   }
@@ -74,25 +74,55 @@ export default class SceneA extends Phaser.Scene {
 
     // Destroy the bullet only if the type and the object's texture key are different
     if (bullet.type !== object.texture.key) {
-      bullet.destroy();
       // Check if the object is an enemy
       if (object.texture.key === "Enemy") {
-        // Decrease the enemy's health by the bullet's damage
-        object.health -= bullet.damage;
-        // Update the enemy's health text
-        object.healthText.text = "Health: " + object.health;
-        // Destroy the enemy if its health is <= 0
-        if (object.health <= 0) {
-          object.healthText.destroy();
-          object.wordText.destroy();
-          object.destroy();
-          this.enemigosMatados += 1;
+        if (object.wordText.text === bullet.currentWord) {
+          bullet.destroy();
+          // Decrease the enemy's health by the bullet's damage
+          object.health -= bullet.damage;
+          // EL ENEMIGO PARPADEA DURANTE 0.04 SEGUNDOS
+          object.setTint(0xff0000);
+          this.time.addEvent({
+            delay: 40,
+            callback: () => {
+              object.clearTint();
+            },
+            callbackScope: this,
+          });
+          // EL ENEMIGO SE ATURDE MOMENTANEAMENTE
+          const originalSpeed = object.speed;
+          object.speed = -(originalSpeed * 2)
+          // object accelerates in the opposite direction
+          this.time.addEvent({
+            delay: 200,
+            callback: () => {
+              // Gradually accelerate the enemy back to its original speed
+              this.tweens.add({
+                targets: object,
+                speed: originalSpeed,
+                ease: 'Linear',
+                duration: 500,
+              });
+            },
+            callbackScope: this,
+          });
+          this.randomizarPalabra(object);
+          // Update the enemy's health text
+          object.healthText.text = "Health: " + object.health;
+          // Destroy the enemy if its health is <= 0
+          if (object.health <= 0) {
+            object.healthText.destroy();
+            object.wordText.destroy();
+            object.destroy();
+            this.enemigosMatados += 1;
 
-          /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
-          // if (this.enemigosMatados == 5) {
-          //   this.scene.stop('SceneA');
-          //   this.scene.start('Gameover');
-          // }
+            /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
+            // if (this.enemigosMatados == 5) {
+            //   this.scene.stop('SceneA');
+            //   this.scene.start('Gameover');
+            // }
+
+          }
 
         }
       }
@@ -179,7 +209,7 @@ export default class SceneA extends Phaser.Scene {
       // enemy.body.setVelocityX(enemy.speed * Math.cos(rotation))
       // enemy.body.setVelocityY(enemy.speed * Math.sin(rotation))
     });
-// LÓGICA DE CREACIÓN DE ENEMIGOS
+    // LÓGICA DE CREACIÓN DE ENEMIGOS
     this.enemySpawnTimer += delta;
     // Create a new enemy every second if there are less than 5 enemies on the screen
     if (this.enemySpawnTimer >= 1700 && this.enemies.getLength() < this.maxEnemies) {
@@ -196,9 +226,9 @@ export default class SceneA extends Phaser.Scene {
         }
         return;
       });
-        if (!wordPossible) {
-          this.currentWord = "";
-        }
+      if (!wordPossible) {
+        this.currentWord = "";
+      }
       this.enemies.getChildren().forEach((enemy) => {
         if (this.currentWord === enemy.wordText.text) {
           const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet")
@@ -233,7 +263,7 @@ export default class SceneA extends Phaser.Scene {
   }
   // MOVIDA LA LÓGICA DE CREACIÓN DE ENEMIGOS A UNA FUNCIÓN
   createEnemy() {
-// COMPRUEBA QUE LA PALABRA ESCOGIDA ALEATORIAMENTE NO ESTÁ YA EN EL GRUPO DE ENEMIGOS
+    // COMPRUEBA QUE LA PALABRA ESCOGIDA ALEATORIAMENTE NO ESTÁ YA EN EL GRUPO DE ENEMIGOS
     let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
     let palabraUnica = true
     this.enemies.getChildren().forEach((enemy) => {
@@ -250,20 +280,45 @@ export default class SceneA extends Phaser.Scene {
         }
       }
     });
-    
-// GENERA UNA COORDENADA ALEATORIA PARA EL ENEMIGO Y LO AÑADE AL GRUPO
+
+    // GENERA UNA COORDENADA ALEATORIA PARA EL ENEMIGO Y LO AÑADE AL GRUPO
     // Generate a random y-coordinate for the enemy
     const randomY = Phaser.Math.Between(0, this.game.config.height);
     // Create a new enemy at the specified x and y coordinates
     const enemy = new Enemy(this, 1000, randomY, "Enemy")
       .setScale(0.5);
     enemy.setAngle(180);
-    enemy.wordText.text = palabraAleatoria;
+    this.randomizarPalabra(enemy);
     console.log(enemy);
 
     // Add the enemy to the group
     this.enemies.add(enemy);
     // Reset the enemy spawn timer
     this.enemySpawnTimer = 0;
+  }
+
+  // ESTE MÉTODO SE ACTIVA SI UN EFECTO FUESE A RANDOMIZAR LA PALABRA DE UN ENEMIGO EXISTENTE.
+  // EN UN FUTURO MECÁNICAS MÁS COMPLEJAS PODRÍAN PASARLE UN PARÁMETRO ESPECIAL DE CONFIGURACIÓN
+  // (Ej. un poder que cambie todas las palabras a la misma palabra o bajen la dificultad de las palabras)
+
+  randomizarPalabra(enemy) {
+    let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
+    let palabraUnica = true
+
+    this.enemies.getChildren().forEach((enemy) => {
+      if (enemy.wordText.text === palabraAleatoria) {
+        palabraUnica = false;
+        while (!palabraUnica) {
+          palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
+          palabraUnica = true
+          this.enemies.getChildren().forEach((enemy) => {
+            if (enemy.wordText.text === palabraAleatoria) {
+              palabraUnica = false;
+            }
+          });
+        }
+      }
+    });
+    enemy.wordText.text = palabraAleatoria;
   }
 }
