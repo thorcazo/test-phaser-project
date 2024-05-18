@@ -13,7 +13,6 @@ class MainMenu extends Phaser.Scene {
   }
 
   create() {
-
     this.scene.launch('UIScene');
     // Fondo de pantalla
     this.bg = this.add.image(this.centerX, this.centerY, 'bg');
@@ -61,15 +60,26 @@ class MainMenu extends Phaser.Scene {
 
     });
 
-
-
-
     startButton.setInteractive();
     startButton.on('pointerdown', () => this.startGame());
+
+
+    // Agregar input de texto
+    this.inputElement = this.add.dom(200, 200, 'input', {
+      type: 'text',
+      name: 'nameField',
+      fontSize: '32px',
+      backgroundColor: '#fff'
+    });
+
+    this.inputElement.setInteractive();
+
+    console.log(this.inputElement);
+
   }
 
   update() {
-    // Desplazar el TileSprite
+    //Desplazar el TileSprite
     this.stars.tilePositionY += 0.03;
     this.stars.tilePositionX -= 0.01;
 

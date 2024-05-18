@@ -1,8 +1,6 @@
 export default class UIScene extends Phaser.Scene {
 
 
-
-
   constructor() {
     super({ key: 'UIScene', active: false });
 
@@ -32,16 +30,22 @@ export default class UIScene extends Phaser.Scene {
         .on('pointerdown', () => {
           this.togglePause();
         });
+
+      // Agregar listener para la tecla ESPACIO
+      this.input.keyboard.on('keydown-SPACE', () => {
+        this.togglePause();
+      });
     }
   }
 
   togglePause() {
-    const newText = this.pauseButton.text === 'PAUSE' ? 'RESUME' : 'PAUSE';
-    console.log(newText === 'PAUSE' ? 'REANUDADO' : 'PAUSADO');
-    this.scene.pause('BattleScene');
-    this.pauseButton.setText(newText);
-    if (newText === 'PAUSE') {
-      this.scene.resume('BattleScene');
+    const battleScene = this.scene.get('BattleScene');
+    if (battleScene.scene.isPaused()) {
+      battleScene.scene.resume();
+      this.pauseButton.setText('PAUSE');
+    } else {
+      battleScene.scene.pause();
+      this.pauseButton.setText('RESUME');
     }
   }
 

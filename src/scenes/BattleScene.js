@@ -13,6 +13,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
+    this.scene.launch('Starfield');
 
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg')

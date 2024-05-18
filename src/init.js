@@ -5,6 +5,7 @@ import MainMenu from './scenes/MainMenu.js';
 import BattleScene from './scenes/BattleScene.js';
 import UIScene from './scenes/ui.js';
 import Gameover from './scenes/Gameover.js';
+import Starfield from './scenes/Starfield.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -12,7 +13,7 @@ const config = {
   height: window.innerHeight,
   parent: "container",
   backgroundColor: '#d3d3d3',
-  scene: [Bootloader, MainMenu, BattleScene, UIScene, Gameover],
+  scene: [Bootloader, Starfield, MainMenu, BattleScene, UIScene, Gameover],
   physics: {
     default: 'arcade',
     arcade: {
