@@ -13,7 +13,7 @@ const config = {
   height: window.innerHeight,
   parent: "container",
   backgroundColor: '#d3d3d3',
-  scene: [Bootloader, Starfield, MainMenu, BattleScene, UIScene, Gameover],
+  scene: [Bootloader, MainMenu, BattleScene, UIScene, Gameover],
   physics: {
     default: 'arcade',
     arcade: {

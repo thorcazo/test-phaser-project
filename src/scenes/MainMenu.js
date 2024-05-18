@@ -2,7 +2,7 @@ class MainMenu extends Phaser.Scene {
 
 
   constructor() {
-    super({ key: 'MainMenu' });
+    super({ key: 'MainMenu', active: false });
   }
 
   preload() {
@@ -12,8 +12,18 @@ class MainMenu extends Phaser.Scene {
 
   }
 
+  init(data) {
+    this.audioManager = data.audioManager;
+  }
+
   create() {
     this.scene.launch('UIScene');
+
+    // Reproducir la música de intro
+    this.audioManager.play('intro');
+   
+
+
     // Fondo de pantalla
     this.bg = this.add.image(this.centerX, this.centerY, 'bg');
     this.bg.setOrigin(0.5, 0.5);
@@ -61,7 +71,11 @@ class MainMenu extends Phaser.Scene {
     });
 
     startButton.setInteractive();
-    startButton.on('pointerdown', () => this.startGame());
+    startButton.on('pointerdown', () => {
+      this.startGame()
+
+    });
+
 
 
     // Agregar input de texto
@@ -74,7 +88,7 @@ class MainMenu extends Phaser.Scene {
 
     this.inputElement.setInteractive();
 
-    console.log(this.inputElement);
+
 
   }
 
@@ -96,6 +110,12 @@ class MainMenu extends Phaser.Scene {
   startGame() {
     // Aquí puedes definir lo que sucede cuando se inicia la partida
     this.scene.start('BattleScene');
+  }
+
+  /* Parar todas los audios menos Intro */
+  stopBattleMusic() {
+    MainMenu.BattleMusic = this.sound.add("BattleMusic", { loop: true });
+    MainMenu.BattleMusic.stop(); 
   }
 
 

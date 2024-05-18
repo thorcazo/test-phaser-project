@@ -13,7 +13,9 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.launch('Starfield');
+
+   
+
 
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg')
@@ -36,7 +38,7 @@ export default class BattleScene extends Phaser.Scene {
     this.maxEnemies = 5;
     this.cameras.main.setBackgroundColor('d3d3d3');
     this.Player = new Player(this, 200, 400, "Player")
-      .setScale(0.5) 
+      .setScale(0.5)
       .setAngle(90)
 
 
@@ -46,8 +48,8 @@ export default class BattleScene extends Phaser.Scene {
 
     // **********************************************
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
-    this.currentWordText = this.add.text(150, 50, "", {
-      fontSize: '16px',
+    this.currentWordText = this.add.text(100, 50, "", {
+      fontSize: '24px',
       fill: '#fff'
     });
     // ***********************************************
@@ -207,7 +209,6 @@ export default class BattleScene extends Phaser.Scene {
       .setScale(0.6);
     enemy.setAngle(180);
     enemy.wordText.text = palabraAleatoria;
-    console.log(enemy);
 
     // Add the enemy to the group
     this.enemies.add(enemy);
