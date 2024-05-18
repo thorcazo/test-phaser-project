@@ -1,3 +1,5 @@
+import AudioManager from "../Sounds/AudioManager";
+
 class MainMenu extends Phaser.Scene {
 
 
@@ -5,6 +7,9 @@ class MainMenu extends Phaser.Scene {
     super({ key: 'MainMenu', active: false });
   }
 
+  init(data) {
+    this.audioManager = data.audioManager;
+  }
   preload() {
     // Aquí puedes precargar los recursos (imágenes, sonidos, etc.) que necesitarás en tu escena
     this.centerX = this.cameras.main.centerX;
@@ -12,16 +17,14 @@ class MainMenu extends Phaser.Scene {
 
   }
 
-  init(data) {
-    this.audioManager = data.audioManager;
-  }
 
   create() {
     this.scene.launch('UIScene');
 
     // Reproducir la música de intro
     this.audioManager.play('intro');
-   
+    if (this.audioManager.isPlaying('BattleMusic')) this.audioManager.stop('BattleMusic');
+
 
 
     // Fondo de pantalla
@@ -109,14 +112,11 @@ class MainMenu extends Phaser.Scene {
 
   startGame() {
     // Aquí puedes definir lo que sucede cuando se inicia la partida
-    this.scene.start('BattleScene');
+    this.audioManager.stop('intro');
+    // this.audioManager.play('BattleMusic');
+    this.scene.start('BattleScene', { audioManager: this.audioManager });
   }
 
-  /* Parar todas los audios menos Intro */
-  stopBattleMusic() {
-    MainMenu.BattleMusic = this.sound.add("BattleMusic", { loop: true });
-    MainMenu.BattleMusic.stop(); 
-  }
 
 
 }

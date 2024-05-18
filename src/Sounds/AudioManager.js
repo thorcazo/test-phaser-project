@@ -53,6 +53,13 @@ class AudioManager {
   unmuteAll() {
     this.scene.sound.mute = false;
   }
+
+  // isPlaying
+  isPlaying(key) {
+    return this.sounds[key] && this.sounds[key].isPlaying;
+  }
+
+
 }
 
 export default AudioManager;

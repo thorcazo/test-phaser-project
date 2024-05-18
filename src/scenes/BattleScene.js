@@ -3,7 +3,7 @@ import Enemy from "../gameObjects/enemy.js";
 
 export default class BattleScene extends Phaser.Scene {
 
-  enemigosMatados = 0;
+  enemiesKilled = 0;
 
   constructor() {
     super({ key: "BattleScene" });
@@ -12,10 +12,11 @@ export default class BattleScene extends Phaser.Scene {
   preload() {
   }
 
+  init(data) {
+    this.audioManager = data.audioManager;
+  }
+
   create() {
-
-   
-
 
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg')
@@ -28,6 +29,12 @@ export default class BattleScene extends Phaser.Scene {
 
     this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2')
       .setOrigin(0, 0)
+
+
+    /*LOAD MUSIC */
+    this.audioManager.play('BattleMusic');
+
+
 
 
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pong", "pica", "rasca"];
@@ -118,10 +125,14 @@ export default class BattleScene extends Phaser.Scene {
       this.enemies.getChildren().forEach((enemy) => {
         if (this.currentWord === enemy.wordText.text) {
           const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet")
-            .setScale(0.05)
+            .setScale(0.03)
           const angle = Phaser.Math.Angle.Between(this.Player.x, this.Player.y, enemy.x, enemy.y);
+
+          /* Activar sonido ButtleShot */
+          this.audioManager.play('BulletShot');
+
           // Set the bullet's velocity based on the angle
-          bullet.setVelocity(Math.cos(angle) * 800, Math.sin(angle) * 800);
+          bullet.setVelocity(Math.cos(angle) * 1000, Math.sin(angle) * 1000);
           bullet.type = "player";
           bullet.currentWord = this.currentWord;
           bullet.damage = 100;
@@ -144,7 +155,6 @@ export default class BattleScene extends Phaser.Scene {
 
   /* FUNCIONES EXTRAS
   ==================================== */
-
   dealDamage(bullet, object) {
     // Destroy the bullet only if the type and the object's texture key are different
     if (bullet.type !== object.texture.key) {
@@ -160,10 +170,10 @@ export default class BattleScene extends Phaser.Scene {
           object.healthText.destroy();
           object.wordText.destroy();
           object.destroy();
-          this.enemigosMatados += 1;
+          this.enemiesKilled += 1;
 
           /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
-          if (this.enemigosMatados == this.maxEnemies) {
+          if (this.enemiesKilled == this.maxEnemies) {
             this.scene.stop('BattleScene');
             this.scene.start('Gameover');
           }
@@ -178,9 +188,14 @@ export default class BattleScene extends Phaser.Scene {
       this.currentWord = "";
     } else {
       this.currentKey = event.key;
-      this.currentWord += event.key;
+      const isKeyCorrect = this.enemies.getChildren().some((enemy) => enemy.wordText.text.startsWith(this.currentWord + event.key));
+      if (isKeyCorrect) {
+        this.audioManager.play('NumKey');
+        this.currentWord += event.key;
+      } else {
+        this.audioManager.play('WrongKey');
+      }
     }
-
   }
   // MOVIDA LA LÓGICA DE CREACIÓN DE ENEMIGOS A UNA FUNCIÓN
   createEnemy() {

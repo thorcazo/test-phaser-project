@@ -7,7 +7,6 @@ export default class Bootloader extends Phaser.Scene {
     this.audioManager = new AudioManager(this);
   }
 
-
   preload() {
     this.load.image("Player", "../assets/img/sprites/player.png");
     this.load.image("Bullet", "../assets/img/sprites/bullet.png");
@@ -20,11 +19,15 @@ export default class Bootloader extends Phaser.Scene {
 
     // Precargar audios
     this.audioManager.load('intro', './assets/sounds/intro.mp3');
+    this.audioManager.load('BattleMusic', './assets/sounds/BattleMusic.mp3');
+    this.audioManager.load('BulletShot', './assets/sounds/bulletShot.wav');
+    this.audioManager.load('HitDamage', './assets/sounds/HitDamage.wav');
+    this.audioManager.load('NumKey', './assets/sounds/NumKey.wav');
 
     // Escuchar el evento de finalización de carga
     this.load.on("complete", () => {
       // Añadir los sonidos al AudioManager
-      this.audioManager.add('intro', { loop: true });
+      this.addAllSound();
 
       // Iniciar la escena MainMenu
       this.scene.start('MainMenu', { audioManager: this.audioManager });
@@ -36,5 +39,15 @@ export default class Bootloader extends Phaser.Scene {
 
 
   update() { }
+
+
+  addAllSound() {
+    this.audioManager.add('intro', { loop: true });
+    this.audioManager.add('BattleMusic', { loop: true });
+    this.audioManager.add('BulletShot', { loop: false });
+    this.audioManager.add('HitDamage', { loop: false });
+    this.audioManager.add('NumKey', { loop: false });
+  }
+
 }
 
