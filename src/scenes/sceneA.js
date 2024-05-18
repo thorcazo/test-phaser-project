@@ -16,6 +16,9 @@ export default class SceneA extends Phaser.Scene {
 
 
   create() {
+    // CREAMOS UN TEXTO CENTRAL QUE CAMBIARÁ PARA MOSTRAR EL INICIO Y FIN DE CADA NIVEL
+    this.textoCentral("¡Prepárate!")
+
     /* Mostrar la UIScene */
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pong", "pica", "rasca"];
     this.scene.launch('UIScene');
@@ -58,9 +61,6 @@ export default class SceneA extends Phaser.Scene {
     })
 
     // Physics
-
-    // TODO: CAMBIAR EL SISTEMA DE COLISIÓN PARA QUE LA BALA SOLO COLISIONE CON OBJETIVOS QUE COMPARTEN EL MISMO this.currentWord.
-
     this.physics.add.overlap(this.projectiles, this.enemies, this.dealDamage, null, this)
     this.physics.add.collider(this.Player, this.enemies, this.takeDamage, null, this )
     // this.physics.add.collider(this.projectiles, this.Player, this.dealDamage, null, this)
@@ -139,7 +139,7 @@ export default class SceneA extends Phaser.Scene {
       player.healthText.text = "Health: " + player.health;
       if (player.health <= 0) {
         this.scene.pause('SceneA');
-        this.scene.bringToTop('Gameover');
+        this.scene.launch('Gameover');
       }
     }
   }
@@ -225,7 +225,14 @@ export default class SceneA extends Phaser.Scene {
       // enemy.body.setVelocityY(enemy.speed * Math.sin(rotation))
     });
     // LÓGICA DE CREACIÓN DE ENEMIGOS
-    this.enemySpawnTimer += delta;
+    this.time.addEvent({
+      delay: 4000,
+      callback: () => {
+        this.enemySpawnTimer += delta;
+      },
+      callbackScope: this,
+    });
+    // this.enemySpawnTimer += delta;
     // Create a new enemy every second if there are less than 5 enemies on the screen
     if (this.enemySpawnTimer >= 1700 && this.enemies.getLength() < this.maxEnemies) {
       this.createEnemy()
@@ -335,5 +342,22 @@ export default class SceneA extends Phaser.Scene {
       }
     });
     enemy.wordText.text = palabraAleatoria;
+  }
+
+  textoCentral(texto) {
+    for (let i = 0; i < 4; i++) {
+      const textObject = this.add.text(this.game.config.width / 2, this.game.config.height / 2, texto, {
+        fontSize: '32px',
+        fill: '#000'
+      });
+      textObject.setOrigin(0.5);
+      this.time.addEvent({
+        delay: 2000,
+        callback: () => {
+          textObject.destroy();
+        },
+        callbackScope: this,
+      });
+    }
   }
 }
