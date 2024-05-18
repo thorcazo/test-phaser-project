@@ -1,8 +1,6 @@
 class MainMenu extends Phaser.Scene {
 
 
-
-
   constructor() {
     super({ key: 'MainMenu' });
   }
@@ -17,8 +15,6 @@ class MainMenu extends Phaser.Scene {
   create() {
 
     this.scene.launch('UIScene');
-
-
     // Fondo de pantalla
     this.bg = this.add.image(this.centerX, this.centerY, 'bg');
     this.bg.setOrigin(0.5, 0.5);
@@ -34,32 +30,40 @@ class MainMenu extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScale(1)
 
-
-
-
     // Texto princpipal TITLE
-    this.title = this.add.text(this.centerX - 100, (this.centerY - 100), 'Type Space', {
+    this.title = this.add.text(this.centerX, (this.centerY - 100), 'TYPE SPACE', {
       fill: '#fff',
       fontFamily: 'PressStart2P',
-      fontSize: '48px'
+      fontSize: '70px'
     }).setOrigin(0.5);
 
     // Cargar logo
-    this.logo = this.add.image((this.title.x - 350), (this.title.y), 'logo');
+    this.logo = this.add.image((this.title.x - 410), (this.title.y), 'logo');
     this.logo.setScale(0.7);
 
     // Botón de inicio de partida
-    let startButton = this.add.text(this.title.x - 220, this.title.y + 50, 'Start', {
+    let startButton = this.add.text(this.title.x - 128, this.title.y + 50, 'START', {
       fill: '#fff',
       fontFamily: 'PressStart2P',
-      fontSize: '24px',
-      backgroundColor: '#000',
+      fontSize: '35px',
+      shadow: {
+        offsetX: 4,
+        offsetY: 4,
+        color: '#082EF7',
+        blur: 0,
+        stroke: false,
+        fill: true
+      },
       padding: {
         x: 20,
         y: 25
       },
 
     });
+
+
+
+
     startButton.setInteractive();
     startButton.on('pointerdown', () => this.startGame());
   }

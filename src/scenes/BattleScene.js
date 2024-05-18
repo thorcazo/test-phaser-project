@@ -35,7 +35,7 @@ export default class BattleScene extends Phaser.Scene {
     this.maxEnemies = 5;
     this.cameras.main.setBackgroundColor('d3d3d3');
     this.Player = new Player(this, 200, 400, "Player")
-      .setScale(0.5)
+      .setScale(0.5) 
       .setAngle(90)
 
 
@@ -202,8 +202,8 @@ export default class BattleScene extends Phaser.Scene {
     // Generate a random y-coordinate for the enemy
     const randomY = Phaser.Math.Between(0, this.game.config.height);
     // Create a new enemy at the specified x and y coordinates
-    const enemy = new Enemy(this, 1000, randomY, "Enemy")
-      .setScale(0.5);
+    const enemy = new Enemy(this, window.innerWidth + 20, randomY, "Enemy")
+      .setScale(0.6);
     enemy.setAngle(180);
     enemy.wordText.text = palabraAleatoria;
     console.log(enemy);
