@@ -60,6 +60,13 @@ class AudioManager {
   }
 
 
+  // aumentar volumen
+  increaseVolume(key, value) {
+    if (this.sounds[key]) {
+      this.sounds[key].setVolume(this.sounds[key].volume + value);
+    }
+  }
+
 }
 
 export default AudioManager;

@@ -4,6 +4,7 @@ import Enemy from "../gameObjects/enemy.js";
 export default class BattleScene extends Phaser.Scene {
 
   enemiesKilled = 0;
+  maxEnemies = 200;
 
   constructor() {
     super({ key: "BattleScene" });
@@ -42,7 +43,6 @@ export default class BattleScene extends Phaser.Scene {
     this.scene.launch('UIScene');
     this.enemySpawnTimer = 0;
     this.isFiring = false;
-    this.maxEnemies = 5;
     this.cameras.main.setBackgroundColor('d3d3d3');
     this.Player = new Player(this, 200, 400, "Player")
       .setScale(0.5)
@@ -171,6 +171,8 @@ export default class BattleScene extends Phaser.Scene {
           object.wordText.destroy();
           object.destroy();
           this.enemiesKilled += 1;
+          console.log(this.enemiesKilled, ' ==> ', this.maxEnemies);
+
 
           /* sumar enemigos matados, cuando llega a 5 entonces Gameover */
           if (this.enemiesKilled == this.maxEnemies) {
@@ -193,7 +195,9 @@ export default class BattleScene extends Phaser.Scene {
         this.audioManager.play('NumKey');
         this.currentWord += event.key;
       } else {
+        console.log('WrongKey');
         this.audioManager.play('WrongKey');
+
       }
     }
   }

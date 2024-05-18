@@ -23,6 +23,7 @@ export default class Bootloader extends Phaser.Scene {
     this.audioManager.load('BulletShot', './assets/sounds/bulletShot.wav');
     this.audioManager.load('HitDamage', './assets/sounds/HitDamage.wav');
     this.audioManager.load('NumKey', './assets/sounds/NumKey.wav');
+    this.audioManager.load('WrongKey', './assets/sounds/WrongKey.wav');
 
     // Escuchar el evento de finalización de carga
     this.load.on("complete", () => {
@@ -43,10 +44,11 @@ export default class Bootloader extends Phaser.Scene {
 
   addAllSound() {
     this.audioManager.add('intro', { loop: true });
-    this.audioManager.add('BattleMusic', { loop: true });
+    this.audioManager.add('BattleMusic', { loop: true, volume: 0.1});
     this.audioManager.add('BulletShot', { loop: false });
     this.audioManager.add('HitDamage', { loop: false });
     this.audioManager.add('NumKey', { loop: false });
+    this.audioManager.add('WrongKey', { loop: false, volume: 1.5})
   }
 
 }
