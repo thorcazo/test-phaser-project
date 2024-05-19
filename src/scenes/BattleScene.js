@@ -136,14 +136,10 @@ export default class BattleScene extends Phaser.Scene {
       this.enemies.getChildren().forEach((enemy) => {
         if (this.currentWord === enemy.wordText.text) {
           const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet")
-            .setScale(0.03)
+            .setScale(0.05)
           const angle = Phaser.Math.Angle.Between(this.Player.x, this.Player.y, enemy.x, enemy.y);
-
-          /* Activar sonido ButtleShot */
-          this.audioManager.play('BulletShot');
-
           // Set the bullet's velocity based on the angle
-          bullet.setVelocity(Math.cos(angle) * 1000, Math.sin(angle) * 1000);
+          bullet.setVelocity(Math.cos(angle) * 800, Math.sin(angle) * 800);
           bullet.type = "player";
           bullet.currentWord = this.currentWord;
           bullet.damage = 50;
@@ -249,6 +245,7 @@ export default class BattleScene extends Phaser.Scene {
         this.currentWord += event.key;
       } else {
         console.log('WrongKey');
+        this.currentWord = "";
         this.audioManager.play('WrongKey');
 
       }
@@ -256,36 +253,38 @@ export default class BattleScene extends Phaser.Scene {
   }
   // MOVIDA LA LÓGICA DE CREACIÓN DE ENEMIGOS A UNA FUNCIÓN
   createEnemy() {
-    // COMPRUEBA QUE LA PALABRA ESCOGIDA ALEATORIAMENTE NO ESTÁ YA EN EL GRUPO DE ENEMIGOS
-    let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
-    let palabraUnica = true
-    this.enemies.getChildren().forEach((enemy) => {
-      if (enemy.wordText.text === palabraAleatoria) {
-        palabraUnica = false;
-        while (!palabraUnica) {
-          palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
-          palabraUnica = true
-          this.enemies.getChildren().forEach((enemy) => {
-            if (enemy.wordText.text === palabraAleatoria) {
-              palabraUnica = false;
-            }
-          });
+    // Verifica si el número actual de enemigos es menor a 10
+    if (this.enemies.getLength() < 10) {
+      // COMPRUEBA QUE LA PALABRA ESCOGIDA ALEATORIAMENTE NO ESTÁ YA EN EL GRUPO DE ENEMIGOS
+      let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
+      let palabraUnica = true;
+      this.enemies.getChildren().forEach((enemy) => {
+        if (enemy.wordText.text === palabraAleatoria) {
+          palabraUnica = false;
+          while (!palabraUnica) {
+            palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
+            palabraUnica = true;
+            this.enemies.getChildren().forEach((enemy) => {
+              if (enemy.wordText.text === palabraAleatoria) {
+                palabraUnica = false;
+              }
+            });
+          }
         }
-      }
-    });
-
-    // Generate a random y-coordinate for the enemy
-    const randomY = Phaser.Math.Between(0, this.game.config.height);
-    // Create a new enemy at the specified x and y coordinates
-    const enemy = new Enemy(this, window.innerWidth + 20, randomY, "Enemy")
-      .setScale(0.6);
-    enemy.setAngle(180);
-    this.randomizarPalabra(enemy);
-
-    // Add the enemy to the group
-    this.enemies.add(enemy);
-    // Reset the enemy spawn timer
-    this.enemySpawnTimer = 0;
+      });
+  
+      // GENERA UNA COORDENADA ALEATORIA PARA EL ENEMIGO Y LO AÑADE AL GRUPO
+      const randomY = Phaser.Math.Between(0, this.game.config.height);
+      const enemy = new Enemy(this, 1000, randomY, "Enemy")
+        .setScale(0.4);
+      enemy.setAngle(180);
+      this.randomizarPalabra(enemy);
+  
+      // Añade el enemigo al grupo
+      this.enemies.add(enemy);
+      // Reinicia el temporizador de spawn de enemigos
+      this.enemySpawnTimer = 0;
+    }
   }
 
 
