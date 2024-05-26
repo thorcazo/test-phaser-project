@@ -5,6 +5,7 @@ export default class BattleScene extends Phaser.Scene {
 
   enemiesKilled = 0;
   maxEnemies = 200;
+  scorePlayer = 0;
 
   enemigosEnPantalla = 10;
 
@@ -34,10 +35,19 @@ export default class BattleScene extends Phaser.Scene {
     /*LOAD MUSIC */
     this.audioManager.play('BattleMusic');
 
+    /* Mostrar ScorePlayer en la parque de arriba izquierda */
+    this.scoreText = this.add.text(10, 10, "Score: " + this.scorePlayer, {
+      font: "24px PressStart2P",
+      fill: "#fff",
+    });
+
+
     this.textoCentral("¡Prepárate!");
 
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pica", "gato"];
     this.colors = ["#236FE0", "#FFE040", "#E02389", "#E02350"];
+
+    this.spawnPowerUp();
 
     this.scene.launch('UIScene');
     this.enemySpawnTimer = 0;
@@ -185,6 +195,8 @@ export default class BattleScene extends Phaser.Scene {
             object.wordText.destroy();
             object.destroy();
             this.enemiesKilled += 1;
+            this.scorePlayer += 5;
+            this.scoreText.setText("Score: " + this.scorePlayer); // Actualizar el texto del puntaje
             console.log(this.enemiesKilled);
           }
         }
@@ -207,13 +219,14 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   handlekeyInput(event) {
-    // Solo maneja las letras del alfabeto
-    if (!/^[a-zA-Z]$/.test(event.key)) {
+    // Solo maneja las letras del alfabeto y la tecla Backspace
+    if (!/^[a-zA-Z]$/.test(event.key) && event.key !== "Backspace") {
       return;
     }
 
     if (event.key === "Backspace") {
-      this.currentWord = "";
+      // Eliminar la última letra de currentWord
+      this.currentWord = this.currentWord.slice(0, -1);
     } else {
       this.currentKey = event.key;
       const isKeyCorrect = this.enemies.getChildren().some((enemy) => enemy.wordText.text.startsWith(this.currentWord + event.key));
@@ -225,10 +238,20 @@ export default class BattleScene extends Phaser.Scene {
           console.log('WrongKey');
           this.currentWord = "";
           this.audioManager.play('WrongKey');
+          this.scorePlayer -= 2; // Restar puntos
+          if (this.scorePlayer < 0) {
+            this.scorePlayer = 0; // Evitar puntaje negativo
+          }
+          this.scoreText.setText("Score: " + this.scorePlayer); // Actualizar el texto del puntaje
         }
       }
     }
+
+    // Actualizar el texto de currentWord
+    this.currentWordText.setText(this.currentWord);
   }
+
+
 
 
 
@@ -236,24 +259,16 @@ export default class BattleScene extends Phaser.Scene {
 
   createEnemy() {
     if (this.enemies.getLength() < this.enemigosEnPantalla) {
-      let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
-      let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
-      let palabraUnica = true;
-      this.enemies.getChildren().forEach((enemy) => {
-        if (enemy.wordText.text === palabraAleatoria) {
-          palabraUnica = false;
-          while (!palabraUnica) {
-            palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
-            palabraUnica = true;
-            this.enemies.getChildren().forEach((enemy) => {
-              if (enemy.wordText.text === palabraAleatoria) {
-                palabraUnica = false;
-              }
-            });
-          }
-        }
-      });
+      let palabraAleatoria;
+      let palabraUnica = false;
 
+      // Encuentra una palabra única
+      while (!palabraUnica) {
+        palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
+        palabraUnica = !this.enemies.getChildren().some((enemy) => enemy.wordText.text === palabraAleatoria);
+      }
+
+      let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
       const randomY = Phaser.Math.Between(0, this.game.config.height);
       const enemy = new Enemy(this, this.game.config.width + 100, randomY, "Enemy").setScale(0.3);
       enemy.setAngle(180);
@@ -263,32 +278,15 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
+
   randomizarPalabra(enemy, palabra = null, color = null) {
     let palabraAleatoria = palabra || this.palabras[Math.floor(Math.random() * this.palabras.length)];
     let colorAleatorio = color || this.colors[Math.floor(Math.random() * this.colors.length)];
-    let palabraUnica = true;
-
-    this.enemies.getChildren().forEach((enemy) => {
-      if (enemy.wordText.text === palabraAleatoria) {
-        palabraUnica = false;
-        while (!palabraUnica) {
-          palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
-          colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
-          palabraUnica = true;
-          this.enemies.getChildren().forEach((enemy) => {
-            if (enemy.wordText.text === palabraAleatoria) {
-              palabraUnica = false;
-            }
-          });
-        }
-      }
-    });
 
     enemy.wordText.setText(palabraAleatoria);
-
     enemy.wordText.setStyle({ backgroundColor: colorAleatorio });
-
   }
+
 
   textoCentral(texto) {
     for (let i = 0; i < 4; i++) {
