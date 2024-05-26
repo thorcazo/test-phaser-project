@@ -9,8 +9,8 @@ import Starfield from './scenes/Starfield.js';
 
 const config = {
   type: Phaser.AUTO,
-  width: window.innerWidth,
-  height: window.innerHeight,
+  width: 1280,
+  height: 720,
   parent: "container",
   backgroundColor: '#d3d3d3',
   scene: [Bootloader, MainMenu, BattleScene, UIScene, Gameover],
@@ -22,8 +22,14 @@ const config = {
     }
   },
   scale: {
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    zoom: 1
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  input: {
+    mouse: {
+      cursor: 'url(./assets/img/Cursor/cursor.png), pointer'
+    }
   }
-}
+};
+
 new Phaser.Game(config);

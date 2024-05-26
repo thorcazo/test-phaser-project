@@ -96,7 +96,7 @@ export default class BattleScene extends Phaser.Scene {
     });
 
     this.time.addEvent({
-      delay: 4000,
+      delay: 100,
       callback: () => {
         this.enemySpawnTimer += delta;
       },

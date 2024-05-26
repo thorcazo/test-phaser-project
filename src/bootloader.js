@@ -17,6 +17,12 @@ export default class Bootloader extends Phaser.Scene {
     this.load.image("Enemy", "./assets/img/sprites/enemy.png");
     this.load.image("logo", "../assets/img/planetMenu.png");
     this.load.image("dmg2", "./assets/img/sprites/powerup_dmg2.png");
+    this.load.image("planetGameOver", "./assets/img/PlanetGameOver.png");
+    this.load.image("marcoFondoGameOver", "./assets/img/marcoFondo.png");
+
+    // buttons
+    this.load.image("newgameButton", "./assets/img/newGameButton.png");
+    this.load.image("mainMenuButton", "./assets/img/mainMenuButton.png");
 
     // Precargar audios
     this.audioManager.load('intro', './assets/sounds/intro.mp3');
@@ -28,7 +34,7 @@ export default class Bootloader extends Phaser.Scene {
 
 
     // Cargar imagen del cursor
-    this.load.image("cursor", "./assets/img/cursor.png");
+    this.load.image("cursor", "./assets/img/Cursor/cursor.png");
 
     // Escuchar el evento de finalización de carga
     this.load.on("complete", () => {
@@ -40,6 +46,8 @@ export default class Bootloader extends Phaser.Scene {
     });
   }
   create() {
+    this.input.setDefaultCursor('url(./assets/img/cursor.png), pointer');
+
 
   }
 

@@ -17,7 +17,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.wordText = scene.add.text(this.x - 50, this.y - 100, "", { font: "16px Arial", fill: "#fff" })
 
 
-    this.speed = 25
+    this.speed = 500
     this.target = null
     this.turn_rate = 1
     // Grados que el enemigo oscila
@@ -25,18 +25,6 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     //  Velocidad de oscilación en milisegundos
     this.wobble_speed = 250
 
-    // this.wobbleTween = this.scene.tweens.add({
-    //   targets: this,
-    //   props: {
-    //     angle: {
-    //       value: this.wobble_limit,
-    //       duration: this.wobble_speed,
-    //       ease: "Sine.easeInOut",
-    //       yoyo: true,
-    //       repeat: -1
-    //     }
-    //   }
-    // })
   }
 
   setTarget(target) {
