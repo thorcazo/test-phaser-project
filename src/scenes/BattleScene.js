@@ -43,7 +43,7 @@ export default class BattleScene extends Phaser.Scene {
     this.enemySpawnTimer = 0;
     this.isFiring = false;
     this.cameras.main.setBackgroundColor('d3d3d3');
-    this.Player = new Player(this, 200, this.cameras.main.height / 2, "Player")
+    this.Player = new Player(this, 100, this.cameras.main.height / 2, "Player")
       .setScale(0.5)
       .setOrigin(0.5, 0.5)
       .setAngle(90);
@@ -55,7 +55,7 @@ export default class BattleScene extends Phaser.Scene {
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
 
     /* Marco para currentWordText */
-    this.bgCurrentWord = this.add.image(this.Player.x, this.game.config.height - 100, 'bgCurrentWord')
+    this.bgCurrentWord = this.add.image(200, this.game.config.height - 100, 'bgCurrentWord')
     // this.marcoCurrentWord =  this.add.rectangle(200, this.game.config.height - 60, 200, 50, 0x131930, 0.5)
 
 
@@ -112,7 +112,7 @@ export default class BattleScene extends Phaser.Scene {
       callbackScope: this,
     });
 
-    if (this.enemySpawnTimer >= 1700 && this.enemies.getLength() < this.maxEnemies) {
+    if (this.enemySpawnTimer >= 4000 && this.enemies.getLength() < this.maxEnemies) {
       this.createEnemy();
     }
 
