@@ -9,8 +9,8 @@ export default class BattleScene extends Phaser.Scene {
 
   enemigosEnPantalla = 10;
 
-  enemySpawnThreshold = 4000; // Umbral inicial
-  reduceThresholdInterval = 2000; // Intervalo de reducción (2 segundos)
+  enemySpawnThreshold = 5500; // Umbral inicial
+  reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
 
   constructor() {
@@ -47,7 +47,6 @@ export default class BattleScene extends Phaser.Scene {
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pica", "gato"];
     this.colors = ["#236FE0", "#FFE040", "#E02389", "#E02350"];
 
-    this.spawnPowerUp();
 
     this.scene.launch('UIScene');
     this.enemySpawnTimer = 0;
