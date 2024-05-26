@@ -29,7 +29,7 @@ export default class Gameover extends Phaser.Scene {
     /* Cargamos assets necesarios para la escena */
     this.newGameButton = this.add.image(this.textOver.x, this.textOver.y + 100, 'newgameButton').setOrigin(0, 0)
       .setInteractive();
-    this.mainMenuButton = this.add.image(this.newGameButton.x + 240, this.newGameButton.y, 'mainMenuButton').setOrigin(0, 0)
+    this.mainMenuButton = this.add.image(this.newGameButton.x + 200, this.newGameButton.y, 'mainMenuButton').setOrigin(0, 0)
       .setInteractive();
 
     // Añade un botón de reinicio en el centro de la pantalla, un poco más abajo
@@ -71,9 +71,47 @@ export default class Gameover extends Phaser.Scene {
 
 
 
-      /* Marco Fondo */
+    /* Marco Fondo */
+    this.marcoFondoGameOver = this.add.image(this.newGameButton.x, this.newGameButton.y + 100, 'marcoFondoGameOver')
+      .setOrigin(0, 0)
+
+    /* Colocar nave player para el marcoFondoGameOver */
+    this.playerGameOver = this.add.image(this.marcoFondoGameOver.x + 200, this.marcoFondoGameOver.y + 51, 'Player')
+      .setOrigin(0.5, 0.5)
+      .setScale(0.5)
 
 
+    /* Tabla de jugadores en el lado dereche de la escena */
+    this.puntuacionTitle = this.add.text(this.mainMenuButton.x + 350, this.mainMenuButton.y, 'PUNTUACION JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' })
+
+    /* Crear "NAME"  y "SCORE" debajo de puntiacionTitle  Ejemplo NAME     SCORE   */
+    this.name = this.add.text(this.puntuacionTitle.x, this.puntuacionTitle.y + 80, 'NAME', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' })
+    this.score = this.add.text(this.name.x + 270, this.name.y, 'SCORE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' })
+
+
+    /* Inventar nombre y puntuacion que aparecerá debajo */
+    this.name1 = this.add.text(this.name.x, this.name.y + 50, 'J1', {
+      fontSize: '1.5rem',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+    this.score1 = this.add.text(this.score.x, this.name1.y, '100', {
+      fontSize: '1.5rem',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+    this.name2 = this.add.text(this.name.x, this.name1.y + 50, 'J2', {
+      fontSize: '1.5rem',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+    this.score2 = this.add.text(this.score.x, this.name2.y, '200', {
+      fontSize: '1.5rem',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
 
 
 
