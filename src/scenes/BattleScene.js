@@ -34,27 +34,36 @@ export default class BattleScene extends Phaser.Scene {
     /*LOAD MUSIC */
     this.audioManager.play('BattleMusic');
 
-    this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pong", "pica", "rasca"];
+    this.textoCentral("¡Prepárate!");
+
+    this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pica", "gato"];
     this.colors = ["#236FE0", "#FFE040", "#E02389", "#E02350"];
 
     this.scene.launch('UIScene');
     this.enemySpawnTimer = 0;
     this.isFiring = false;
     this.cameras.main.setBackgroundColor('d3d3d3');
-    this.Player = new Player(this, 200, 400, "Player")
+    this.Player = new Player(this, 200, this.cameras.main.height / 2, "Player")
       .setScale(0.5)
+      .setOrigin(0.5, 0.5)
       .setAngle(90);
 
     this.input.keyboard.on('keydown', this.handlekeyInput, this);
     this.currentKey = null;
-    this.currentWord = "";
 
     // **********************************************
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
-    this.currentWordText = this.add.text(100, 50, "", {
-      fontSize: '24px',
-      fill: '#fff'
-    });
+
+    /* Marco para currentWordText */
+    this.bgCurrentWord = this.add.image(this.Player.x, this.game.config.height - 100, 'bgCurrentWord')
+    // this.marcoCurrentWord =  this.add.rectangle(200, this.game.config.height - 60, 200, 50, 0x131930, 0.5)
+
+
+
+    this.currentWordText = this.add.text(this.bgCurrentWord.x, this.bgCurrentWord.y + 10, "", {
+      font: "24px PressStart2P",
+      fill: "#fff",
+    }).setOrigin(0.5, 1);
     // ***********************************************
 
     this.enemies = this.add.group();
@@ -73,8 +82,8 @@ export default class BattleScene extends Phaser.Scene {
   update(time, delta) {
     var target = this.Player;
     this.enemies.getChildren().forEach((enemy) => {
-      enemy.healthText.setPosition((enemy.x - 35), (enemy.y + 50));
-      enemy.wordText.setPosition((enemy.x - 20), (enemy.y + -80));
+      // enemy.healthText.setPosition((enemy.x), (enemy.y + 50));
+      enemy.wordText.setPosition((enemy.x), (enemy.y + -60));
 
       const tx = target.x;
       const ty = target.y;
@@ -136,7 +145,9 @@ export default class BattleScene extends Phaser.Scene {
       });
     }
 
-    this.currentWordText.setText("Current Word: " + this.currentWord);
+    this.currentWordText.setText(this.currentWord);
+
+    /* Estilar input currentWordText */
 
     this.stars.tilePositionX += 3;
     this.stars2.tilePositionX += 0.05;
@@ -172,9 +183,9 @@ export default class BattleScene extends Phaser.Scene {
             callbackScope: this,
           });
           this.randomizarPalabra(object);
-          object.healthText.text = "Health: " + object.health;
+          // object.healthText.text = "Health: " + object.health;
           if (object.health <= 0) {
-            object.healthText.destroy();
+            // object.healthText.destroy();
             object.wordText.destroy();
             object.destroy();
             this.enemigosMatados += 1;
@@ -187,10 +198,10 @@ export default class BattleScene extends Phaser.Scene {
   takeDamage(player, enemy) {
     if (enemy.texture.key === "Enemy") {
       enemy.destroy();
-      enemy.healthText.destroy();
+      // enemy.healthText.destroy();
       enemy.wordText.destroy();
       player.health -= 1;
-      player.healthText.text = "Health: " + player.health;
+      // player.healthText.te xt = "Health: " + player.health;
       if (player.health <= 0) {
         this.scene.pause('BattleScene');
         this.scene.launch('Gameover');
@@ -236,8 +247,8 @@ export default class BattleScene extends Phaser.Scene {
       });
 
       const randomY = Phaser.Math.Between(0, this.game.config.height);
-      const enemy = new Enemy(this, 1000, randomY, "Enemy")
-        .setScale(0.4);
+      const enemy = new Enemy(this, this.game.config.width + 100, randomY, "Enemy")
+        .setScale(0.3);
       enemy.setAngle(180);
       this.randomizarPalabra(enemy, palabraAleatoria, colorAleatorio);
       this.enemies.add(enemy);
@@ -267,14 +278,17 @@ export default class BattleScene extends Phaser.Scene {
     });
 
     enemy.wordText.setText(palabraAleatoria);
+
+    console.log(colorAleatorio);
     enemy.wordText.setStyle({ backgroundColor: colorAleatorio });
+
   }
 
   textoCentral(texto) {
     for (let i = 0; i < 4; i++) {
       const textObject = this.add.text(this.game.config.width / 2, this.game.config.height / 2, texto, {
-        fontSize: '32px',
-        fill: '#000'
+        font: '64px PressStart2P',
+        fill: '#fff'
       });
       textObject.setOrigin(0.5);
       this.time.addEvent({

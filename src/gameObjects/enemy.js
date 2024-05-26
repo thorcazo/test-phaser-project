@@ -14,7 +14,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
     // Comentamos la asignación de la palabra aquí y la asignamos al crear el enemigo en la escena
     // Esto es porque así podémos comprovar que la palabra no existe ya en pantalla
-    this.wordText = scene.add.text(1400, 0, "", { font: "14px PressStart2P", fill: "#fff", padding: { x: 20, y: 10 } })
+    this.wordText = scene.add.text(1400, 0, "", { font: "13px PressStart2P", fill: "#fff", padding: { x: 20, y: 10 } })
       .setOrigin(0.5)
 
 
