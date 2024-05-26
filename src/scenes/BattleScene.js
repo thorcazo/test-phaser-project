@@ -6,6 +6,12 @@ export default class BattleScene extends Phaser.Scene {
   enemiesKilled = 0;
   maxEnemies = 200;
 
+  enemigosEnPantalla = 10;
+
+  enemySpawnThreshold = 4000; // Umbral inicial
+  reduceThresholdInterval = 2000; // Intervalo de reducción (2 segundos)
+  minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
+
   constructor() {
     super({ key: "BattleScene" });
   }
@@ -18,18 +24,12 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
-
     /* IMAGEN FONDO */
-    this.bg = this.add.image(0, 0, 'bg')
-      .setOrigin(0, 0);
+    this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
 
     /* STARS PARA ANIMACION */
-    this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars1')
-      .setOrigin(0, 0)
-      .setAlpha(0.3);
-
-    this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2')
-      .setOrigin(0, 0);
+    this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars1').setOrigin(0, 0).setAlpha(0.3);
+    this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2').setOrigin(0, 0);
 
     /*LOAD MUSIC */
     this.audioManager.play('BattleMusic');
@@ -43,10 +43,7 @@ export default class BattleScene extends Phaser.Scene {
     this.enemySpawnTimer = 0;
     this.isFiring = false;
     this.cameras.main.setBackgroundColor('d3d3d3');
-    this.Player = new Player(this, 100, this.cameras.main.height / 2, "Player")
-      .setScale(0.5)
-      .setOrigin(0.5, 0.5)
-      .setAngle(90);
+    this.Player = new Player(this, 100, this.cameras.main.height / 2, "Player").setScale(0.5).setOrigin(0.5, 0.5).setAngle(90);
 
     this.input.keyboard.on('keydown', this.handlekeyInput, this);
     this.currentKey = null;
@@ -55,10 +52,7 @@ export default class BattleScene extends Phaser.Scene {
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
 
     /* Marco para currentWordText */
-    this.bgCurrentWord = this.add.image(200, this.game.config.height - 100, 'bgCurrentWord')
-    // this.marcoCurrentWord =  this.add.rectangle(200, this.game.config.height - 60, 200, 50, 0x131930, 0.5)
-
-
+    this.bgCurrentWord = this.add.image(200, this.game.config.height - 100, 'bgCurrentWord');
 
     this.currentWordText = this.add.text(this.bgCurrentWord.x, this.bgCurrentWord.y + 10, "", {
       font: "24px PressStart2P",
@@ -76,6 +70,14 @@ export default class BattleScene extends Phaser.Scene {
     // Physics
     this.physics.add.overlap(this.projectiles, this.enemies, this.dealDamage, null, this);
     this.physics.add.collider(this.Player, this.enemies, this.takeDamage, null, this);
+
+    // Configurar el temporizador para reducir el umbral de spawn cada 10 segundos
+    this.time.addEvent({
+      delay: this.reduceThresholdInterval,
+      callback: this.reduceSpawnThreshold,
+      callbackScope: this,
+      loop: true
+    });
 
   } // FINAL CREATE
 
@@ -104,16 +106,11 @@ export default class BattleScene extends Phaser.Scene {
       enemy.body.setVelocityY(enemy.speed * Math.sin(enemy.rotation));
     });
 
-    this.time.addEvent({
-      delay: 100,
-      callback: () => {
-        this.enemySpawnTimer += delta;
-      },
-      callbackScope: this,
-    });
+    this.enemySpawnTimer += delta;
 
-    if (this.enemySpawnTimer >= 4000 && this.enemies.getLength() < this.maxEnemies) {
+    if (this.enemySpawnTimer >= this.enemySpawnThreshold && this.enemies.getLength() < this.maxEnemies) {
       this.createEnemy();
+      this.enemySpawnTimer = 0;
     }
 
     if (this.currentWord !== "") {
@@ -130,8 +127,7 @@ export default class BattleScene extends Phaser.Scene {
       }
       this.enemies.getChildren().forEach((enemy) => {
         if (this.currentWord === enemy.wordText.text) {
-          const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet")
-            .setScale(0.05);
+          const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet").setScale(0.05);
           const angle = Phaser.Math.Angle.Between(this.Player.x, this.Player.y, enemy.x, enemy.y);
           bullet.setVelocity(Math.cos(angle) * 800, Math.sin(angle) * 800);
           bullet.type = "player";
@@ -188,7 +184,8 @@ export default class BattleScene extends Phaser.Scene {
             // object.healthText.destroy();
             object.wordText.destroy();
             object.destroy();
-            this.enemigosMatados += 1;
+            this.enemiesKilled += 1;
+            console.log(this.enemiesKilled);
           }
         }
       }
@@ -210,6 +207,11 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   handlekeyInput(event) {
+    // Solo maneja las letras del alfabeto
+    if (!/^[a-zA-Z]$/.test(event.key)) {
+      return;
+    }
+
     if (event.key === "Backspace") {
       this.currentWord = "";
     } else {
@@ -219,15 +221,21 @@ export default class BattleScene extends Phaser.Scene {
         this.audioManager.play('NumKey');
         this.currentWord += event.key;
       } else {
-        console.log('WrongKey');
-        this.currentWord = "";
-        this.audioManager.play('WrongKey');
+        if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
+          console.log('WrongKey');
+          this.currentWord = "";
+          this.audioManager.play('WrongKey');
+        }
       }
     }
   }
 
+
+
+
+
   createEnemy() {
-    if (this.enemies.getLength() < 10) {
+    if (this.enemies.getLength() < this.enemigosEnPantalla) {
       let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
       let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
       let palabraUnica = true;
@@ -247,8 +255,7 @@ export default class BattleScene extends Phaser.Scene {
       });
 
       const randomY = Phaser.Math.Between(0, this.game.config.height);
-      const enemy = new Enemy(this, this.game.config.width + 100, randomY, "Enemy")
-        .setScale(0.3);
+      const enemy = new Enemy(this, this.game.config.width + 100, randomY, "Enemy").setScale(0.3);
       enemy.setAngle(180);
       this.randomizarPalabra(enemy, palabraAleatoria, colorAleatorio);
       this.enemies.add(enemy);
@@ -279,7 +286,6 @@ export default class BattleScene extends Phaser.Scene {
 
     enemy.wordText.setText(palabraAleatoria);
 
-    console.log(colorAleatorio);
     enemy.wordText.setStyle({ backgroundColor: colorAleatorio });
 
   }
@@ -300,5 +306,19 @@ export default class BattleScene extends Phaser.Scene {
       });
     }
   }
+
+  /* mecanica para reducir el tiempo de spawnEnemy */
+  reduceSpawnThreshold() {
+    if (this.enemySpawnThreshold > this.minSpawnThreshold) {
+      this.enemySpawnThreshold -= 200; // Reduce el umbral en 200 ms cada 10 segundos
+      if (this.enemySpawnThreshold < this.minSpawnThreshold) {
+        this.enemySpawnThreshold = this.minSpawnThreshold;
+      }
+      console.log('Nuevo umbral de spawn: ' + this.enemySpawnThreshold);
+    } else {
+      console.log('Umbral de spawn mínimo alcanzado');
+    }
+  }
+
 
 }
