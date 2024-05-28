@@ -78,6 +78,62 @@ export default class Gameover extends Phaser.Scene {
       .setOrigin(0.5, 0.5)
       .setScale(0.5)
 
+    /* Sgregar textos "Nombre jugador", "Nº Naves destruidas", "Errores cometidos", "Puntiacion Total" */
+    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, 'JUGADOR', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+    this.linea1 = this.add.text(this.namePlayerText.x + 90, this.namePlayerText.y, '.................', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+    this.navesDestruidasText = this.add.text(this.marcoFondoGameOver.x + 30, this.namePlayerText.y + 30, 'NAVES DESTRUIDAS', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+    this.linea2 = this.add.text(this.navesDestruidasText.x + 200, this.navesDestruidasText.y, '........', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+
+    this.erroresCometidos = this.add.text(this.marcoFondoGameOver.x + 30, this.navesDestruidasText.y + 30, 'ERRORES COMETIDOS', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+
+    this.linea3 = this.add.text(this.erroresCometidos.x + 210, this.erroresCometidos.y, '.......', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+    this.totalScoreText = this.add.text(this.marcoFondoGameOver.x + 30, this.erroresCometidos.y + 60, 'PUNTUACION TOTAL', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+    this.linea4 = this.add.text(this.totalScoreText.x + 200, this.totalScoreText.y, '........', {
+      fontSize: '12px',
+      fontFamily: 'PressStart2P',
+      color: '#fff'
+    })
+
+
+
+
+
+
+    /* TABLA DERECHA GRANDE */
 
     /* Tabla de jugadores en el lado dereche de la escena */
     this.puntuacionTitle = this.add.text(this.mainMenuButton.x + 350, this.mainMenuButton.y, 'PUNTUACION JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' })
