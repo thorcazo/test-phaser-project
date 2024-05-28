@@ -1,6 +1,8 @@
 import Player from "../gameObjects/player.js";
 import Enemy from "../gameObjects/enemy.js";
 
+import { addScore, getScores } from '../utils/firestoreTest.js';
+
 export default class BattleScene extends Phaser.Scene {
 
   enemiesKilled = 0;
@@ -211,6 +213,13 @@ export default class BattleScene extends Phaser.Scene {
       player.health -= 1;
       // player.healthText.te xt = "Health: " + player.health;
       if (player.health <= 0) {
+
+        /* numShips_destr
+          player_name
+          total_score
+          */
+
+        addScore("Jugador1", this.enemiesKilled, this.scorePlayer);
         this.scene.pause('BattleScene');
         this.scene.launch('Gameover');
       }

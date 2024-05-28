@@ -15,8 +15,6 @@ export default class Gameover extends Phaser.Scene {
     this.screenX = this.cameras.main.centerX - this.cameras.main.centerX;
     this.screenY = this.cameras.main.centerY - this.cameras.main.centerY;
 
-
-
     // Añade un texto de Game Over en el centro de la pantalla
     this.textGame = this.add.text(this.screenX + 80, this.screenY + 80, 'GAME', { fontSize: '4rem', fontFamily: 'PressStart2P', color: '#fff' })
     this.textOver = this.add.text(this.textGame.x, this.textGame.y + 64, 'OVER', { fontSize: '4rem', fontFamily: 'PressStart2P', color: '#fff' })
