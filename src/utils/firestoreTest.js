@@ -4,12 +4,13 @@ import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
 // Función para agregar un documento a la colección "score_player"
-const addScore = async (playerName, numShipsDestr, totalScoreText) => {
+const addScore = async (playerName, numShipsDestr, errorKeyText, totalScoreText) => {
   try {
-    const docRef = await addDoc(collection(db, "score_player"), {
-      player_name: playerName,
-      numShips_destr: numShipsDestr,
-      total_score: totalScoreText
+    const docRef = await addDoc(collection(db, "dataPlayer"), {
+      playerName: playerName,
+      shipsDestroyed: numShipsDestr,
+      errorKey: errorKeyText,
+      totalScore: parseInt(totalScoreText),
     });
     console.log("Documento escrito con ID: ", docRef.id);
   } catch (e) {

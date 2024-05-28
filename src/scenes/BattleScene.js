@@ -221,7 +221,7 @@ export default class BattleScene extends Phaser.Scene {
           puntuacionTotal: this.scorePlayer
         };
 
-        addScore(gameOverData.nombreJugador, gameOverData.navesDestruidas, gameOverData.puntuacionTotal);
+        addScore(gameOverData.nombreJugador, gameOverData.navesDestruidas, gameOverData.erroresCometidos, gameOverData.puntuacionTotal);
         this.scene.pause('BattleScene');
         this.scene.launch('Gameover', gameOverData);
       }
