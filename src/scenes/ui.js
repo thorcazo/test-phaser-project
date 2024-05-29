@@ -11,6 +11,7 @@ export default class UIScene extends Phaser.Scene {
     this.createPauseButton(400, 50);
     this.createGameOverButton(500, 50);
     this.createMainMenuButton(600, 50);
+    this.createLeaderboardButton(700, 50);
     this.ocultarTablaJugadores();
     // this.createButtonMuseSound(700, 50);
   }
@@ -63,6 +64,16 @@ export default class UIScene extends Phaser.Scene {
     }).setInteractive()
       .on('pointerdown', () => {
         this.transitionTo('MainMenu');
+      });
+  }
+  createLeaderboardButton(x, y) {
+    this.add.text(x, y, 'LEADERBOARD', {
+      fill: '#fff',
+      padding: 10,
+      backgroundColor: '#000'
+    }).setInteractive()
+      .on('pointerdown', () => {
+        this.scene.launch('leaderboardScene');
       });
   }
 
