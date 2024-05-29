@@ -1,0 +1,7 @@
+- Presentar la idea, como surgio, objetivos iniciales
+- Busqueda de la libreria adecuada
+- Tecnologias nuevas para vosotros: vite, idx, phaser, firebase
+- Demostracion juego
+- Reparto tareas  y git/trello/discord
+- Principales dificultades y tambien los logros mas destacavbles, grado de consecucion de objetivos
+- Mejoras de futuro
