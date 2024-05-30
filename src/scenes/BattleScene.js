@@ -1,11 +1,15 @@
 import Player from "../gameObjects/player.js";
 import Enemy from "../gameObjects/enemy.js";
 
+import { addScore, getScores } from '../utils/firestoreTest.js';
+
 export default class BattleScene extends Phaser.Scene {
 
   enemiesKilled = 0;
   maxEnemies = 200;
   scorePlayer = 0;
+
+  errorText = 0;
 
   enemigosEnPantalla = 10;
 
@@ -206,13 +210,20 @@ export default class BattleScene extends Phaser.Scene {
   takeDamage(player, enemy) {
     if (enemy.texture.key === "Enemy") {
       enemy.destroy();
-      // enemy.healthText.destroy();
       enemy.wordText.destroy();
       player.health -= 1;
-      // player.healthText.te xt = "Health: " + player.health;
       if (player.health <= 0) {
+        // Añadir los datos de la partida
+        const gameOverData = {
+          nombreJugador: "ABC",
+          navesDestruidas: this.enemiesKilled,
+          erroresCometidos: this.errorText,
+          puntuacionTotal: this.scorePlayer
+        };
+
+        addScore(gameOverData.nombreJugador, gameOverData.navesDestruidas, gameOverData.erroresCometidos, gameOverData.puntuacionTotal);
         this.scene.pause('BattleScene');
-        this.scene.launch('Gameover');
+        this.scene.launch('Gameover', gameOverData);
       }
     }
   }
@@ -238,6 +249,7 @@ export default class BattleScene extends Phaser.Scene {
           this.currentWord = "";
           this.audioManager.play('WrongKey');
           this.scorePlayer -= 2; // Restar puntos
+          this.errorText += 1; // Aumentar el contador de errores
           if (this.scorePlayer < 0) {
             this.scorePlayer = 0; // Evitar puntaje negativo
           }

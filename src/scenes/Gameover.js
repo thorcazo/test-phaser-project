@@ -3,121 +3,101 @@ export default class Gameover extends Phaser.Scene {
     super({ key: 'Gameover' });
   }
 
+  init(data) {
+    // Recibir los datos pasados desde BattleScene
+    this.nombreJugador = data.nombreJugador;
+    this.navesDestruidas = data.navesDestruidas;
+    this.erroresCometidos = data.erroresCometidos;
+    this.puntuacionTotal = data.puntuacionTotal;
+  }
+
   create() {
     this.scene.launch('UIScene');
     this.scene.stop('BattleScene');
 
-    /* Establecer un color background */
+    // Establecer un color de fondo
     this.cameras.main.setBackgroundColor('#1C142A');
 
-    /* Posicion de la pantalla */
-
+    // Posición de la pantalla
     this.screenX = this.cameras.main.centerX - this.cameras.main.centerX;
     this.screenY = this.cameras.main.centerY - this.cameras.main.centerY;
 
-
-
     // Añade un texto de Game Over en el centro de la pantalla
-    this.textGame = this.add.text(this.screenX + 80, this.screenY + 80, 'GAME', { fontSize: '4rem', fontFamily: 'PressStart2P', color: '#fff' })
-    this.textOver = this.add.text(this.textGame.x, this.textGame.y + 64, 'OVER', { fontSize: '4rem', fontFamily: 'PressStart2P', color: '#fff' })
+    this.add.text(this.screenX + 80, this.screenY + 80, 'GAME', { fontSize: '4rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.add.text(this.screenX + 80, this.screenY + 144, 'OVER', { fontSize: '4rem', fontFamily: 'PressStart2P', color: '#fff' });
 
+    // Añade una imagen del planeta de Game Over
+    this.add.image(this.screenX + 380, this.screenY + 80, 'planetGameOver').setOrigin(0, 0).setScale(0.8);
 
-    this.planetGameOver = this.add.image(this.textGame.x + 300, this.textGame.y, 'planetGameOver')
-      .setOrigin(0, 0)
-      .setScale(0.8);
+    // Botones interactivos
+    this.createButton(this.screenX + 80, this.screenY + 244, 'newgameButton', 'NUEVA PARTIDA', 'BattleScene');
+    this.createButton(this.screenX + 280, this.screenY + 244, 'mainMenuButton', 'MENU PRINCIPAL', 'MainMenu');
 
-    /* Cargamos assets necesarios para la escena */
-    this.newGameButton = this.add.image(this.textOver.x, this.textOver.y + 100, 'newgameButton').setOrigin(0, 0)
-      .setInteractive();
-    this.mainMenuButton = this.add.image(this.newGameButton.x + 200, this.newGameButton.y, 'mainMenuButton').setOrigin(0, 0)
-      .setInteractive();
+    // Fondo del marco
+    this.marcoFondoGameOver = this.add.image(this.screenX + 80, this.screenY + 344, 'marcoFondoGameOver').setOrigin(0, 0);
 
-    // Añade un botón de reinicio en el centro de la pantalla, un poco más abajo
-    this.newGameText = this.add.text(this.newGameButton.x + 18, this.newGameButton.y + 20, 'NUEVA PARTIDA', {
+    // Nave del jugador
+    this.add.image(this.marcoFondoGameOver.x + 200, this.marcoFondoGameOver.y + 51, 'Player').setOrigin(0.5, 0.5).setScale(0.5);
+
+    // Variables dinámicas para los valores
+    // Variables dinámicas para los valores
+    const nombreJugador = this.nombreJugador;
+    const navesDestruidas = this.navesDestruidas;
+    const erroresCometidos = this.erroresCometidos;
+    const puntuacionTotal = this.puntuacionTotal;
+
+    // Textos de estadísticas
+    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `JUGADOR ................ ${nombreJugador}`, {
       fontSize: '12px',
-      color: '#ffffff',
       fontFamily: 'PressStart2P',
-    })
-      .setInteractive()
+      color: '#fff'
+    });
 
-    this.mainMenuText = this.add.text(this.mainMenuButton.x + 18, this.mainMenuButton.y + 20, 'MENU PRINCIPAL', {
+    this.navesDestruidasText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 150, `NAVES DESTRUIDAS ....... ${navesDestruidas}`, {
       fontSize: '12px',
-      color: '#ffffff',
-      fontFamily: 'PressStart2P',
-    })
-      .setInteractive()
-
-
-    // Cuando se hace clic en el botón de reinicio, reinicia la escena del juego
-    this.newGameButton.on('pointerdown', () => {
-      this.scene.stop('Gameover');
-      this.scene.start('BattleScene');
-    });
-
-    this.newGameText.on('pointerdown', () => {
-      this.scene.stop('Gameover');
-      this.scene.start('BattleScene');
-    });
-
-    this.mainMenuButton.on('pointerdown', () => {
-      this.scene.stop('Gameover');
-      this.scene.start('MainMenu');
-    });
-
-    this.mainMenuText.on('pointerdown', () => {
-      this.scene.stop('Gameover');
-      this.scene.start('MainMenu');
-    });
-
-
-
-    /* Marco Fondo */
-    this.marcoFondoGameOver = this.add.image(this.newGameButton.x, this.newGameButton.y + 100, 'marcoFondoGameOver')
-      .setOrigin(0, 0)
-
-    /* Colocar nave player para el marcoFondoGameOver */
-    this.playerGameOver = this.add.image(this.marcoFondoGameOver.x + 200, this.marcoFondoGameOver.y + 51, 'Player')
-      .setOrigin(0.5, 0.5)
-      .setScale(0.5)
-
-
-    /* Tabla de jugadores en el lado dereche de la escena */
-    this.puntuacionTitle = this.add.text(this.mainMenuButton.x + 350, this.mainMenuButton.y, 'PUNTUACION JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' })
-
-    /* Crear "NAME"  y "SCORE" debajo de puntiacionTitle  Ejemplo NAME     SCORE   */
-    this.name = this.add.text(this.puntuacionTitle.x, this.puntuacionTitle.y + 80, 'NAME', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' })
-    this.score = this.add.text(this.name.x + 270, this.name.y, 'SCORE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' })
-
-
-    /* Inventar nombre y puntuacion que aparecerá debajo */
-    this.name1 = this.add.text(this.name.x, this.name.y + 50, 'J1', {
-      fontSize: '1.5rem',
       fontFamily: 'PressStart2P',
       color: '#fff'
-    })
-    this.score1 = this.add.text(this.score.x, this.name1.y, '100', {
-      fontSize: '1.5rem',
+    });
+
+    this.erroresCometidosText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 180, `ERRORES COMETIDOS ...... ${erroresCometidos}`, {
+      fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
-    })
+    });
 
-    this.name2 = this.add.text(this.name.x, this.name1.y + 50, 'J2', {
-      fontSize: '1.5rem',
+    this.totalScoreText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 240, `PUNTUACION TOTAL ....... ${puntuacionTotal}`, {
+      fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
-    })
+    });
 
-    this.score2 = this.add.text(this.score.x, this.name2.y, '200', {
-      fontSize: '1.5rem',
-      fontFamily: 'PressStart2P',
-      color: '#fff'
-    })
+    // Tabla de puntuaciones
+    this.add.text(this.screenX + 730, this.screenY + 344, 'PUNTUACION JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.add.text(this.screenX + 730, this.screenY + 424, 'NAME', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.add.text(this.screenX + 1000, this.screenY + 424, 'SCORE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
 
+    const scores = [
+      { name: 'J1', score: '100' },
+      { name: 'J2', score: '200' }
+    ];
 
+    scores.forEach((score, index) => {
+      this.add.text(this.screenX + 730, this.screenY + 474 + (index * 50), score.name, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+      this.add.text(this.screenX + 1000, this.screenY + 474 + (index * 50), score.score, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    });
+  }
 
+  createButton(x, y, key, text, sceneKey) {
+    const button = this.add.image(x, y, key).setOrigin(0, 0).setInteractive();
+    const buttonText = this.add.text(x + 18, y + 20, text, { fontSize: '12px', fontFamily: 'PressStart2P', color: '#ffffff' }).setInteractive();
 
-
-
-
+    button.on('pointerdown', () => {
+      this.scene.stop('Gameover');
+      this.scene.start(sceneKey);
+    });
+    buttonText.on('pointerdown', () => {
+      this.scene.stop('Gameover');
+      this.scene.start(sceneKey);
+    });
   }
 }
