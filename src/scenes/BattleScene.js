@@ -281,7 +281,7 @@ export default class BattleScene extends Phaser.Scene {
 
       let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
       const randomY = Phaser.Math.Between(0, this.game.config.height);
-      const enemy = new Enemy(this, this.game.config.width + 100, randomY, "Enemy").setScale(0.3);
+      const enemy = new Enemy(this, this.game.config.width + 20, randomY, "Enemy").setScale(0.3);
       enemy.setAngle(180);
       this.randomizarPalabra(enemy, palabraAleatoria, colorAleatorio);
       this.enemies.add(enemy);
