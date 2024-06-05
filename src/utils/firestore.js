@@ -1,7 +1,7 @@
 // src/utils/firestore.js
 
 import { collection, addDoc, getDocs } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db } from "../firebaseConfig.js";
 
 // Función para agregar un documento a la colección "score_player"
 const addScore = async (playerName, numShipsDestr, errorKeyText, totalScoreText) => {
@@ -19,11 +19,14 @@ const addScore = async (playerName, numShipsDestr, errorKeyText, totalScoreText)
   }
 };
 
-// Función para leer documentos de la colección "score_player"
+// Función para leer documentos de la colección "dataPlayer"
 const getScores = async () => {
+  let players = [];
   const querySnapshot = await getDocs(collection(db, "dataPlayer"));
   querySnapshot.forEach((doc) => {
+    players.push({ id: doc.id, ...doc.data() });
   });
+  return players;
 };
 
 const addDataEnemies = async (word, color, enemyName) => {
@@ -59,31 +62,11 @@ const addNamesEnemies = async (name, dificulty) => {
 }
 
 
-
-/*  Método para optener el top de jugadores con más puntuacion (totalScore)  */
 const getTopPlayers = async () => {
-  const querySnapshot = await getDocs(collection(db, "dataPlayer"));
-  const topPlayers = [];
-  querySnapshot.forEach((doc) => {
-    /* si el totalScore del jugador es mayor que el anterior almacenar */
-    if (topPlayers.length < 3) {
-      topPlayers.push({ id: doc.id, ...doc.data() });
-    } else {
-      /* si el totalScore del jugador es mayor que el menor del top, reemplazarlo */
-      const minScore = Math.min(...topPlayers.map(player => player.totalScore));
-      if (doc.data().totalScore > minScore) {
-        const index = topPlayers.findIndex(player => player.totalScore === minScore);
-        topPlayers[index] = { id: doc.id, ...doc.data() };
-      }
-    }
-  });
+  const players = await getScores();
+  const topPlayers = players.sort((a, b) => b.totalScore - a.totalScore);
   return topPlayers;
 };
 
-
-
-
-
-
-
+getTopPlayers();
 export { addScore, getScores, getWordsEnemies, addDataEnemies, getTopPlayers };

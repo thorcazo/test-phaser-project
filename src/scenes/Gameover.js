@@ -1,5 +1,4 @@
-import { getTopPlayers } from '../utils/firestore';
-
+import { getTopPlayers } from '../utils/firestore.js';
 
 export default class Gameover extends Phaser.Scene {
   constructor() {
@@ -14,13 +13,17 @@ export default class Gameover extends Phaser.Scene {
     this.puntuacionTotal = data.puntuacionTotal;
   }
 
-  create() {
+  async create() {
     this.scene.launch('UIScene');
     this.scene.stop('BattleScene');
 
-    this.getTopPlayers();
-
-
+    // Obtener los datos de los mejores jugadores
+    const players = await getTopPlayers();
+    const mappedPlayers = players.map(p => ({
+      name: p.playerName,
+      score: p.totalScore
+    }));
+    console.log(mappedPlayers);
 
     // Establecer un color de fondo
     this.cameras.main.setBackgroundColor('#1C142A');
@@ -79,18 +82,14 @@ export default class Gameover extends Phaser.Scene {
     });
 
     // Tabla de puntuaciones
-    this.add.text(this.screenX + 730, this.screenY + 344, 'PUNTUACION JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
-    this.add.text(this.screenX + 730, this.screenY + 424, 'NAME', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
-    this.add.text(this.screenX + 1000, this.screenY + 424, 'SCORE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla = this.add.text(this.screenX + 630, this.screenY + 100, 'PUNTUACIÓN JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla__nombre = this.add.text(this.tabla.x, this.tabla.y + 70, 'NOMBRE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla__puntos = this.add.text(this.tabla__nombre.x + 270, this.tabla__nombre.y, 'PUNTOS', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
 
-    const scores = [
-      { name: 'J1', score: '100' },
-      { name: 'J2', score: '200' }
-    ];
-
-    scores.forEach((score, index) => {
-      this.add.text(this.screenX + 730, this.screenY + 474 + (index * 50), score.name, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
-      this.add.text(this.screenX + 1000, this.screenY + 474 + (index * 50), score.score, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    // Mostrar las puntuaciones obtenidas
+    mappedPlayers.forEach((score, index) => {
+      this.namePlayer = this.add.text(this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 50), score.name, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+      this.scorePlayer = this.add.text(this.namePlayer.x + 300, this.tabla__nombre.y + 70 + (index * 50), score.score, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
     });
   }
 
@@ -130,11 +129,6 @@ export default class Gameover extends Phaser.Scene {
     battleScene.resetData();
   }
 
-  /* getTopPlayers */
-  async getTopPlayers() {
-    const topPlayers = await getTopPlayers();
-    console.log(topPlayers);
-  }
 
 
 
