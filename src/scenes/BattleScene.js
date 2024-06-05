@@ -28,7 +28,7 @@ export default class BattleScene extends Phaser.Scene {
     this.audioManager = data.audioManager;
   }
 
-  create() {
+  async create() {
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
 
@@ -36,15 +36,14 @@ export default class BattleScene extends Phaser.Scene {
     this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars1').setOrigin(0, 0).setAlpha(0.3);
     this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2').setOrigin(0, 0);
 
-    /*LOAD MUSIC */
+    /*Cargar musica del archivo llamado "battleMusic" -> Cargará la canción de la escena */
     this.audioManager.play('BattleMusic');
 
-    /* Mostrar ScorePlayer en la parque de arriba izquierda */
+    /* Mostrar ScorePlayer en la parte de arriba izquierda */
     this.scoreText = this.add.text(10, 10, "Score: " + this.scorePlayer, {
       font: "24px PressStart2P",
       fill: "#fff",
     });
-
 
     this.textoCentral("¡Prepárate!");
 
@@ -348,6 +347,15 @@ export default class BattleScene extends Phaser.Scene {
       console.log('Umbral de spawn mínimo alcanzado');
     }
   }
+
+
+    // Agrega esta función para cargar el JSON
+    loadJSON(scene, key, url) {
+      return new Promise((resolve) => {
+        scene.load.json(key, url);
+        scene.load.once('complete', () => resolve(scene.cache.json.get(key)));
+      });
+    }
 
 
 }
