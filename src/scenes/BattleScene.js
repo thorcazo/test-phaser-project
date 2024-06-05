@@ -33,7 +33,6 @@ export default class BattleScene extends Phaser.Scene {
 
   init(data) {
     this.audioManager = data.audioManager;
-
   }
 
   async create() {
