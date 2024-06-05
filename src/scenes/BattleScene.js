@@ -19,6 +19,7 @@ export default class BattleScene extends Phaser.Scene {
   minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
 
 
+
   palabras = [];
   colors = [];
 
@@ -32,9 +33,16 @@ export default class BattleScene extends Phaser.Scene {
 
   init(data) {
     this.audioManager = data.audioManager;
+
   }
 
   async create() {
+
+
+
+
+
+
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
 
@@ -205,7 +213,7 @@ export default class BattleScene extends Phaser.Scene {
             this.enemiesKilled += 1;
             this.scorePlayer += 5;
             this.scoreText.setText("Score: " + this.scorePlayer); // Actualizar el texto del puntaje
-            console.log(this.enemiesKilled);
+            console.log('Enemigos destruidos: ', this.enemiesKilled);
           }
         }
       }
@@ -219,15 +227,16 @@ export default class BattleScene extends Phaser.Scene {
       player.health -= 1;
       if (player.health <= 0) {
         // Añadir los datos de la partida
-        const gameOverData = {
+        let gameOverData = {
           nombreJugador: "ABC",
-          navesDestruidas: this.enemiesKilled,
-          erroresCometidos: this.errorText,
-          puntuacionTotal: this.scorePlayer
+          navesDestruidas: this.enemiesKilled ? this.enemiesKilled : 0,
+          erroresCometidos: this.errorText ? this.errorText : 0,
+          puntuacionTotal: this.scorePlayer ? this.scorePlayer : 0
         };
 
         addScore(gameOverData.nombreJugador, gameOverData.navesDestruidas, gameOverData.erroresCometidos, gameOverData.puntuacionTotal);
         this.scene.pause('BattleScene');
+        this.audioManager.stop('BattleMusic');
         this.scene.launch('Gameover', gameOverData);
       }
     }
@@ -270,7 +279,6 @@ export default class BattleScene extends Phaser.Scene {
 
 
   createEnemy() {
-    console.log('Crando enemigo...', this.palabras, ' | ', this.colors)
     if (this.enemies.getLength() < this.enemigosEnPantalla) {
       let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
       let palabraUnica = true;
@@ -298,7 +306,7 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-  // TODO: randomizarPalabra no comprueba si la palabra ya está.
+
   randomizarPalabra(enemy, palabra = null, color = null) {
     let palabraAleatoria = palabra || this.palabras[Math.floor(Math.random() * this.palabras.length)];
     let colorAleatorio = color || this.colors[Math.floor(Math.random() * this.colors.length)];
@@ -352,14 +360,6 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-
-  /* funcion para cargar los datos de getWordsEnemies -> que viene de una coleccion de firestore */
-  async cargarDatos_MAL() {
-    const datos = await getWordsEnemies();
-    datos.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-    });
-  }
 
   async cargarDatos() {
     const datos = await getWordsEnemies();

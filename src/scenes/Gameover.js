@@ -11,9 +11,14 @@ export default class Gameover extends Phaser.Scene {
     this.navesDestruidas = data.navesDestruidas;
     this.erroresCometidos = data.erroresCometidos;
     this.puntuacionTotal = data.puntuacionTotal;
+
+    this.audioManager = data.audioManager;
   }
 
   async create() {
+
+
+
     this.scene.launch('UIScene');
     this.scene.stop('BattleScene');
 
@@ -23,7 +28,16 @@ export default class Gameover extends Phaser.Scene {
       name: p.playerName,
       score: p.totalScore
     }));
-    console.log(mappedPlayers);
+
+    /* TODO: Si el jugador actual de "nombreJugador y puntuacionTotal" supera los 3 primeros de mappedPlayers entonces inicar escena leaderboard para introducir el nombre y luego hacer un insert en firestore "dataPlayers" */
+
+    mappedPlayers.forEach((score, index) => {
+      if (this.puntuacionTotal > score.score) {
+        this.scene.start('leaderboardScene', { puntuacionTotal: this.puntuacionTotal });
+      }
+    });
+
+
 
     // Establecer un color de fondo
     this.cameras.main.setBackgroundColor('#1C142A');
@@ -51,10 +65,10 @@ export default class Gameover extends Phaser.Scene {
 
     // Variables dinámicas para los valores
     // Variables dinámicas para los valores
-    const nombreJugador = this.nombreJugador;
-    const navesDestruidas = this.navesDestruidas;
-    const erroresCometidos = this.erroresCometidos;
-    const puntuacionTotal = this.puntuacionTotal;
+    const nombreJugador = this.nombreJugador ? this.nombreJugador : 'IDK';
+    const navesDestruidas = this.navesDestruidas ? this.navesDestruidas : 0;
+    const erroresCometidos = this.erroresCometidos ? this.erroresCometidos : 0;
+    const puntuacionTotal = this.puntuacionTotal ? this.puntuacionTotal : 0;
 
     // Textos de estadísticas
     this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `JUGADOR ................ ${nombreJugador}`, {

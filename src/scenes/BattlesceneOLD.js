@@ -198,7 +198,7 @@ export default class BattleScene extends Phaser.Scene {
       enemy.body.setVelocityX(enemy.speed * Math.cos(enemy.rotation))
       enemy.body.setVelocityY(enemy.speed * Math.sin(enemy.rotation))
 
-      // TODO: AÑADIR WOBBLE A LOS ENEMIGOS, HACER QUE SE DESTRUYAN AL IMPACTAR, IMPLEMENTAR GAME OVER
+  
 
 
       // angleDiff tampoco es necesario de momento.
