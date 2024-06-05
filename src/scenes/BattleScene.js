@@ -51,7 +51,6 @@ export default class BattleScene extends Phaser.Scene {
     this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pica", "gato"];
     this.colors = ["#236FE0", "#FFE040", "#E02389", "#E02350"];
 
-
     this.scene.launch('UIScene');
     this.enemySpawnTimer = 0;
     this.isFiring = false;

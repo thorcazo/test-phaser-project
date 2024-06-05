@@ -7,7 +7,7 @@ export default class BattleScene extends Phaser.Scene {
   maxEnemies = 200;
 
   constructor() {
-    super({ key: "BattleScene" });
+    super({ key: "BattleSceneOLD" });
   }
 
   preload() {
