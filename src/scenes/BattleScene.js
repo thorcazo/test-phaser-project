@@ -270,15 +270,22 @@ export default class BattleScene extends Phaser.Scene {
 
   createEnemy() {
     if (this.enemies.getLength() < this.enemigosEnPantalla) {
-      let palabraAleatoria;
-      let palabraUnica = false;
-
-      // Encuentra una palabra única
-      while (!palabraUnica) {
-        palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
-        palabraUnica = !this.enemies.getChildren().some((enemy) => enemy.wordText.text === palabraAleatoria);
-      }
-
+      let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
+      let palabraUnica = true;
+      this.enemies.getChildren().forEach((enemy) => {
+        if (enemy.wordText.text === palabraAleatoria) {
+          palabraUnica = false;
+          while (!palabraUnica) {
+            palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
+            palabraUnica = true
+            this.enemies.getChildren().forEach((enemy) => {
+              if (enemy.wordText.text === palabraAleatoria) {
+                palabraUnica = false;
+              }
+            });
+          }
+        }
+      });
       let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
       const randomY = Phaser.Math.Between(0, this.game.config.height);
       const enemy = new Enemy(this, this.game.config.width + 20, randomY, "Enemy").setScale(0.3);
@@ -289,11 +296,25 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-
+  // TODO: randomizarPalabra no comprueba si la palabra ya está.
   randomizarPalabra(enemy, palabra = null, color = null) {
     let palabraAleatoria = palabra || this.palabras[Math.floor(Math.random() * this.palabras.length)];
     let colorAleatorio = color || this.colors[Math.floor(Math.random() * this.colors.length)];
-
+    let palabraUnica = true;
+    this.enemies.getChildren().forEach((enemy) => {
+      if (enemy.wordText.text === palabraAleatoria) {
+        palabraUnica = false;
+        while (!palabraUnica) {
+          palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
+          palabraUnica = true
+          this.enemies.getChildren().forEach((enemy) => {
+            if (enemy.wordText.text === palabraAleatoria) {
+              palabraUnica = false;
+            }
+          });
+        }
+      }
+    });
     enemy.wordText.setText(palabraAleatoria);
     enemy.wordText.setStyle({ backgroundColor: colorAleatorio });
   }
