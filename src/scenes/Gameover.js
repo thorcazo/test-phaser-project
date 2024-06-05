@@ -1,3 +1,6 @@
+import { getTopPlayers } from '../utils/firestore';
+
+
 export default class Gameover extends Phaser.Scene {
   constructor() {
     super({ key: 'Gameover' });
@@ -14,6 +17,10 @@ export default class Gameover extends Phaser.Scene {
   create() {
     this.scene.launch('UIScene');
     this.scene.stop('BattleScene');
+
+    this.getTopPlayers();
+
+
 
     // Establecer un color de fondo
     this.cameras.main.setBackgroundColor('#1C142A');
@@ -121,6 +128,12 @@ export default class Gameover extends Phaser.Scene {
   resetBattleSceneData() {
     const battleScene = this.scene.get('BattleScene');
     battleScene.resetData();
+  }
+
+  /* getTopPlayers */
+  async getTopPlayers() {
+    const topPlayers = await getTopPlayers();
+    console.log(topPlayers);
   }
 
 

@@ -1,4 +1,4 @@
-import { addDataEnemies } from "./firestoreTest"
+import { addDataEnemies } from "./firestore"
 
 
 /*NOTE:  Este objeto lo he utilizado para cargar los datos de los enemigos en la base de datos. Ahora solo es mera información. Todos los datos estan cargados ya */

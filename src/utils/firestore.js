@@ -1,4 +1,4 @@
-// src/utils/firestoreTest.js
+// src/utils/firestore.js
 
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
@@ -60,4 +60,30 @@ const addNamesEnemies = async (name, dificulty) => {
 
 
 
-export { addScore, getScores, getWordsEnemies, addDataEnemies };
+/*  Método para optener el top de jugadores con más puntuacion (totalScore)  */
+const getTopPlayers = async () => {
+  const querySnapshot = await getDocs(collection(db, "dataPlayer"));
+  const topPlayers = [];
+  querySnapshot.forEach((doc) => {
+    /* si el totalScore del jugador es mayor que el anterior almacenar */
+    if (topPlayers.length < 3) {
+      topPlayers.push({ id: doc.id, ...doc.data() });
+    } else {
+      /* si el totalScore del jugador es mayor que el menor del top, reemplazarlo */
+      const minScore = Math.min(...topPlayers.map(player => player.totalScore));
+      if (doc.data().totalScore > minScore) {
+        const index = topPlayers.findIndex(player => player.totalScore === minScore);
+        topPlayers[index] = { id: doc.id, ...doc.data() };
+      }
+    }
+  });
+  return topPlayers;
+};
+
+
+
+
+
+
+
+export { addScore, getScores, getWordsEnemies, addDataEnemies, getTopPlayers };

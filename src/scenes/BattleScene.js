@@ -3,7 +3,7 @@ import Enemy from "../gameObjects/enemy.js";
 
 import { wordsEnemies } from '../utils/dataEnemies.js';
 
-import { addScore, getScores, getWordsEnemies } from '../utils/firestoreTest.js';
+import { addScore, getScores, getWordsEnemies } from '../utils/firestore.js';
 
 export default class BattleScene extends Phaser.Scene {
 
