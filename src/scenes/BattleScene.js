@@ -1,7 +1,9 @@
 import Player from "../gameObjects/player.js";
 import Enemy from "../gameObjects/enemy.js";
 
-import { addScore, getScores } from '../utils/firestoreTest.js';
+import { wordsEnemies } from '../utils/dataEnemies.js';
+
+import { addScore, getScores, getWordsEnemies } from '../utils/firestoreTest.js';
 
 export default class BattleScene extends Phaser.Scene {
 
@@ -17,11 +19,16 @@ export default class BattleScene extends Phaser.Scene {
   reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
 
+
+  palabras = [];
+  colors = [];
+
   constructor() {
     super({ key: "BattleScene" });
   }
 
   preload() {
+
   }
 
   init(data) {
@@ -47,8 +54,9 @@ export default class BattleScene extends Phaser.Scene {
 
     this.textoCentral("¡Prepárate!");
 
-    this.palabras = ["casa", "perro", "luz", "mesa", "parque", "sol", "auto", "flor", "pan", "lago", "pista", "curva", "leche", "ping", "pica", "gato"];
-    this.colors = ["#236FE0", "#FFE040", "#E02389", "#E02350"];
+    this.cargarDatos();
+
+
 
     this.scene.launch('UIScene');
     this.enemySpawnTimer = 0;
@@ -260,13 +268,10 @@ export default class BattleScene extends Phaser.Scene {
     this.currentWordText.setText(this.currentWord);
   }
 
-
-
-
-
-
+  
 
   createEnemy() {
+    console.log('Crando enemigo...', this.palabras, ' | ', this.colors)
     if (this.enemies.getLength() < this.enemigosEnPantalla) {
       let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
       let palabraUnica = true;
@@ -349,13 +354,28 @@ export default class BattleScene extends Phaser.Scene {
   }
 
 
-    // Agrega esta función para cargar el JSON
-    loadJSON(scene, key, url) {
-      return new Promise((resolve) => {
-        scene.load.json(key, url);
-        scene.load.once('complete', () => resolve(scene.cache.json.get(key)));
-      });
+  /* funcion para cargar los datos de getWordsEnemies -> que viene de una coleccion de firestore */
+  async cargarDatos_MAL() {
+    const datos = await getWordsEnemies();
+    datos.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+    });
+  }
+
+  async cargarDatos() {
+    const datos = await getWordsEnemies();
+    if (datos) {
+      this.wordsColors = datos;
+
+      // Asignar las palabras y colores desde Firestore
+      this.palabras = this.wordsColors.map(item => item.word);
+      this.colors = this.wordsColors.map(item => item.color);
+
+    } else {
+      console.error("No se pudieron cargar los datos de Firestore.");
     }
+  }
+
 
 
 }

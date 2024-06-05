@@ -11,6 +11,7 @@ const addScore = async (playerName, numShipsDestr, errorKeyText, totalScoreText)
       shipsDestroyed: numShipsDestr,
       errorKey: errorKeyText,
       totalScore: parseInt(totalScoreText),
+      date: new Date(),
     });
     console.log("Documento escrito con ID: ", docRef.id);
   } catch (e) {
@@ -20,10 +21,43 @@ const addScore = async (playerName, numShipsDestr, errorKeyText, totalScoreText)
 
 // Función para leer documentos de la colección "score_player"
 const getScores = async () => {
-  const querySnapshot = await getDocs(collection(db, "score_player"));
+  const querySnapshot = await getDocs(collection(db, "dataPlayer"));
   querySnapshot.forEach((doc) => {
-    console.log(`${doc.id} => `, doc.data());
   });
 };
 
-export { addScore, getScores };
+const addDataEnemies = async (word, color, enemyName) => {
+  try {
+    const docRef = await addDoc(collection(db, "wordsEnemies"), {
+      word: word,
+      color: color,
+      enemyName: enemyName,
+    });
+    console.log("Documento escrito con ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error añadiendo el documento: ", e);
+  }
+};
+
+const getWordsEnemies = async () => {
+  const querySnapshot = await getDocs(collection(db, "wordsEnemies"));
+  const wordsEnemies = [];
+  querySnapshot.forEach((doc) => {
+    wordsEnemies.push({ id: doc.id, ...doc.data() });
+  });
+  return wordsEnemies;
+};
+
+const addNamesEnemies = async (name, dificulty) => {
+  try {
+
+    const docRef = await addDoc(collection(db, 'namesEnemies'));
+
+  } catch (e) {
+    console.error("Error añadiendo el documento: ", e);
+  }
+}
+
+
+
+export { addScore, getScores, getWordsEnemies, addDataEnemies };
