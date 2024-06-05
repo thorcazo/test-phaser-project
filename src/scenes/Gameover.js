@@ -6,11 +6,7 @@ export default class Gameover extends Phaser.Scene {
   }
 
   init(data) {
-    // TODO: Convertir esto en un objeto para que pueda llevar los datos a leaderboardScene
-    this.nombreJugador = data.nombreJugador;
-    this.navesDestruidas = data.navesDestruidas;
-    this.erroresCometidos = data.erroresCometidos;
-    this.puntuacionTotal = data.puntuacionTotal;
+    this.leaderData = data.leaderData;
 
     this.audioManager = data.audioManager;
   }
@@ -25,16 +21,12 @@ export default class Gameover extends Phaser.Scene {
       name: p.playerName,
       score: p.totalScore
     }));
-
-    /* TODO: Si el jugador actual de "nombreJugador y puntuacionTotal" supera los 3 primeros de mappedPlayers entonces inicar escena leaderboard para introducir el nombre y luego hacer un insert en firestore "dataPlayers" */
-
+//NOTE: En esta parte sale un error ya que no existe la variable playerData
     mappedPlayers.forEach((score, index) => {
-      if (this.puntuacionTotal > score.score) {
-        this.scene.launch('leaderboardScene', { puntuacionTotal: this.puntuacionTotal });
+      if (this.playerData.puntuacionTotal > score.score) {
+        this.scene.launch('leaderboardScene', { playerData: this.playerData });
       }
     });
-
-
 
     // Establecer un color de fondo
     this.cameras.main.setBackgroundColor('#1C142A');
@@ -61,32 +53,28 @@ export default class Gameover extends Phaser.Scene {
     this.add.image(this.marcoFondoGameOver.x + 200, this.marcoFondoGameOver.y + 51, 'Player').setOrigin(0.5, 0.5).setScale(0.5);
 
     // Variables dinámicas para los valores
-    // Variables dinámicas para los valores
-    const nombreJugador = this.nombreJugador ? this.nombreJugador : 'IDK';
-    const navesDestruidas = this.navesDestruidas ? this.navesDestruidas : 0;
-    const erroresCometidos = this.erroresCometidos ? this.erroresCometidos : 0;
-    const puntuacionTotal = this.puntuacionTotal ? this.puntuacionTotal : 0;
+
 
     // Textos de estadísticas
-    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `JUGADOR ................ ${nombreJugador}`, {
+    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `JUGADOR ................ ${this.playerData.nombreJugador}`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
     });
 
-    this.navesDestruidasText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 150, `NAVES DESTRUIDAS ....... ${navesDestruidas}`, {
+    this.navesDestruidasText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 150, `NAVES DESTRUIDAS ....... ${this.playerData.navesDestruidas}`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
     });
 
-    this.erroresCometidosText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 180, `ERRORES COMETIDOS ...... ${erroresCometidos}`, {
+    this.erroresCometidosText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 180, `ERRORES COMETIDOS ...... ${this.playerData.erroresCometidos}`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
     });
 
-    this.totalScoreText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 240, `PUNTUACION TOTAL ....... ${puntuacionTotal}`, {
+    this.totalScoreText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 240, `PUNTUACION TOTAL ....... ${this.playerData.puntuacionTotal}`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'

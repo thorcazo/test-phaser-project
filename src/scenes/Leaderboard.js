@@ -1,6 +1,10 @@
 import AudioManager from "../Sounds/AudioManager";
 import Phaser from "phaser";
 
+
+import { addScore } from "../utils/firestore";
+
+
 export default class leaderboardScene extends Phaser.Scene {
   constructor() {
     super("leaderboardScene");
@@ -8,9 +12,32 @@ export default class leaderboardScene extends Phaser.Scene {
     this.currentInput = ''; // Para almacenar las letras ingresadas
   }
 
+  /* init() -> traer todos los datos del jugador actual que esta jugando
+  
+
+  
+  */
+  init(data) {
+    this.playerData = {
+      nombreJugador: data.gameOverData.nombreJugador,
+      navesDestruidas: data.gameOverData.navesDestruidas,
+      erroresCometidos: data.gameOverData.erroresCometidos,
+      puntuacionTotal: data.gameOverData.puntuacionTotal
+    };
+
+  }
+
+
+
+
+
   create() {
+
+
+    console.log(this.playerData)
+
     this.audioManager.muteAll();
-    this.scene.pause('Gameover');
+
 
     this.border = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, 620, 500, 0xFFFFFF)
       .setOrigin(0.5, 0.5);
@@ -58,7 +85,17 @@ export default class leaderboardScene extends Phaser.Scene {
     this.saveButton.on('pointerdown', () => {
       if (this.currentInput.length > 0) {
         console.log('Nombre guardado:', this.currentInput);
-        // Aquí puedes agregar la lógica para guardar el nombre
+
+        this.playerData.nombreJugador = this.currentInput;
+
+        console.log(this.playerData);
+
+        //TODO: Guardar los datos en la base de datos,  luego lanzar gameover
+        addScore(this.playerData.nombreJugador, this.playerData.navesDestruidas, this.playerData.erroresCometidos, this.playerData.puntuacionTotal);
+
+        this.scene.start('Gameover', { leaderData: this.playerData });
+
+
       } else {
         console.log('El campo de nombre está vacío.');
       }

@@ -233,10 +233,12 @@ export default class BattleScene extends Phaser.Scene {
           puntuacionTotal: this.scorePlayer ? this.scorePlayer : 0
         };
 
-        addScore(gameOverData.nombreJugador, gameOverData.navesDestruidas, gameOverData.erroresCometidos, gameOverData.puntuacionTotal);
+
         this.scene.pause('BattleScene');
         this.audioManager.stop('BattleMusic');
-        this.scene.launch('Gameover', gameOverData);
+
+        //FIXME: Antes de lanzar la escena de leaderboard, se debe comprobar si el usuario existe y si ha superado la puntuacion en el top 10. de los jugadores. Se podría traer funciones de firestore para comprobar si el usuario existe y si ha superado la puntuacion en el top 10. de los jugadores.
+        this.scene.launch('leaderboardScene', { gameOverData: gameOverData });
       }
     }
   }
