@@ -9,8 +9,8 @@ export default class leaderboardScene extends Phaser.Scene {
   }
 
   create() {
-    console.log('leaderboardScene');
     this.audioManager.muteAll();
+    this.scene.pause('Gameover');
 
     this.border = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, 620, 500, 0xFFFFFF)
       .setOrigin(0.5, 0.5);
@@ -26,6 +26,7 @@ export default class leaderboardScene extends Phaser.Scene {
 
     this.closeButton.on('pointerdown', () => {
       this.scene.stop();
+      this.scene.resume('Gameover');
     });
 
     const table = this.add.text(100, 100, '', {

@@ -14,7 +14,7 @@ export default class BattleScene extends Phaser.Scene {
 
   enemigosEnPantalla = 10;
 
-  enemySpawnThreshold = 5500; // Umbral inicial
+  enemySpawnThreshold = 1500; // Umbral inicial
   reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
 

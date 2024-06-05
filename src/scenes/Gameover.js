@@ -33,7 +33,7 @@ export default class Gameover extends Phaser.Scene {
 
     mappedPlayers.forEach((score, index) => {
       if (this.puntuacionTotal > score.score) {
-        this.scene.start('leaderboardScene', { puntuacionTotal: this.puntuacionTotal });
+        this.scene.launch('leaderboardScene', { puntuacionTotal: this.puntuacionTotal });
       }
     });
 
