@@ -6,7 +6,7 @@ export default class Gameover extends Phaser.Scene {
   }
 
   init(data) {
-    // Recibir los datos pasados desde BattleScene
+    // TODO: Convertir esto en un objeto para que pueda llevar los datos a leaderboardScene
     this.nombreJugador = data.nombreJugador;
     this.navesDestruidas = data.navesDestruidas;
     this.erroresCometidos = data.erroresCometidos;
@@ -16,9 +16,6 @@ export default class Gameover extends Phaser.Scene {
   }
 
   async create() {
-
-
-
     this.scene.launch('UIScene');
     this.scene.stop('BattleScene');
 
