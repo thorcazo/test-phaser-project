@@ -7,10 +7,9 @@ import { addScore, getScores, getWordsEnemies } from '../utils/firestoreTest.js'
 
 export default class BattleScene extends Phaser.Scene {
 
-  enemiesKilled = 0;
   maxEnemies = 200;
+  enemiesKilled = 0;
   scorePlayer = 0;
-
   errorText = 0;
 
   enemigosEnPantalla = 10;
@@ -268,7 +267,7 @@ export default class BattleScene extends Phaser.Scene {
     this.currentWordText.setText(this.currentWord);
   }
 
-  
+
 
   createEnemy() {
     console.log('Crando enemigo...', this.palabras, ' | ', this.colors)
@@ -343,7 +342,7 @@ export default class BattleScene extends Phaser.Scene {
   /* mecanica para reducir el tiempo de spawnEnemy */
   reduceSpawnThreshold() {
     if (this.enemySpawnThreshold > this.minSpawnThreshold) {
-      this.enemySpawnThreshold -= 200; // Reduce el umbral en 200 ms cada 10 segundos
+      this.enemySpawnThreshold -= 100; // Reduce el umbral en 200 ms cada 10 segundos
       if (this.enemySpawnThreshold < this.minSpawnThreshold) {
         this.enemySpawnThreshold = this.minSpawnThreshold;
       }
@@ -374,6 +373,13 @@ export default class BattleScene extends Phaser.Scene {
     } else {
       console.error("No se pudieron cargar los datos de Firestore.");
     }
+  }
+
+  resetData() {
+    this.enemiesKilled = 0;
+    this.scorePlayer = 0;
+    this.errorText = 0;
+    this.enemySpawnThreshold = 5500;
   }
 
 

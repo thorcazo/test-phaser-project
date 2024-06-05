@@ -94,10 +94,35 @@ export default class Gameover extends Phaser.Scene {
     button.on('pointerdown', () => {
       this.scene.stop('Gameover');
       this.scene.start(sceneKey);
+
+      /* resetear datos */
+      this.resetData();
+      this.resetBattleSceneData();
     });
     buttonText.on('pointerdown', () => {
       this.scene.stop('Gameover');
       this.scene.start(sceneKey);
+
+      /* resetear datos */
+      this.resetData();
+      this.resetBattleSceneData();
     });
   }
+
+
+
+  resetData() {
+    this.nombreJugador = '';
+    this.navesDestruidas = 0;
+    this.erroresCometidos = 0;
+    this.puntuacionTotal = 0;
+  }
+
+  resetBattleSceneData() {
+    const battleScene = this.scene.get('BattleScene');
+    battleScene.resetData();
+  }
+
+
+
 }
