@@ -35,6 +35,7 @@ export default class UIScene extends Phaser.Scene {
       // Agregar listener para la tecla ESPACIO
       this.input.keyboard.on('keydown-SPACE', () => {
         this.togglePause();
+        
       });
     }
   }
@@ -44,8 +45,10 @@ export default class UIScene extends Phaser.Scene {
     if (battleScene.scene.isPaused()) {
       battleScene.scene.resume();
       this.pauseButton.setText('PAUSE');
+      this.audioManager.resumeAll();
     } else {
       battleScene.scene.pause();
+      this.audioManager.pauseAll();
       this.pauseButton.setText('RESUME');
     }
   }

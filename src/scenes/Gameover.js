@@ -6,14 +6,17 @@ export default class Gameover extends Phaser.Scene {
   }
 
   init(data) {
-    this.playerData = {
-      nombreJugador: data.leaderData.nombreJugador,
-      navesDestruidas: data.leaderData.navesDestruidas,
-      erroresCometidos: data.leaderData.erroresCometidos,
-      puntuacionTotal: data.leaderData.puntuacionTotal
-    };
+    try {
 
-    console.log(this.playerData);
+      this.playerData = {
+        nombreJugador: data && data.playerData && data.playerData.nombreJugador ? data.playerData.nombreJugador : '---',
+        navesDestruidas: data && data.playerData ? data.playerData.navesDestruidas : 0,
+        erroresCometidos: data && data.playerData ? data.playerData.erroresCometidos : 0,
+        puntuacionTotal: data && data.playerData ? data.playerData.puntuacionTotal : 0
+      };
+    } catch (e) {
+      console.log('Error', e);
+    }
 
     this.audioManager = data.audioManager;
   }
@@ -49,7 +52,7 @@ export default class Gameover extends Phaser.Scene {
     this.createButton(this.screenX + 280, this.screenY + 244, 'mainMenuButton', 'MENU PRINCIPAL', 'MainMenu');
 
     // Fondo del marco
-    this.marcoFondoGameOver = this.add.image(this.screenX + 80, this.screenY + 344, 'marcoFondoGameOver').setOrigin(0, 0);
+    this.marcoFondoGameOver = this.add.image(this.screenX + 80, this.screenY + 320, 'marcoFondoGameOver').setOrigin(0, 0);
 
     // Nave del jugador
     this.add.image(this.marcoFondoGameOver.x + 200, this.marcoFondoGameOver.y + 51, 'Player').setOrigin(0.5, 0.5).setScale(0.5);
@@ -83,14 +86,15 @@ export default class Gameover extends Phaser.Scene {
     });
 
     // Tabla de puntuaciones
-    this.tabla = this.add.text(this.screenX + 630, this.screenY + 100, 'PUNTUACIÓN JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
-    this.tabla__nombre = this.add.text(this.tabla.x, this.tabla.y + 70, 'NOMBRE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla = this.add.text(this.screenX + 630, this.screenY + 75, ' PUNTUACIÓN JUGADORES ', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla = this.add.text(this.screenX + 630, this.screenY + 92, '----------- ----------', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla__nombre = this.add.text(this.tabla.x + 20, this.tabla.y + 70, 'NOMBRE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
     this.tabla__puntos = this.add.text(this.tabla__nombre.x + 270, this.tabla__nombre.y, 'PUNTOS', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
 
     // Mostrar las puntuaciones obtenidas
     mappedPlayers.forEach((score, index) => {
       this.namePlayer = this.add.text(
-        this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 50),
+        this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 40),
         score.name, {
         fontSize: '1.5rem',
         fontFamily: 'PressStart2P',
@@ -98,8 +102,8 @@ export default class Gameover extends Phaser.Scene {
       });
 
       this.scorePlayer = this.add.text(
-        this.namePlayer.x + 300,
-        this.tabla__nombre.y + 70 + (index * 50),
+        this.namePlayer.x + 270,
+        this.tabla__nombre.y + 70 + (index * 40),
         score.score, {
         fontSize: '1.5rem',
         fontFamily: 'PressStart2P',
@@ -114,6 +118,8 @@ export default class Gameover extends Phaser.Scene {
 
     button.on('pointerdown', () => {
       this.scene.stop('Gameover');
+      /* desmutear todos los sonidos */
+      
       this.scene.start(sceneKey);
 
       /* resetear datos */
@@ -122,6 +128,7 @@ export default class Gameover extends Phaser.Scene {
     });
     buttonText.on('pointerdown', () => {
       this.scene.stop('Gameover');
+      
       this.scene.start(sceneKey);
 
       /* resetear datos */

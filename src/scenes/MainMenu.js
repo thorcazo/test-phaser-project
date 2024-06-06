@@ -28,7 +28,12 @@ class MainMenu extends Phaser.Scene {
 
     // Reproducir la música de intro
     this.audioManager.play('intro');
-    if (this.audioManager.isPlaying('BattleMusic')) this.audioManager.stop('BattleMusic');
+    if (this.audioManager.isPlaying('BattleMusic')) {
+      this.audioManager.unmute('BattleMusic');
+      this.audioManager.stop('BattleMusic');
+
+    }
+
 
 
 

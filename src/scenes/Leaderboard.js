@@ -10,16 +10,16 @@ export default class leaderboardScene extends Phaser.Scene {
   }
 
   init(data) {
-    this.playerData = {
-      // nombreJugador: data.playerData.nombreJugador ,
-      // navesDestruidas: data.playerData.navesDestruidas,
-      // erroresCometidos: data.playerData.erroresCometidos,
-      // puntuacionTotal: data.playerData.puntuacionTotal
-      nombreJugador: 'ABC',
-      navesDestruidas: 0,
-      erroresCometidos: 0,
-      puntuacionTotal: 0
-    };
+    try {
+      this.playerData = {
+        nombreJugador: data && data.playerData && data.playerData.nombreJugador ? data.playerData.nombreJugador : '---',
+        navesDestruidas: data && data.playerData ? data.playerData.navesDestruidas : 0,
+        erroresCometidos: data && data.playerData ? data.playerData.erroresCometidos : 0,
+        puntuacionTotal: data && data.playerData ? data.playerData.puntuacionTotal : 0
+      };
+    } catch (e) {
+      console.log('Error', e);
+    }
     console.log('leaderboardScene', this.playerData);
   }
 
@@ -33,11 +33,13 @@ export default class leaderboardScene extends Phaser.Scene {
     let color_white = 'ffffff';
     let color_yellow = 'FFE040';
     let color_bg = '1C142A';
+    let color_red = 'E02350'
 
     let width_input = 382;
     let height_input = 39;
 
-    this.audioManager.muteAll();
+    this.audioManager.pauseAll();
+
     this.border = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, width_board, height_board, '0x' + color_white);
     this.background = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, this.border.width - 10, this.border.height - 10, '0x' + color_bg);
 
@@ -57,7 +59,7 @@ export default class leaderboardScene extends Phaser.Scene {
     });
 
     //NOTE: Agregar texto -> Enemigos destruidos
-    this.textEnemiesDestroyed = this.add.text(this.primeros10.x - 60, this.primeros10.y + 70, 'ENEMIGOS DESTRUIDOS:', {
+    this.textEnemiesDestroyed = this.add.text(this.primeros10.x - 60, this.primeros10.y + 70, `ENEMIGOS DESTRUIDOS: ${this.playerData.navesDestruidas}`, {
       fontSize: '16px',
       fontFamily: 'PressStart2P',
       color: '#ffffff',
@@ -65,7 +67,7 @@ export default class leaderboardScene extends Phaser.Scene {
     });
 
     //NOTE: Agregar TEXTO -> Errores cometidos
-    this.textWrongKeys = this.add.text(this.textEnemiesDestroyed.x, this.textEnemiesDestroyed.y + 20, 'ERRORES COMETIDOS: ', {
+    this.textWrongKeys = this.add.text(this.textEnemiesDestroyed.x, this.textEnemiesDestroyed.y + 20, `ERRORES COMETIDOS: ${this.playerData.erroresCometidos}`, {
       fontSize: '16px',
       fontFamily: 'PressStart2P',
       color: '#ffffff',
@@ -73,7 +75,7 @@ export default class leaderboardScene extends Phaser.Scene {
     });
 
     //NOTE: Agregar TEXTO -> Puntuacion
-    this.textPuntuacion = this.add.text(this.textWrongKeys.x, this.textWrongKeys.y + 20, 'PUNTUACION: ', {
+    this.textPuntuacion = this.add.text(this.textWrongKeys.x, this.textWrongKeys.y + 20, `PUNTUACION TOTAL: ${this.playerData.puntuacionTotal}`, {
       fontSize: '16px',
       fontFamily: 'PressStart2P',
       color: '#ffffff',
@@ -101,20 +103,20 @@ export default class leaderboardScene extends Phaser.Scene {
     }).setOrigin(0.5, 0.5);
 
     // Crear el botón de guardar
-    this.saveButton = this.add.text(this.inputText.x, this.inputText.y + 50, 'GUARDAR', {
+    this.saveButton = this.add.text(this.inputText.x - 95, this.inputText.y + 80, 'GUARDAR', {
       fontSize: title_size,
       fontFamily: 'PressStart2P',
-      color: '#' + color_white,
-      backgroundColor: '#000000',
+      color: '#' + color_bg,
+      backgroundColor: '#' + color_white,
       padding: { x: 20, y: 10 }
     }).setOrigin(0.5).setInteractive();
 
     // Crear el botón de cerrar
-    this.closeButton = this.add.text(this.saveButton.x - 100, this.saveButton.y, 'CERRAR', {
+    this.closeButton = this.add.text(this.saveButton.x + 200, this.saveButton.y, 'CERRAR', {
       fontSize: title_size,
       fontFamily: 'PressStart2P',
       color: '#' + color_white,
-      backgroundColor: '#000000',
+      backgroundColor: '#' + color_red,
       padding: { x: 20, y: 10 }
     }).setOrigin(0.5).setInteractive();
 
@@ -125,7 +127,7 @@ export default class leaderboardScene extends Phaser.Scene {
         // Guardar los datos en la base de datos, luego lanzar gameover
         addScore(this.playerData.nombreJugador, this.playerData.navesDestruidas, this.playerData.erroresCometidos, this.playerData.puntuacionTotal);
         this.scene.stop();
-        this.scene.start('Gameover', { leaderData: this.playerData });
+        this.scene.start('Gameover', { playerData: this.playerData });
       } else {
         console.log('El campo de nombre está vacío.');
       }
@@ -133,7 +135,7 @@ export default class leaderboardScene extends Phaser.Scene {
 
     this.closeButton.on('pointerdown', () => {
       this.scene.stop();
-      this.scene.resume('Gameover');
+      this.scene.start('Gameover', { playerData: this.playerData });
     });
 
     // Escuchar eventos de teclado

@@ -33,14 +33,17 @@ export default class BattleScene extends Phaser.Scene {
 
   init(data) {
     this.audioManager = data.audioManager;
+
+    this.enemySpawnThreshold = 1500;
+
+    /* si BattleMusic esta sinlenciado entonces desinlenciar */
+    if (this.audioManager.isPlaying('BattleMusic')) {
+      this.audioManager.unmute('BattleMusic');
+
+    }
   }
 
   async create() {
-
-
-
-
-
 
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
@@ -213,6 +216,31 @@ export default class BattleScene extends Phaser.Scene {
             this.scorePlayer += 5;
             this.scoreText.setText("Score: " + this.scorePlayer); // Actualizar el texto del puntaje
             console.log('Enemigos destruidos: ', this.enemiesKilled);
+            if (this.enemiesKilled >= this.maxEnemies) {
+              // Añadir los datos de la partida
+              let battleSceneData = {
+                nombreJugador: "ABC",
+                navesDestruidas: this.enemiesKilled ? this.enemiesKilled : 0,
+                erroresCometidos: this.errorText ? this.errorText : 0,
+                puntuacionTotal: this.scorePlayer ? this.scorePlayer : 0
+              };
+
+              console.log('Datos de la partida: ', battleSceneData);
+
+              this.scene.pause('BattleScene');
+              this.audioManager.stop('BattleMusic');
+
+              const topPlayers = getTopPlayers();
+
+              topPlayers.then((players) => {
+                //NOTE: El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
+                if (players[0].totalScore && battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
+                  this.scene.launch('leaderboardScene', { playerData: battleSceneData });
+                } else {
+                  this.scene.launch('Gameover', { playerData: battleSceneData });
+                }
+              });
+            }
           }
         }
       }
@@ -239,13 +267,19 @@ export default class BattleScene extends Phaser.Scene {
         const topPlayers = getTopPlayers();
 
         topPlayers.then((players) => {
-          //NOTE: El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
-          if (battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
-            console.log('Nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
+          // Si no hay jugadores en la base de datos, lanza la escena 'Gameover'
+          if (players.length === 0) {
+            console.log('No hay jugadores en la base de datos');
             this.scene.launch('leaderboardScene', { playerData: battleSceneData });
           } else {
-            console.log('No hay nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
-            this.scene.launch('Gameover', { playerData: battleSceneData });
+            //NOTE: El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
+            if (battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
+              console.log('Nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
+              this.scene.launch('leaderboardScene', { playerData: battleSceneData });
+            } else {
+              console.log('No hay nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
+              this.scene.launch('Gameover', { playerData: battleSceneData });
+            }
           }
         });
       }
@@ -285,8 +319,6 @@ export default class BattleScene extends Phaser.Scene {
     // Actualizar el texto de currentWord
     this.currentWordText.setText(this.currentWord);
   }
-
-
 
   createEnemy() {
     if (this.enemies.getLength() < this.enemigosEnPantalla) {
@@ -360,7 +392,7 @@ export default class BattleScene extends Phaser.Scene {
   /* mecanica para reducir el tiempo de spawnEnemy */
   reduceSpawnThreshold() {
     if (this.enemySpawnThreshold > this.minSpawnThreshold) {
-      this.enemySpawnThreshold -= 100; // Reduce el umbral en 200 ms cada 10 segundos
+      this.enemySpawnThreshold -= 100; // Reduce el umbral en 100 ms cada 10 segundos
       if (this.enemySpawnThreshold < this.minSpawnThreshold) {
         this.enemySpawnThreshold = this.minSpawnThreshold;
       }
