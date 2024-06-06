@@ -65,7 +65,7 @@ const addNamesEnemies = async (name, dificulty) => {
 const getTopPlayers = async () => {
   const players = await getScores();
   const topPlayers = players.sort((a, b) => b.totalScore - a.totalScore);
-  return topPlayers;
+  return topPlayers.splice(0, 10);
 };
 
 getTopPlayers();

@@ -19,11 +19,14 @@ export default class leaderboardScene extends Phaser.Scene {
   */
   init(data) {
     this.playerData = {
-      nombreJugador: data.gameOverData.nombreJugador,
-      navesDestruidas: data.gameOverData.navesDestruidas,
-      erroresCometidos: data.gameOverData.erroresCometidos,
-      puntuacionTotal: data.gameOverData.puntuacionTotal
+      nombreJugador: data.battleSceneData.nombreJugador,
+      navesDestruidas: data.battleSceneData.navesDestruidas,
+      erroresCometidos: data.battleSceneData.erroresCometidos,
+      puntuacionTotal: data.battleSceneData.puntuacionTotal
     };
+
+
+    console.log('leaderboardScene', this.playerData);
 
   }
 

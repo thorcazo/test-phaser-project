@@ -3,7 +3,7 @@ import Enemy from "../gameObjects/enemy.js";
 
 import { wordsEnemies } from '../utils/dataEnemies.js';
 
-import { addScore, getScores, getWordsEnemies } from '../utils/firestore.js';
+import { addScore, getWordsEnemies, getTopPlayers } from '../utils/firestore.js';
 
 export default class BattleScene extends Phaser.Scene {
 
@@ -218,7 +218,7 @@ export default class BattleScene extends Phaser.Scene {
       }
     }
   }
-
+  // TERMINAR PARTIDA e ir a GAMEOVER o a LEADERBOARD
   takeDamage(player, enemy) {
     if (enemy.texture.key === "Enemy") {
       enemy.destroy();
@@ -226,19 +226,37 @@ export default class BattleScene extends Phaser.Scene {
       player.health -= 1;
       if (player.health <= 0) {
         // Añadir los datos de la partida
-        let gameOverData = {
+        let battleSceneData = {
           nombreJugador: "ABC",
           navesDestruidas: this.enemiesKilled ? this.enemiesKilled : 0,
           erroresCometidos: this.errorText ? this.errorText : 0,
           puntuacionTotal: this.scorePlayer ? this.scorePlayer : 0
         };
 
-
         this.scene.pause('BattleScene');
         this.audioManager.stop('BattleMusic');
 
-        //FIXME: Antes de lanzar la escena de leaderboard, se debe comprobar si el usuario existe y si ha superado la puntuacion en el top 10. de los jugadores. Se podría traer funciones de firestore para comprobar si el usuario existe y si ha superado la puntuacion en el top 10. de los jugadores.
-        this.scene.launch('leaderboardScene', { gameOverData: gameOverData });
+        const topPlayers = getTopPlayers();
+
+
+        topPlayers.then((players) => {
+          //NOTE: Lo correcto sería que entrara en leaderboard si es mayor al utlimo de la lista de topPlayers
+          players.forEach((player, index) => {
+            if (battleSceneData.puntuacionTotal > player.totalScore) {
+              console.log('Nuevo record: ', battleSceneData.puntuacionTotal, ' | ', player.totalScore);
+              this.scene.launch('leaderboardScene', { playerData: battleSceneData });
+
+            } else {
+              console.log('No hay nuevo record: ', battleSceneData.puntuacionTotal, ' | ', player.totalScore);
+              this.scene.launch('Gameover', { playerData: battleSceneData });
+            }
+          });
+
+
+        });
+
+
+
       }
     }
   }

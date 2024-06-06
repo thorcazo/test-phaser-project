@@ -6,7 +6,14 @@ export default class Gameover extends Phaser.Scene {
   }
 
   init(data) {
-    this.leaderData = data.leaderData;
+    this.playerData = {
+      nombreJugador: data.playerData.nombreJugador,
+      navesDestruidas: data.playerData.navesDestruidas,
+      erroresCometidos: data.playerData.erroresCometidos,
+      puntuacionTotal: data.playerData.puntuacionTotal
+    };
+
+    console.log(this.playerData);
 
     this.audioManager = data.audioManager;
   }
@@ -21,7 +28,7 @@ export default class Gameover extends Phaser.Scene {
       name: p.playerName,
       score: p.totalScore
     }));
-//NOTE: En esta parte sale un error ya que no existe la variable playerData
+    //NOTE: En esta parte sale un error ya que no existe la variable playerData
     mappedPlayers.forEach((score, index) => {
       if (this.playerData.puntuacionTotal > score.score) {
         this.scene.launch('leaderboardScene', { playerData: this.playerData });
@@ -56,7 +63,7 @@ export default class Gameover extends Phaser.Scene {
 
 
     // Textos de estadísticas
-    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `JUGADOR ................ ${this.playerData.nombreJugador}`, {
+    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `TU PUNTUACIÓN`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
