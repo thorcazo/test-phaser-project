@@ -1,9 +1,6 @@
 import AudioManager from "../Sounds/AudioManager";
 import Phaser from "phaser";
-
-
 import { addScore } from "../utils/firestore";
-
 
 export default class leaderboardScene extends Phaser.Scene {
   constructor() {
@@ -12,75 +9,111 @@ export default class leaderboardScene extends Phaser.Scene {
     this.currentInput = ''; // Para almacenar las letras ingresadas
   }
 
-  /* init() -> traer todos los datos del jugador actual que esta jugando
-  
-
-  
-  */
   init(data) {
     this.playerData = {
-      nombreJugador: data.battleSceneData.nombreJugador,
-      navesDestruidas: data.battleSceneData.navesDestruidas,
-      erroresCometidos: data.battleSceneData.erroresCometidos,
-      puntuacionTotal: data.battleSceneData.puntuacionTotal
+      // nombreJugador: data.playerData.nombreJugador ,
+      // navesDestruidas: data.playerData.navesDestruidas,
+      // erroresCometidos: data.playerData.erroresCometidos,
+      // puntuacionTotal: data.playerData.puntuacionTotal
+      nombreJugador: 'ABC',
+      navesDestruidas: 0,
+      erroresCometidos: 0,
+      puntuacionTotal: 0
     };
-
-
     console.log('leaderboardScene', this.playerData);
-
   }
 
-
-
-
-
   create() {
+    /* Variables para los texto, font-size, space, colors */
+    let title_size = '22px';
+    let text_size = '16px';
+    let width_board = 594;
+    let height_board = 583;
 
+    let color_white = 'ffffff';
+    let color_yellow = 'FFE040';
+    let color_bg = '1C142A';
 
-    console.log(this.playerData)
+    let width_input = 382;
+    let height_input = 39;
 
     this.audioManager.muteAll();
+    this.border = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, width_board, height_board, '0x' + color_white);
+    this.background = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, this.border.width - 10, this.border.height - 10, '0x' + color_bg);
 
-
-    this.border = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, 620, 500, 0xFFFFFF)
-      .setOrigin(0.5, 0.5);
-
-    this.background = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, 610, 490, 0x1C142A)
-      .setOrigin(0.5, 0.5);
-
-    this.closeButton = this.add.image(
-      this.background.x + this.background.width / 2 - 23,
-      this.background.y - this.background.height / 2 + 23,
-      'buttonClose'
-    ).setInteractive();
-
-    this.closeButton.on('pointerdown', () => {
-      this.scene.stop();
-      this.scene.resume('Gameover');
+    // Agregar el texto "Has quedado entre los 10 primeros"
+    this.titleModal = this.add.text(this.background.x - 230, this.background.y - 240, 'HAS QUEDADO ENTRE LOS', {
+      fontSize: title_size,
+      fontFamily: 'PressStart2P',
+      color: '#' + color_white,
+      align: 'center'
+    });
+    // Agregar el texto "los 10 primeros"
+    this.primeros10 = this.add.text(this.titleModal.x + 100, this.titleModal.y + 30, '10 PRIMEROS', {
+      fontSize: title_size,
+      fontFamily: 'PressStart2P',
+      color: '#' + color_yellow,
+      align: 'center'
     });
 
-    const table = this.add.text(100, 100, '', {
-      fontSize: '32px',
+    //NOTE: Agregar texto -> Enemigos destruidos
+    this.textEnemiesDestroyed = this.add.text(this.primeros10.x - 60, this.primeros10.y + 70, 'ENEMIGOS DESTRUIDOS:', {
+      fontSize: '16px',
       fontFamily: 'PressStart2P',
       color: '#ffffff',
-      align: 'left',
-      wordWrap: { width: 400 }
+      align: 'center'
     });
+
+    //NOTE: Agregar TEXTO -> Errores cometidos
+    this.textWrongKeys = this.add.text(this.textEnemiesDestroyed.x, this.textEnemiesDestroyed.y + 20, 'ERRORES COMETIDOS: ', {
+      fontSize: '16px',
+      fontFamily: 'PressStart2P',
+      color: '#ffffff',
+      align: 'center'
+    });
+
+    //NOTE: Agregar TEXTO -> Puntuacion
+    this.textPuntuacion = this.add.text(this.textWrongKeys.x, this.textWrongKeys.y + 20, 'PUNTUACION: ', {
+      fontSize: '16px',
+      fontFamily: 'PressStart2P',
+      color: '#ffffff',
+      align: 'center'
+    });
+
+    // Agregar el texto "Escribe tu nombre"
+    this.textNombre = this.add.text(this.textPuntuacion.x, this.textPuntuacion.y + 90, 'ESCRIBE TU NOMBRE', {
+      fontSize: title_size,
+      fontFamily: 'PressStart2P',
+      color: '#' + color_white,
+      align: 'center'
+    });
+
+    /* Crear un rectángulo blanco en la misma posición que this.inputText */
+    this.inputbackground = this.add.rectangle(this.background.x, this.background.y + 60, width_input, height_input, '0x' + color_white).setOrigin(0.5, 0.5);
 
     // Crear texto para mostrar el input del usuario
-    this.inputText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2 - 50, '', {
-      fontSize: '32px',
+    this.inputText = this.add.text(this.inputbackground.x, this.inputbackground.y, '', {
+      fontSize: title_size,
       fontFamily: 'PressStart2P',
-      color: '#ffffff',
-      backgroundColor: '#000000',
-      padding: { x: 20, y: 10 }
-    }).setOrigin(0.5);
+      color: '#000000',
+      backgroundColor: '#ffffff',
+      padding: { x: 10, y: 5 }
+    }).setOrigin(0.5, 0.5);
 
     // Crear el botón de guardar
-    this.saveButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2 + 50, 'GUARDAR', {
-      fontSize: '32px',
+    this.saveButton = this.add.text(this.inputText.x, this.inputText.y + 50, 'GUARDAR', {
+      fontSize: title_size,
       fontFamily: 'PressStart2P',
-      color: '#ffffff',
+      color: '#' + color_white,
+      backgroundColor: '#000000',
+      padding: { x: 20, y: 10 }
+    }).setOrigin(0.5).setInteractive();
+
+    // Crear el botón de cerrar
+    this.closeButton = this.add.text(this.saveButton.x - 100, this.saveButton.y, 'CERRAR', {
+      fontSize: title_size,
+      fontFamily: 'PressStart2P',
+      color: '#' + color_white,
       backgroundColor: '#000000',
       padding: { x: 20, y: 10 }
     }).setOrigin(0.5).setInteractive();
@@ -88,20 +121,19 @@ export default class leaderboardScene extends Phaser.Scene {
     this.saveButton.on('pointerdown', () => {
       if (this.currentInput.length > 0) {
         console.log('Nombre guardado:', this.currentInput);
-
         this.playerData.nombreJugador = this.currentInput;
-
-        console.log(this.playerData);
-
-        //TODO: Guardar los datos en la base de datos,  luego lanzar gameover
+        // Guardar los datos en la base de datos, luego lanzar gameover
         addScore(this.playerData.nombreJugador, this.playerData.navesDestruidas, this.playerData.erroresCometidos, this.playerData.puntuacionTotal);
-
+        this.scene.stop();
         this.scene.start('Gameover', { leaderData: this.playerData });
-
-
       } else {
         console.log('El campo de nombre está vacío.');
       }
+    });
+
+    this.closeButton.on('pointerdown', () => {
+      this.scene.stop();
+      this.scene.resume('Gameover');
     });
 
     // Escuchar eventos de teclado

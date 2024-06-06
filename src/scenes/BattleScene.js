@@ -218,7 +218,7 @@ export default class BattleScene extends Phaser.Scene {
       }
     }
   }
-  // TERMINAR PARTIDA e ir a GAMEOVER o a LEADERBOARD
+  //TAKEDAMAGE -> TERMINAR PARTIDA e ir a GAMEOVER o a LEADERBOARD
   takeDamage(player, enemy) {
     if (enemy.texture.key === "Enemy") {
       enemy.destroy();
@@ -238,25 +238,16 @@ export default class BattleScene extends Phaser.Scene {
 
         const topPlayers = getTopPlayers();
 
-
         topPlayers.then((players) => {
-          //NOTE: Lo correcto sería que entrara en leaderboard si es mayor al utlimo de la lista de topPlayers
-          players.forEach((player, index) => {
-            if (battleSceneData.puntuacionTotal > player.totalScore) {
-              console.log('Nuevo record: ', battleSceneData.puntuacionTotal, ' | ', player.totalScore);
-              this.scene.launch('leaderboardScene', { playerData: battleSceneData });
-
-            } else {
-              console.log('No hay nuevo record: ', battleSceneData.puntuacionTotal, ' | ', player.totalScore);
-              this.scene.launch('Gameover', { playerData: battleSceneData });
-            }
-          });
-
-
+          //NOTE: El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
+          if (battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
+            console.log('Nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
+            this.scene.launch('leaderboardScene', { playerData: battleSceneData });
+          } else {
+            console.log('No hay nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
+            this.scene.launch('Gameover', { playerData: battleSceneData });
+          }
         });
-
-
-
       }
     }
   }

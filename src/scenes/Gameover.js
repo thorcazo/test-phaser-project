@@ -89,9 +89,22 @@ export default class Gameover extends Phaser.Scene {
 
     // Mostrar las puntuaciones obtenidas
     mappedPlayers.forEach((score, index) => {
-      this.namePlayer = this.add.text(this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 50), score.name, { fontSize: '1.5rem', fontFamily: 'PressStart2P',  color: '#fff' });
+      this.namePlayer = this.add.text(
+        this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 50),
+        score.name, {
+        fontSize: '1.5rem',
+        fontFamily: 'PressStart2P',
+        color: score.name === this.playerData.nombreJugador ? '#FFD700' : '#fff'
+      });
 
-      this.scorePlayer = this.add.text(this.namePlayer.x + 300, this.tabla__nombre.y + 70 + (index * 50), score.score, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+      this.scorePlayer = this.add.text(
+        this.namePlayer.x + 300,
+        this.tabla__nombre.y + 70 + (index * 50),
+        score.score, {
+        fontSize: '1.5rem',
+        fontFamily: 'PressStart2P',
+        color: score.name === this.playerData.nombreJugador ? '#FFD700' : '#fff'
+      });
     });
   }
 
