@@ -3,6 +3,11 @@ import AudioManager from "../Sounds/AudioManager";
 class MainMenu extends Phaser.Scene {
 
 
+  datos = [
+    { word: "hola", color: "#FF0000" },
+  ]
+
+
   constructor() {
     super({ key: 'MainMenu', active: false });
   }
@@ -23,7 +28,12 @@ class MainMenu extends Phaser.Scene {
 
     // Reproducir la música de intro
     this.audioManager.play('intro');
-    if (this.audioManager.isPlaying('BattleMusic')) this.audioManager.stop('BattleMusic');
+    if (this.audioManager.isPlaying('BattleMusic')) {
+      this.audioManager.unmute('BattleMusic');
+      this.audioManager.stop('BattleMusic');
+
+    }
+
 
 
 
@@ -114,7 +124,7 @@ class MainMenu extends Phaser.Scene {
     // Aquí puedes definir lo que sucede cuando se inicia la partida
     this.audioManager.stop('intro');
     // this.audioManager.play('BattleMusic');
-    this.scene.start('BattleScene', { audioManager: this.audioManager });
+    this.scene.start('BattleScene', { datos: this.datos, audioManager: this.audioManager });
   }
 
 

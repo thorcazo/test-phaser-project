@@ -1,18 +1,24 @@
+import AudioManager from "../Sounds/AudioManager";
+
 export default class UIScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'UIScene', active: false });
-    this.tablaJugadores = document.querySelector('.tabla-jugadores');
+    //this.tablaJugadores = document.querySelector('.tabla-jugadores');
+    this.audioManager = new AudioManager(this);
   }
 
-  preload() {}
+  preload() { }
+
+
+
 
   create() {
     this.createPauseButton(400, 50);
     this.createGameOverButton(500, 50);
     this.createMainMenuButton(600, 50);
-    this.ocultarTablaJugadores();
-    // this.createButtonMuseSound(700, 50);
+    this.createLeaderboardButton(700, 50);
+
   }
 
   createPauseButton(x, y) {
@@ -29,6 +35,7 @@ export default class UIScene extends Phaser.Scene {
       // Agregar listener para la tecla ESPACIO
       this.input.keyboard.on('keydown-SPACE', () => {
         this.togglePause();
+        
       });
     }
   }
@@ -38,8 +45,10 @@ export default class UIScene extends Phaser.Scene {
     if (battleScene.scene.isPaused()) {
       battleScene.scene.resume();
       this.pauseButton.setText('PAUSE');
+      this.audioManager.resumeAll();
     } else {
       battleScene.scene.pause();
+      this.audioManager.pauseAll();
       this.pauseButton.setText('RESUME');
     }
   }
@@ -52,6 +61,18 @@ export default class UIScene extends Phaser.Scene {
     }).setInteractive()
       .on('pointerdown', () => {
         this.transitionTo('Gameover');
+      });
+  }
+
+  createLeaderboardButton(x, y) {
+    this.add.text(x, y, 'LEADERBOARD', {
+      fill: '#fff',
+      padding: 10,
+      backgroundColor: '#000'
+    }).setInteractive()
+      .on('pointerdown', () => {
+        this.audioManager.stop('intro');
+        this.scene.start('leaderboardScene', { audioManager: this.audioManager });
       });
   }
 
@@ -72,14 +93,7 @@ export default class UIScene extends Phaser.Scene {
     this.scene.start(sceneKey);
   }
 
-  ocultarTablaJugadores() {
-    /* Si la escena es "BattleScene" entonces añadir la clase hidden a tablaJugadores */
-    if (this.scene.isActive('BattleScene')) {
-      this.tablaJugadores.classList.add('hidden');
-    } else {
-      this.tablaJugadores.classList.remove('hidden');
-    }
-  }
+
 
   createButtonMuseSound(x, y) {
     this.add.text(x, y, 'MUSIC', {

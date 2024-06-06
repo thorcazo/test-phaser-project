@@ -1,19 +1,37 @@
+import { getTopPlayers } from '../utils/firestore.js';
+
 export default class Gameover extends Phaser.Scene {
   constructor() {
     super({ key: 'Gameover' });
   }
 
   init(data) {
-    // Recibir los datos pasados desde BattleScene
-    this.nombreJugador = data.nombreJugador;
-    this.navesDestruidas = data.navesDestruidas;
-    this.erroresCometidos = data.erroresCometidos;
-    this.puntuacionTotal = data.puntuacionTotal;
+    try {
+
+      this.playerData = {
+        nombreJugador: data && data.playerData && data.playerData.nombreJugador ? data.playerData.nombreJugador : '---',
+        navesDestruidas: data && data.playerData ? data.playerData.navesDestruidas : 0,
+        erroresCometidos: data && data.playerData ? data.playerData.erroresCometidos : 0,
+        puntuacionTotal: data && data.playerData ? data.playerData.puntuacionTotal : 0
+      };
+    } catch (e) {
+      console.log('Error', e);
+    }
+
+    this.audioManager = data.audioManager;
   }
 
-  create() {
+  async create() {
     this.scene.launch('UIScene');
     this.scene.stop('BattleScene');
+
+    // Obtener los datos de los mejores jugadores
+    const players = await getTopPlayers();
+    const mappedPlayers = players.map(p => ({
+      name: p.playerName,
+      score: p.totalScore
+    }));
+
 
     // Establecer un color de fondo
     this.cameras.main.setBackgroundColor('#1C142A');
@@ -34,56 +52,63 @@ export default class Gameover extends Phaser.Scene {
     this.createButton(this.screenX + 280, this.screenY + 244, 'mainMenuButton', 'MENU PRINCIPAL', 'MainMenu');
 
     // Fondo del marco
-    this.marcoFondoGameOver = this.add.image(this.screenX + 80, this.screenY + 344, 'marcoFondoGameOver').setOrigin(0, 0);
+    this.marcoFondoGameOver = this.add.image(this.screenX + 80, this.screenY + 320, 'marcoFondoGameOver').setOrigin(0, 0);
 
     // Nave del jugador
     this.add.image(this.marcoFondoGameOver.x + 200, this.marcoFondoGameOver.y + 51, 'Player').setOrigin(0.5, 0.5).setScale(0.5);
 
     // Variables dinámicas para los valores
-    // Variables dinámicas para los valores
-    const nombreJugador = this.nombreJugador;
-    const navesDestruidas = this.navesDestruidas;
-    const erroresCometidos = this.erroresCometidos;
-    const puntuacionTotal = this.puntuacionTotal;
+
 
     // Textos de estadísticas
-    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `JUGADOR ................ ${nombreJugador}`, {
+    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, ` --- TU PUNTUACIÓN ---`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
     });
 
-    this.navesDestruidasText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 150, `NAVES DESTRUIDAS ....... ${navesDestruidas}`, {
+    this.navesDestruidasText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 150, `NAVES DESTRUIDAS ....... ${this.playerData.navesDestruidas}`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
     });
 
-    this.erroresCometidosText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 180, `ERRORES COMETIDOS ...... ${erroresCometidos}`, {
+    this.erroresCometidosText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 180, `ERRORES COMETIDOS ...... ${this.playerData.erroresCometidos}`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
     });
 
-    this.totalScoreText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 240, `PUNTUACION TOTAL ....... ${puntuacionTotal}`, {
+    this.totalScoreText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 240, `PUNTUACION TOTAL ....... ${this.playerData.puntuacionTotal}`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
     });
 
     // Tabla de puntuaciones
-    this.add.text(this.screenX + 730, this.screenY + 344, 'PUNTUACION JUGADORES', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
-    this.add.text(this.screenX + 730, this.screenY + 424, 'NAME', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
-    this.add.text(this.screenX + 1000, this.screenY + 424, 'SCORE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla = this.add.text(this.screenX + 630, this.screenY + 75, ' PUNTUACIÓN JUGADORES ', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla = this.add.text(this.screenX + 630, this.screenY + 92, '----------- ----------', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla__nombre = this.add.text(this.tabla.x + 20, this.tabla.y + 70, 'NOMBRE', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+    this.tabla__puntos = this.add.text(this.tabla__nombre.x + 270, this.tabla__nombre.y, 'PUNTOS', { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
 
-    const scores = [
-      { name: 'J1', score: '100' },
-      { name: 'J2', score: '200' }
-    ];
+    // Mostrar las puntuaciones obtenidas
+    mappedPlayers.forEach((score, index) => {
+      this.namePlayer = this.add.text(
+        this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 40),
+        score.name, {
+        fontSize: '1.5rem',
+        fontFamily: 'PressStart2P',
+        color: score.name === this.playerData.nombreJugador ? '#FFD700' : '#fff'
+      });
 
-    scores.forEach((score, index) => {
-      this.add.text(this.screenX + 730, this.screenY + 474 + (index * 50), score.name, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
-      this.add.text(this.screenX + 1000, this.screenY + 474 + (index * 50), score.score, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+      this.scorePlayer = this.add.text(
+        this.namePlayer.x + 270,
+        this.tabla__nombre.y + 70 + (index * 40),
+        score.score, {
+        fontSize: '1.5rem',
+        fontFamily: 'PressStart2P',
+        color: score.name === this.playerData.nombreJugador ? '#FFD700' : '#fff'
+      });
     });
   }
 
@@ -93,11 +118,40 @@ export default class Gameover extends Phaser.Scene {
 
     button.on('pointerdown', () => {
       this.scene.stop('Gameover');
+      /* desmutear todos los sonidos */
+      
       this.scene.start(sceneKey);
+
+      /* resetear datos */
+      this.resetData();
+      this.resetBattleSceneData();
     });
     buttonText.on('pointerdown', () => {
       this.scene.stop('Gameover');
+      
       this.scene.start(sceneKey);
+
+      /* resetear datos */
+      this.resetData();
+      this.resetBattleSceneData();
     });
   }
+
+
+
+  resetData() {
+    this.nombreJugador = '';
+    this.navesDestruidas = 0;
+    this.erroresCometidos = 0;
+    this.puntuacionTotal = 0;
+  }
+
+  resetBattleSceneData() {
+    const battleScene = this.scene.get('BattleScene');
+    battleScene.resetData();
+  }
+
+
+
+
 }

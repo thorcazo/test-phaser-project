@@ -43,6 +43,17 @@ class AudioManager {
       this.sounds[key].stop();
     }
   }
+  pauseAll() {
+    this.scene.sound.sounds.forEach(sound => {
+      sound.pause();
+    });
+  }
+
+  resumeAll() {
+    this.scene.sound.sounds.forEach(sound => {
+      sound.resume();
+    });
+  }
 
   // Silenciar todos los sonidos
   muteAll() {
