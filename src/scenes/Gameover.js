@@ -7,10 +7,10 @@ export default class Gameover extends Phaser.Scene {
 
   init(data) {
     this.playerData = {
-      nombreJugador: data.playerData.nombreJugador,
-      navesDestruidas: data.playerData.navesDestruidas,
-      erroresCometidos: data.playerData.erroresCometidos,
-      puntuacionTotal: data.playerData.puntuacionTotal
+      nombreJugador: data.leaderData.nombreJugador,
+      navesDestruidas: data.leaderData.navesDestruidas,
+      erroresCometidos: data.leaderData.erroresCometidos,
+      puntuacionTotal: data.leaderData.puntuacionTotal
     };
 
     console.log(this.playerData);
@@ -28,12 +28,7 @@ export default class Gameover extends Phaser.Scene {
       name: p.playerName,
       score: p.totalScore
     }));
-    //NOTE: En esta parte sale un error ya que no existe la variable playerData
-    mappedPlayers.forEach((score, index) => {
-      if (this.playerData.puntuacionTotal > score.score) {
-        this.scene.launch('leaderboardScene', { playerData: this.playerData });
-      }
-    });
+
 
     // Establecer un color de fondo
     this.cameras.main.setBackgroundColor('#1C142A');
@@ -63,7 +58,7 @@ export default class Gameover extends Phaser.Scene {
 
 
     // Textos de estadísticas
-    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, `TU PUNTUACIÓN`, {
+    this.namePlayerText = this.add.text(this.marcoFondoGameOver.x + 30, this.marcoFondoGameOver.y + 120, ` --- TU PUNTUACIÓN ---`, {
       fontSize: '12px',
       fontFamily: 'PressStart2P',
       color: '#fff'
@@ -94,7 +89,8 @@ export default class Gameover extends Phaser.Scene {
 
     // Mostrar las puntuaciones obtenidas
     mappedPlayers.forEach((score, index) => {
-      this.namePlayer = this.add.text(this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 50), score.name, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
+      this.namePlayer = this.add.text(this.tabla__nombre.x, this.tabla__nombre.y + 70 + (index * 50), score.name, { fontSize: '1.5rem', fontFamily: 'PressStart2P',  color: '#fff' });
+
       this.scorePlayer = this.add.text(this.namePlayer.x + 300, this.tabla__nombre.y + 70 + (index * 50), score.score, { fontSize: '1.5rem', fontFamily: 'PressStart2P', color: '#fff' });
     });
   }
