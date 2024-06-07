@@ -126,9 +126,9 @@ export default class UIScene extends Phaser.Scene {
 
 
 
-  /* texto informativo de la version del juego que aparece en el lado abajo a la derecha */
+  /* VERSION:   texto informativo de la version del juego que aparece en el lado abajo a la derecha */
   versionGame() {
-    this.add.text(this.cameras.main.width - 100, this.cameras.main.height - 50, 'v0.7.0', {
+    this.add.text(this.cameras.main.width - 100, this.cameras.main.height - 50, 'v0.7.1', {
       fill: '#fff',
       padding: 10,
       backgroundColor: '#000'
