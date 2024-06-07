@@ -24,6 +24,12 @@ class MainMenu extends Phaser.Scene {
 
 
   create() {
+
+
+    
+
+
+
     this.scene.launch('UIScene');
 
     // Reproducir la música de intro
@@ -31,11 +37,7 @@ class MainMenu extends Phaser.Scene {
     if (this.audioManager.isPlaying('BattleMusic')) {
       this.audioManager.unmute('BattleMusic');
       this.audioManager.stop('BattleMusic');
-
     }
-
-
-
 
     // Fondo de pantalla
     this.bg = this.add.image(this.centerX, this.centerY, 'bg');
@@ -100,35 +102,23 @@ class MainMenu extends Phaser.Scene {
     });
 
     this.inputElement.setInteractive();
-
-
-
   }
 
   update() {
     //Desplazar el TileSprite
     this.stars.tilePositionY += 0.03;
     this.stars.tilePositionX -= 0.01;
-
     this.stars2.tilePositionY += 0.05;
-
 
     /* Animar logo */
     this.logo.angle += 0.1;
-
-
   }
-
-
   startGame() {
     // Aquí puedes definir lo que sucede cuando se inicia la partida
     this.audioManager.stop('intro');
     // this.audioManager.play('BattleMusic');
     this.scene.start('BattleScene', { datos: this.datos, audioManager: this.audioManager });
   }
-
-
-
 }
 
 export default MainMenu;

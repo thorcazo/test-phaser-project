@@ -1,8 +1,5 @@
 import Player from "../gameObjects/player.js";
 import Enemy from "../gameObjects/enemy.js";
-
-import { wordsEnemies } from '../utils/dataEnemies.js';
-
 import { addScore, getWordsEnemies, getTopPlayers } from '../utils/firestore.js';
 
 export default class BattleScene extends Phaser.Scene {
@@ -14,7 +11,7 @@ export default class BattleScene extends Phaser.Scene {
 
   enemigosEnPantalla = 10;
 
-  enemySpawnThreshold = 1500; // Umbral inicial
+  enemySpawnThreshold = 5000; // Umbral inicial
   reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
 
@@ -34,7 +31,7 @@ export default class BattleScene extends Phaser.Scene {
   init(data) {
     this.audioManager = data.audioManager;
 
-    this.enemySpawnThreshold = 1500;
+    this.enemySpawnThreshold = 5000;
 
     /* si BattleMusic esta sinlenciado entonces desinlenciar */
     if (this.audioManager.isPlaying('BattleMusic')) {

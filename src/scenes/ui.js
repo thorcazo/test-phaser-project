@@ -14,11 +14,15 @@ export default class UIScene extends Phaser.Scene {
 
 
   create() {
+
+    this.versionGame();
+
+
+
     this.createPauseButton(400, 50);
     this.createGameOverButton(500, 50);
     this.createMainMenuButton(600, 50);
     this.createLeaderboardButton(700, 50);
-
   }
 
   createPauseButton(x, y) {
@@ -35,7 +39,7 @@ export default class UIScene extends Phaser.Scene {
       // Agregar listener para la tecla ESPACIO
       this.input.keyboard.on('keydown-SPACE', () => {
         this.togglePause();
-        
+
       });
     }
   }
@@ -119,4 +123,17 @@ export default class UIScene extends Phaser.Scene {
       console.error('No se pudo encontrar la escena MainMenu o el audio intro.');
     }
   }
+
+
+
+  /* texto informativo de la version del juego que aparece en el lado abajo a la derecha */
+  versionGame() {
+    this.add.text(this.cameras.main.width - 100, this.cameras.main.height - 50, 'v0.7.0', {
+      fill: '#fff',
+      padding: 10,
+      backgroundColor: '#000'
+    });
+  }
+
+
 }
