@@ -9,11 +9,11 @@ export default class BattleScene extends Phaser.Scene {
   scorePlayer = 0;
   errorText = 0;
 
-  enemigosEnPantalla = 10;
+  enemigosEnPantalla;
 
   enemySpawnThreshold = 0; // Umbral inicial
-  reduceThresholdInterval = 4000; // Intervalo de reducción (2 segundos)
-  minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
+  reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
+  minSpawnThreshold = 200; // Umbral mínimo para evitar que el juego sea imposible
 
   palabras = [];
   colors = [];
@@ -28,7 +28,10 @@ export default class BattleScene extends Phaser.Scene {
 
   init(data) {
     this.audioManager = data.audioManager;
+    this.enemigosEnPantalla = 10;
+    this.bulletVelocity = 1000;
 
+    // umbral de spawn de enemigos
     this.enemySpawnThreshold = 2000;
 
     /* si BattleMusic esta sinlenciado entonces desinlenciar */
@@ -51,8 +54,8 @@ export default class BattleScene extends Phaser.Scene {
     this.audioManager.play('BattleMusic');
 
     /* Mostrar ScorePlayer en la parte de arriba izquierda */
-    this.scoreText = this.add.text(10, 10, "Score: " + this.scorePlayer, {
-      font: "24px PressStart2P",
+    this.scoreText = this.add.text(50, 40, "PUNTUACIÓN: " + this.scorePlayer, {
+      font: "16px PressStart2P",
       fill: "#fff",
     });
 
@@ -149,10 +152,23 @@ export default class BattleScene extends Phaser.Scene {
         if (this.currentWord === enemy.wordText.text) {
           const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet").setScale(0.05);
           const angle = Phaser.Math.Angle.Between(this.Player.x, this.Player.y, enemy.x, enemy.y);
-          bullet.setVelocity(Math.cos(angle) * 800, Math.sin(angle) * 800);
+
+          if (this.scorePlayer > 100) {
+            this.bulletVelocity = 3000;
+          }
+
+
+          bullet.setVelocity(Math.cos(angle) * this.bulletVelocity, Math.sin(angle) * this.bulletVelocity);
           bullet.type = "player";
           bullet.currentWord = this.currentWord;
+
+          console.log('puntos jugador', this.scorePlayer);
           bullet.damage = 50;
+
+          if (this.scorePlayer > 100) {
+            bullet.damage = 100;
+          }
+
           this.projectiles.add(bullet);
           this.Player.angle = angle * (180 / Math.PI) + 90;
           this.currentWord = "";
@@ -199,17 +215,13 @@ export default class BattleScene extends Phaser.Scene {
             callbackScope: this,
           });
           this.randomizarPalabra(object);
-          // object.healthText.text = "Health: " + object.health;
           if (object.health <= 0) {
-            // object.healthText.destroy();
             object.wordText.destroy();
             object.destroy();
             this.enemiesKilled += 1;
             this.scorePlayer += 5;
-            this.scoreText.setText("Score: " + this.scorePlayer); // Actualizar el texto del puntaje
-            console.log('Enemigos destruidos: ', this.enemiesKilled);
+            this.scoreText.setText("PUNTUACIÓN: " + this.scorePlayer); // Actualizar el texto del puntaje
             if (this.enemiesKilled >= this.maxEnemies) {
-              // Añadir los datos de la partida
               let battleSceneData = {
                 nombreJugador: "ABC",
                 navesDestruidas: this.enemiesKilled ? this.enemiesKilled : 0,
@@ -217,16 +229,13 @@ export default class BattleScene extends Phaser.Scene {
                 puntuacionTotal: this.scorePlayer ? this.scorePlayer : 0
               };
 
-              console.log('Datos de la partida: ', battleSceneData);
-
               this.scene.pause('BattleScene');
               this.audioManager.stop('BattleMusic');
 
               const topPlayers = getTopPlayers();
 
               topPlayers.then((players) => {
-                // El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
-                if (players[0].totalScore && battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
+                if (players.length < 10 || battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
                   this.scene.launch('leaderboardScene', { playerData: battleSceneData });
                 } else {
                   this.scene.launch('Gameover', { playerData: battleSceneData });
@@ -238,6 +247,7 @@ export default class BattleScene extends Phaser.Scene {
       }
     }
   }
+
 
 
   //TAKEDAMAGE -> TERMINAR PARTIDA e ir a GAMEOVER o a LEADERBOARD
@@ -267,7 +277,7 @@ export default class BattleScene extends Phaser.Scene {
             this.scene.launch('leaderboardScene', { playerData: battleSceneData });
           } else {
             //El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
-            if (battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
+            if (players.length < 10 && battleSceneData.puntuacionTotal != "0" || battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
               console.log('Nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
               this.scene.launch('leaderboardScene', { playerData: battleSceneData });
             } else {
@@ -297,7 +307,6 @@ export default class BattleScene extends Phaser.Scene {
         this.currentWord += event.key;
       } else {
         if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
-          console.log('WrongKey');
           this.currentWord = "";
           this.audioManager.play('WrongKey');
           this.scorePlayer -= 2; // Restar puntos
@@ -305,7 +314,7 @@ export default class BattleScene extends Phaser.Scene {
           if (this.scorePlayer < 0) {
             this.scorePlayer = 0; // Evitar puntaje negativo
           }
-          this.scoreText.setText("Score: " + this.scorePlayer); // Actualizar el texto del puntaje
+          this.scoreText.setText("PUNTUACIÓN: " + this.scorePlayer); // Actualizar el texto del puntaje
         }
       }
     }
@@ -314,21 +323,44 @@ export default class BattleScene extends Phaser.Scene {
     this.currentWordText.setText(this.currentWord);
   }
 
-  createEnemy() {
-    if (this.enemies.getLength() < this.enemigosEnPantalla && this.lowEnemies && this.lowEnemies.length > 0) {
-      const randomEnemyData = this.lowEnemies[Math.floor(Math.random() * this.lowEnemies.length)];
-      const randomY = Phaser.Math.Between(0, this.game.config.height);
 
+
+  async cargarDatos() {
+    const datos = await getWordsEnemies();
+    if (datos) {
+      this.wordsColors = datos;
+
+      // Asignar las palabras y colores desde Firestore
+      this.palabras = this.wordsColors.map(item => item.word);
+      this.colors = this.wordsColors.map(item => item.color);
+    } else {
+      console.error("No se pudieron cargar los datos de Firestore.");
+    }
+
+    const dataEnemies = await getDataEnemies();
+    this.lowEnemies = dataEnemies.filter(enemy => enemy.difficulty === "low");
+    this.mediumEnemies = dataEnemies.filter(enemy => enemy.difficulty === "medium");
+  }
+
+  createEnemy() {
+    if (this.enemies.getLength() < this.enemigosEnPantalla) {
+      let randomEnemyData;
+      if (this.scorePlayer < 100) {
+        randomEnemyData = this.lowEnemies[Math.floor(Math.random() * this.lowEnemies.length)];
+      } else {
+        randomEnemyData = this.mediumEnemies[Math.floor(Math.random() * this.mediumEnemies.length)];
+      }
+
+      const randomY = Phaser.Math.Between(0, this.game.config.height);
       const enemy = new Enemy(this, this.game.config.width + 20, randomY, randomEnemyData.type).setScale(0.4);
       enemy.setAngle(180);
       this.randomizarPalabra(enemy, null, null, randomEnemyData.health, randomEnemyData.speed);
-
-      console.log('Enemigo creado: ', enemy.type, ' | Health: ', enemy.health, ' | Speed: ', enemy.speed);
 
       this.enemies.add(enemy);
       this.enemySpawnTimer = 0;
     }
   }
+
 
 
   randomizarPalabra(enemy, palabra = null, color = null, health = null, speed = null) {
@@ -387,21 +419,6 @@ export default class BattleScene extends Phaser.Scene {
   }
 
 
-  async cargarDatos() {
-    const datos = await getWordsEnemies();
-    if (datos) {
-      this.wordsColors = datos;
-
-      // Asignar las palabras y colores desde Firestore
-      this.palabras = this.wordsColors.map(item => item.word);
-      this.colors = this.wordsColors.map(item => item.color);
-    } else {
-      console.error("No se pudieron cargar los datos de Firestore.");
-    }
-
-    const dataEnemies = await getDataEnemies();
-    this.lowEnemies = dataEnemies.filter(enemy => enemy.difficulty === "low");
-  }
 
   resetData() {
     this.enemiesKilled = 0;

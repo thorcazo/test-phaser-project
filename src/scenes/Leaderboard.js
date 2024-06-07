@@ -120,18 +120,23 @@ export default class leaderboardScene extends Phaser.Scene {
       padding: { x: 20, y: 10 }
     }).setOrigin(0.5).setInteractive();
 
-    this.saveButton.on('pointerdown', () => {
+    this.saveButton.on('pointerdown', async () => {
       if (this.currentInput.length > 0) {
         console.log('Nombre guardado:', this.currentInput);
         this.playerData.nombreJugador = this.currentInput;
-        // Guardar los datos en la base de datos, luego lanzar gameover
-        addScore(this.playerData.nombreJugador, this.playerData.navesDestruidas, this.playerData.erroresCometidos, this.playerData.puntuacionTotal);
+
+        this.currentInput = '';
+
+        // Guardar o actualizar los datos en la base de datos
+        await addScore(this.playerData.nombreJugador, this.playerData.navesDestruidas, this.playerData.erroresCometidos, this.playerData.puntuacionTotal);
+
         this.scene.stop();
         this.scene.start('Gameover', { playerData: this.playerData });
       } else {
         console.log('El campo de nombre está vacío.');
       }
     });
+
 
     this.closeButton.on('pointerdown', () => {
       this.scene.stop();

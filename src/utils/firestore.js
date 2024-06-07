@@ -1,21 +1,46 @@
 // src/utils/firestore.js
 
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
-
-// Función para agregar un documento a la colección "score_player"
+// Función para agregar o actualizar un documento en la colección "dataPlayer"
 const addScore = async (playerName, numShipsDestr, errorKeyText, totalScoreText) => {
   try {
-    const docRef = await addDoc(collection(db, "dataPlayer"), {
-      playerName: playerName,
-      shipsDestroyed: numShipsDestr,
-      errorKey: errorKeyText,
-      totalScore: parseInt(totalScoreText),
-      date: new Date(),
-    });
-    console.log("Documento escrito con ID: ", docRef.id);
+    const playersRef = collection(db, "dataPlayer");
+    const q = query(playersRef, where("playerName", "==", playerName));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      // Si no existe un jugador con el mismo nombre, crea un nuevo documento
+      await addDoc(playersRef, {
+        playerName: playerName,
+        shipsDestroyed: numShipsDestr,
+        errorKey: errorKeyText,
+        totalScore: parseInt(totalScoreText),
+        date: new Date(),
+      });
+      console.log("Nuevo jugador añadido con éxito");
+    } else {
+      // Si existe un jugador con el mismo nombre, verifica la puntuación
+      querySnapshot.forEach(async (document) => {
+        const playerDocRef = doc(db, "dataPlayer", document.id);
+        const existingData = document.data();
+
+        if (parseInt(totalScoreText) > existingData.totalScore) {
+          // Solo actualizar si la nueva puntuación es mayor que la existente
+          await updateDoc(playerDocRef, {
+            shipsDestroyed: numShipsDestr,
+            errorKey: errorKeyText,
+            totalScore: parseInt(totalScoreText),
+            date: new Date(),
+          });
+          console.log("Puntuación del jugador actualizada con éxito");
+        } else {
+          console.log("La nueva puntuación no es mayor que la existente. No se ha actualizado el registro.");
+        }
+      });
+    }
   } catch (e) {
-    console.error("Error añadiendo el documento: ", e);
+    console.error("Error añadiendo o actualizando el documento: ", e);
   }
 };
 
