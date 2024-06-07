@@ -15,8 +15,6 @@ export default class BattleScene extends Phaser.Scene {
   reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
 
-
-
   palabras = [];
   colors = [];
 
@@ -177,7 +175,7 @@ export default class BattleScene extends Phaser.Scene {
 
   dealDamage(bullet, object) {
     if (bullet.type !== object.texture.key) {
-      if (object.texture.key === "Enemy") {
+      if (object.texture.key.startsWith("Enemy")) {
         if (object.wordText.text === bullet.currentWord) {
           bullet.destroy();
           object.health -= bullet.damage;
@@ -243,9 +241,45 @@ export default class BattleScene extends Phaser.Scene {
       }
     }
   }
+
+
+  createEnemy() {
+    if (this.enemies.getLength() < this.enemigosEnPantalla) {
+      let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
+      let palabraUnica = true;
+      this.enemies.getChildren().forEach((enemy) => {
+        if (enemy.wordText.text === palabraAleatoria) {
+          palabraUnica = false;
+          while (!palabraUnica) {
+            palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
+            palabraUnica = true
+            this.enemies.getChildren().forEach((enemy) => {
+              if (enemy.wordText.text === palabraAleatoria) {
+                palabraUnica = false;
+              }
+            });
+          }
+        }
+      });
+      let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
+      const randomY = Phaser.Math.Between(0, this.game.config.height);
+
+      // Seleccionar aleatoriamente el tipo de enemigo
+      const enemyTypes = ["Enemy", "Enemy2", "Enemy3", "Enemy4", "Enemy5", "Enemy6"];
+      const randomTypeEnemy = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+
+      const enemy = new Enemy(this, this.game.config.width + 20, randomY, randomTypeEnemy).setScale(0.1);
+      enemy.setAngle(180);
+      this.randomizarPalabra(enemy, palabraAleatoria, colorAleatorio);
+      this.enemies.add(enemy);
+      this.enemySpawnTimer = 0;
+    }
+  }
+
+
   //TAKEDAMAGE -> TERMINAR PARTIDA e ir a GAMEOVER o a LEADERBOARD
   takeDamage(player, enemy) {
-    if (enemy.texture.key === "Enemy") {
+    if (enemy.texture.key.startsWith("Enemy")) {
       enemy.destroy();
       enemy.wordText.destroy();
       player.health -= 1;
@@ -337,7 +371,14 @@ export default class BattleScene extends Phaser.Scene {
       });
       let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
       const randomY = Phaser.Math.Between(0, this.game.config.height);
-      const enemy = new Enemy(this, this.game.config.width + 20, randomY, "Enemy").setScale(0.3);
+
+      // Seleccionar aleatoriamente el tipo de enemigo
+      const enemyTypes = ["Enemy", "Enemy2", "Enemy3", "Enemy4", "Enemy5", "Enemy6"];
+      const randomTypeEnemy = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+
+
+
+      const enemy = new Enemy(this, this.game.config.width + 20, randomY, randomTypeEnemy).setScale(0.5);
       enemy.setAngle(180);
       this.randomizarPalabra(enemy, palabraAleatoria, colorAleatorio);
       this.enemies.add(enemy);

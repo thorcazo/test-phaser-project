@@ -10,6 +10,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     scene.physics.world.enable(this)
     this.body.setImmovable(true)
     this.health = 100
+    
     // this.healthText = scene.add.text((this.x - 35), (this.y + 50), "HP: " + this.health, { font: "16px PressStart2P", fill: "#fff" });
 
     // Comentamos la asignación de la palabra aquí y la asignamos al crear el enemigo en la escena
@@ -47,6 +48,8 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     const rotation = Phaser.Math.Angle.Between(x, y, tx, ty)
     this.setRotation(rotation);
     this.scene.physics.moveToObject(this, this.target, 50) // 100 es la velocidad
+
+
 
   }
 }
