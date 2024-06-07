@@ -69,6 +69,19 @@ const addDataEnemies = async (type, health, difficulty, speed, points) => {
   }
 };
 
+const addWordsEnemies = async (color, difficulty, word) => {
+  try {
+    const docRef = await addDoc(collection(db, "wordsEnemies"), {
+      color: color,
+      difficulty: difficulty,
+      word: word
+    });
+    console.log("Documento escrito con ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error añadiendo el documento: ", e);
+  }
+};
+
 const getWordsEnemies = async () => {
   const querySnapshot = await getDocs(collection(db, "wordsEnemies"));
   const wordsEnemies = [];
@@ -78,15 +91,7 @@ const getWordsEnemies = async () => {
   return wordsEnemies;
 };
 
-const addNamesEnemies = async (name, dificulty) => {
-  try {
 
-    const docRef = await addDoc(collection(db, 'namesEnemies'));
-
-  } catch (e) {
-    console.error("Error añadiendo el documento: ", e);
-  }
-}
 
 
 const getTopPlayers = async () => {
@@ -109,4 +114,4 @@ const getDataEnemies = async () => {
 
 
 getTopPlayers();
-export { addScore, getScores, getWordsEnemies, addDataEnemies, getTopPlayers, getDataEnemies };
+export { addScore, getScores, getWordsEnemies, addDataEnemies, getTopPlayers, getDataEnemies, addWordsEnemies };

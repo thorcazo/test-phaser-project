@@ -9,10 +9,10 @@ export default class BattleScene extends Phaser.Scene {
   scorePlayer = 0;
   errorText = 0;
 
-  enemigosEnPantalla;
+
 
   enemySpawnThreshold = 0; // Umbral inicial
-  reduceThresholdInterval = 10000; // Intervalo de reducción (2 segundos)
+  reduceThresholdInterval = 11000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 200; // Umbral mínimo para evitar que el juego sea imposible
 
   palabras = [];
@@ -32,7 +32,7 @@ export default class BattleScene extends Phaser.Scene {
     this.bulletVelocity = 1000;
 
     // umbral de spawn de enemigos
-    this.enemySpawnThreshold = 2000;
+    this.enemySpawnThreshold = 3000;
 
     /* si BattleMusic esta sinlenciado entonces desinlenciar */
     if (this.audioManager.isPlaying('BattleMusic')) {
@@ -66,7 +66,7 @@ export default class BattleScene extends Phaser.Scene {
     this.enemySpawnTimer = 0;
     this.isFiring = false;
     this.cameras.main.setBackgroundColor('d3d3d3');
-    this.Player = new Player(this, 100, this.cameras.main.height / 2, "Player").setScale(0.5).setOrigin(0.5, 0.5).setAngle(90);
+    this.Player = new Player(this, 100, this.cameras.main.height / 2, "Player").setScale(0.6).setOrigin(0.5, 0.5).setAngle(90);
 
     this.input.keyboard.on('keydown', this.handlekeyInput, this);
     this.currentKey = null;
@@ -330,8 +330,16 @@ export default class BattleScene extends Phaser.Scene {
     if (datos) {
       this.wordsColors = datos;
 
+      console.log(this.wordsColors)
+
       // Asignar las palabras y colores desde Firestore
-      this.palabras = this.wordsColors.map(item => item.word);
+
+      this.palabras = this.wordsColors.filter(item => item.difficulty === "easy").map(item => item.word);
+
+      if (this.scorePlayer > 100) {
+        this.palabras = this.wordsColors.filter(item => item.difficulty === "normal").map(item => item.word);
+      }
+
       this.colors = this.wordsColors.map(item => item.color);
     } else {
       console.error("No se pudieron cargar los datos de Firestore.");
@@ -357,7 +365,7 @@ export default class BattleScene extends Phaser.Scene {
       this.randomizarPalabra(enemy, null, null, randomEnemyData.health, randomEnemyData.speed);
       enemy.points = parseInt(randomEnemyData.points);
 
-      console.log('Datos enemigo: ', randomEnemyData.type, randomEnemyData.health, randomEnemyData.speed, randomEnemyData.points, randomEnemyData.difficulty, '| Palabra: ', enemy.wordText.text, '| Color: ', enemy.wordText.style.backgroundColor)
+      // console.log('Datos enemigo: ', randomEnemyData.type, randomEnemyData.health, randomEnemyData.speed, randomEnemyData.points, randomEnemyData.difficulty, '| Palabra: ', enemy.wordText.text, '| Color: ', enemy.wordText.style.backgroundColor)
 
       this.enemies.add(enemy);
       this.enemySpawnTimer = 0;
