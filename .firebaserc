@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "tfg-type-space"
-  }
+    "default": "tfg-type-space",
+    "thorcazo": "tfg-type-space"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
