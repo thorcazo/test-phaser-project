@@ -19,7 +19,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
 
 
-    this.speed = 70
+    this.speed = 80
     this.target = null
     this.turn_rate = 1
     // Grados que el enemigo oscila

@@ -8,7 +8,7 @@ export default class CreditsScene extends Phaser.Scene {
 
   preload() {
     // Precargar los recursos necesarios
-    this.load.image('bg', 'path_to_background_image');
+
   }
 
   create() {
@@ -20,25 +20,22 @@ export default class CreditsScene extends Phaser.Scene {
       TYPE SPACE
 
       Desarrolladores:
-      - Nombre del Desarrollador 1
-      - Nombre del Desarrollador 2
-      - Nombre del Desarrollador 3
+      - Alberto González
+      - David Pastor
 
       Agradecimientos Especiales:
-      - Nombre del Agradecido 1
-      - Nombre del Agradecido 2
+      - Luis Miguel - Profesor
 
       Fuentes de los Assets:
-      - Fuente de Asset 1
-      - Fuente de Asset 2
+      - Itch.io:
+       - Autor: Autor del Asset
 
       Música:
-      - Título de la Música 1
-      - Título de la Música 2
+      - Suno.ia - Generador de Música
     `;
 
     this.credits = this.add.text(
-      this.cameras.main.centerX,
+      this.cameras.main.centerX - 80,
       this.cameras.main.height + 50,
       creditsText,
       {
@@ -52,16 +49,34 @@ export default class CreditsScene extends Phaser.Scene {
     // Configurar la animación de desplazamiento
     this.tweens.add({
       targets: this.credits,
-      y: -this.credits.height,
-      duration: 20000,
+      y: this.cameras.main.centerY - 80,
+      duration: 8000,
       ease: 'Linear',
       onComplete: () => {
-        this.scene.start('MainMenu'); // Regresar al menú principal después de los créditos
+        this.showMainMenuButton();
       }
     });
 
     // Reproducir música de créditos si aplica
     // this.audioManager.play('creditsMusic');
+  }
+
+  showMainMenuButton() {
+    // Crear el botón de "Menu principal"
+    const buttonText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 250, 'Menu principal', {
+      fontFamily: 'PressStart2P',
+      fontSize: '24px',
+      fill: '#fff',
+      backgroundColor: 'red',
+      padding: {
+        x: 20,
+        y: 10
+      }
+    }).setOrigin(0.5, 0.5).setInteractive();
+
+    buttonText.on('pointerdown', () => {
+      this.scene.start('MainMenu');
+    });
   }
 
   update() {

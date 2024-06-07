@@ -31,7 +31,7 @@ export default class BattleScene extends Phaser.Scene {
   init(data) {
     this.audioManager = data.audioManager;
 
-    this.enemySpawnThreshold = 5000;
+    this.enemySpawnThreshold = 3000;
 
     /* si BattleMusic esta sinlenciado entonces desinlenciar */
     if (this.audioManager.isPlaying('BattleMusic')) {
