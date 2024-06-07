@@ -54,13 +54,14 @@ const getScores = async () => {
   return players;
 };
 
-const addDataEnemies = async (type, health, difficulty, speed) => {
+const addDataEnemies = async (type, health, difficulty, speed, points) => {
   try {
     const docRef = await addDoc(collection(db, "dataEnemy"), {
       type: type,
       health: health,
       difficulty: difficulty,
       speed: speed,
+      points: points
     });
     console.log("Documento escrito con ID: ", docRef.id);
   } catch (e) {

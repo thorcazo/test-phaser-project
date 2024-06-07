@@ -157,12 +157,9 @@ export default class BattleScene extends Phaser.Scene {
             this.bulletVelocity = 2000;
           }
 
-
           bullet.setVelocity(Math.cos(angle) * this.bulletVelocity, Math.sin(angle) * this.bulletVelocity);
           bullet.type = "player";
           bullet.currentWord = this.currentWord;
-
-          console.log('puntos jugador', this.scorePlayer);
           bullet.damage = 50;
 
           if (this.scorePlayer > 100) {
@@ -178,8 +175,6 @@ export default class BattleScene extends Phaser.Scene {
     }
 
     this.currentWordText.setText(this.currentWord);
-
-    /* Estilar input currentWordText */
 
     this.stars.tilePositionX += 3;
     this.stars2.tilePositionX += 0.05;
@@ -219,7 +214,12 @@ export default class BattleScene extends Phaser.Scene {
             object.wordText.destroy();
             object.destroy();
             this.enemiesKilled += 1;
-            this.scorePlayer += 5;
+
+
+            const enemyPoints = object.points ? parseInt(object.points) : 0;
+
+            this.scorePlayer += enemyPoints;
+
             this.scoreText.setText("PUNTUACIÓN: " + this.scorePlayer); // Actualizar el texto del puntaje
             if (this.enemiesKilled >= this.maxEnemies) {
               let battleSceneData = {
@@ -355,6 +355,9 @@ export default class BattleScene extends Phaser.Scene {
       const enemy = new Enemy(this, this.game.config.width + 20, randomY, randomEnemyData.type).setScale(0.4);
       enemy.setAngle(180);
       this.randomizarPalabra(enemy, null, null, randomEnemyData.health, randomEnemyData.speed);
+      enemy.points = parseInt(randomEnemyData.points);
+
+      console.log('Datos enemigo: ', randomEnemyData.type, randomEnemyData.health, randomEnemyData.speed, randomEnemyData.points, randomEnemyData.difficulty, '| Palabra: ', enemy.wordText.text, '| Color: ', enemy.wordText.style.backgroundColor)
 
       this.enemies.add(enemy);
       this.enemySpawnTimer = 0;
@@ -412,7 +415,7 @@ export default class BattleScene extends Phaser.Scene {
       if (this.enemySpawnThreshold < this.minSpawnThreshold) {
         this.enemySpawnThreshold = this.minSpawnThreshold;
       }
-      console.log('umbral spawn: ' + this.enemySpawnThreshold);
+      //console.log('umbral spawn: ' + this.enemySpawnThreshold);
     } else {
       //console.log('Umbral de spawn mínimo alcanzado');
     }
