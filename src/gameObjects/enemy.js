@@ -4,13 +4,13 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
   //  Movidas las palabras a la escena para controlar si se repiten en pantalla o no
 
 
-  constructor(scene, x, y, type) {
+  constructor(scene, x, y, type, speed) {
     super(scene, x, y, type)
     scene.add.existing(this)
     scene.physics.world.enable(this)
     this.body.setImmovable(true)
     this.health = 100
-    
+
     // this.healthText = scene.add.text((this.x - 35), (this.y + 50), "HP: " + this.health, { font: "16px PressStart2P", fill: "#fff" });
 
     // Comentamos la asignación de la palabra aquí y la asignamos al crear el enemigo en la escena
@@ -20,7 +20,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
 
 
-    this.speed = 80
+    this.speed = speed
     this.target = null
     this.turn_rate = 1
     // Grados que el enemigo oscila

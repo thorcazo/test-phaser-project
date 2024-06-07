@@ -29,12 +29,13 @@ const getScores = async () => {
   return players;
 };
 
-const addDataEnemies = async (word, color, enemyName) => {
+const addDataEnemies = async (type, health, difficulty, speed) => {
   try {
-    const docRef = await addDoc(collection(db, "wordsEnemies"), {
-      word: word,
-      color: color,
-      enemyName: enemyName,
+    const docRef = await addDoc(collection(db, "dataEnemy"), {
+      type: type,
+      health: health,
+      difficulty: difficulty,
+      speed: speed,
     });
     console.log("Documento escrito con ID: ", docRef.id);
   } catch (e) {
@@ -68,5 +69,18 @@ const getTopPlayers = async () => {
   return topPlayers.splice(0, 10);
 };
 
+
+const getDataEnemies = async () => {
+  const querySnapshot = await getDocs(collection(db, "dataEnemy"));
+  const dataEnemies = [];
+  querySnapshot.forEach((doc) => {
+    dataEnemies.push({ id: doc.id, ...doc.data() });
+  });
+  return dataEnemies;
+};
+
+
+
+
 getTopPlayers();
-export { addScore, getScores, getWordsEnemies, addDataEnemies, getTopPlayers };
+export { addScore, getScores, getWordsEnemies, addDataEnemies, getTopPlayers, getDataEnemies };

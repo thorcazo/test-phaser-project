@@ -1,18 +1,18 @@
 import Player from "../gameObjects/player.js";
 import Enemy from "../gameObjects/enemy.js";
-import { addScore, getWordsEnemies, getTopPlayers } from '../utils/firestore.js';
+import { getDataEnemies, getWordsEnemies, getTopPlayers } from '../utils/firestore.js';
 
 export default class BattleScene extends Phaser.Scene {
 
-  maxEnemies = 200;
+  maxEnemies = 1000;
   enemiesKilled = 0;
   scorePlayer = 0;
   errorText = 0;
 
   enemigosEnPantalla = 10;
 
-  enemySpawnThreshold = 5000; // Umbral inicial
-  reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
+  enemySpawnThreshold = 0; // Umbral inicial
+  reduceThresholdInterval = 4000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 400; // Umbral mínimo para evitar que el juego sea imposible
 
   palabras = [];
@@ -29,7 +29,7 @@ export default class BattleScene extends Phaser.Scene {
   init(data) {
     this.audioManager = data.audioManager;
 
-    this.enemySpawnThreshold = 3000;
+    this.enemySpawnThreshold = 2000;
 
     /* si BattleMusic esta sinlenciado entonces desinlenciar */
     if (this.audioManager.isPlaying('BattleMusic')) {
@@ -57,10 +57,7 @@ export default class BattleScene extends Phaser.Scene {
     });
 
     this.textoCentral("¡Prepárate!");
-
     this.cargarDatos();
-
-
 
     this.scene.launch('UIScene');
     this.enemySpawnTimer = 0;
@@ -228,7 +225,7 @@ export default class BattleScene extends Phaser.Scene {
               const topPlayers = getTopPlayers();
 
               topPlayers.then((players) => {
-                //NOTE: El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
+                // El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
                 if (players[0].totalScore && battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
                   this.scene.launch('leaderboardScene', { playerData: battleSceneData });
                 } else {
@@ -239,40 +236,6 @@ export default class BattleScene extends Phaser.Scene {
           }
         }
       }
-    }
-  }
-
-
-  createEnemy() {
-    if (this.enemies.getLength() < this.enemigosEnPantalla) {
-      let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
-      let palabraUnica = true;
-      this.enemies.getChildren().forEach((enemy) => {
-        if (enemy.wordText.text === palabraAleatoria) {
-          palabraUnica = false;
-          while (!palabraUnica) {
-            palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
-            palabraUnica = true
-            this.enemies.getChildren().forEach((enemy) => {
-              if (enemy.wordText.text === palabraAleatoria) {
-                palabraUnica = false;
-              }
-            });
-          }
-        }
-      });
-      let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
-      const randomY = Phaser.Math.Between(0, this.game.config.height);
-
-      // Seleccionar aleatoriamente el tipo de enemigo
-      const enemyTypes = ["Enemy", "Enemy2", "Enemy3", "Enemy4", "Enemy5", "Enemy6"];
-      const randomTypeEnemy = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-
-      const enemy = new Enemy(this, this.game.config.width + 20, randomY, randomTypeEnemy).setScale(0.1);
-      enemy.setAngle(180);
-      this.randomizarPalabra(enemy, palabraAleatoria, colorAleatorio);
-      this.enemies.add(enemy);
-      this.enemySpawnTimer = 0;
     }
   }
 
@@ -303,7 +266,7 @@ export default class BattleScene extends Phaser.Scene {
             console.log('No hay jugadores en la base de datos');
             this.scene.launch('leaderboardScene', { playerData: battleSceneData });
           } else {
-            //NOTE: El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
+            //El jugador entra en leaderboard si su puntuación es mayor que la del último jugador en la tabla de líderes
             if (battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
               console.log('Nuevo record: ', battleSceneData.puntuacionTotal, ' | ', players[players.length - 1].totalScore);
               this.scene.launch('leaderboardScene', { playerData: battleSceneData });
@@ -352,53 +315,34 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   createEnemy() {
-    if (this.enemies.getLength() < this.enemigosEnPantalla) {
-      let palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
-      let palabraUnica = true;
-      this.enemies.getChildren().forEach((enemy) => {
-        if (enemy.wordText.text === palabraAleatoria) {
-          palabraUnica = false;
-          while (!palabraUnica) {
-            palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
-            palabraUnica = true
-            this.enemies.getChildren().forEach((enemy) => {
-              if (enemy.wordText.text === palabraAleatoria) {
-                palabraUnica = false;
-              }
-            });
-          }
-        }
-      });
-      let colorAleatorio = this.colors[Math.floor(Math.random() * this.colors.length)];
+    if (this.enemies.getLength() < this.enemigosEnPantalla && this.lowEnemies && this.lowEnemies.length > 0) {
+      const randomEnemyData = this.lowEnemies[Math.floor(Math.random() * this.lowEnemies.length)];
       const randomY = Phaser.Math.Between(0, this.game.config.height);
 
-      // Seleccionar aleatoriamente el tipo de enemigo
-      const enemyTypes = ["Enemy", "Enemy2", "Enemy3", "Enemy4", "Enemy5", "Enemy6"];
-      const randomTypeEnemy = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-
-
-
-      const enemy = new Enemy(this, this.game.config.width + 20, randomY, randomTypeEnemy).setScale(0.5);
+      const enemy = new Enemy(this, this.game.config.width + 20, randomY, randomEnemyData.type).setScale(0.4);
       enemy.setAngle(180);
-      this.randomizarPalabra(enemy, palabraAleatoria, colorAleatorio);
+      this.randomizarPalabra(enemy, null, null, randomEnemyData.health, randomEnemyData.speed);
+
+      console.log('Enemigo creado: ', enemy.type, ' | Health: ', enemy.health, ' | Speed: ', enemy.speed);
+
       this.enemies.add(enemy);
       this.enemySpawnTimer = 0;
     }
   }
 
 
-  randomizarPalabra(enemy, palabra = null, color = null) {
+  randomizarPalabra(enemy, palabra = null, color = null, health = null, speed = null) {
     let palabraAleatoria = palabra || this.palabras[Math.floor(Math.random() * this.palabras.length)];
     let colorAleatorio = color || this.colors[Math.floor(Math.random() * this.colors.length)];
     let palabraUnica = true;
-    this.enemies.getChildren().forEach((enemy) => {
-      if (enemy.wordText.text === palabraAleatoria) {
+    this.enemies.getChildren().forEach((existingEnemy) => {
+      if (existingEnemy.wordText.text === palabraAleatoria) {
         palabraUnica = false;
         while (!palabraUnica) {
-          palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)]
-          palabraUnica = true
-          this.enemies.getChildren().forEach((enemy) => {
-            if (enemy.wordText.text === palabraAleatoria) {
+          palabraAleatoria = this.palabras[Math.floor(Math.random() * this.palabras.length)];
+          palabraUnica = true;
+          this.enemies.getChildren().forEach((existingEnemy) => {
+            if (existingEnemy.wordText.text === palabraAleatoria) {
               palabraUnica = false;
             }
           });
@@ -407,6 +351,8 @@ export default class BattleScene extends Phaser.Scene {
     });
     enemy.wordText.setText(palabraAleatoria);
     enemy.wordText.setStyle({ backgroundColor: colorAleatorio });
+    if (health) enemy.health = health;
+    if (speed) enemy.speed = speed;
   }
 
 
@@ -434,9 +380,9 @@ export default class BattleScene extends Phaser.Scene {
       if (this.enemySpawnThreshold < this.minSpawnThreshold) {
         this.enemySpawnThreshold = this.minSpawnThreshold;
       }
-      console.log('Nuevo umbral de spawn: ' + this.enemySpawnThreshold);
+      //console.log('umbral spawn: ' + this.enemySpawnThreshold);
     } else {
-      console.log('Umbral de spawn mínimo alcanzado');
+      //console.log('Umbral de spawn mínimo alcanzado');
     }
   }
 
@@ -449,10 +395,12 @@ export default class BattleScene extends Phaser.Scene {
       // Asignar las palabras y colores desde Firestore
       this.palabras = this.wordsColors.map(item => item.word);
       this.colors = this.wordsColors.map(item => item.color);
-
     } else {
       console.error("No se pudieron cargar los datos de Firestore.");
     }
+
+    const dataEnemies = await getDataEnemies();
+    this.lowEnemies = dataEnemies.filter(enemy => enemy.difficulty === "low");
   }
 
   resetData() {
@@ -461,7 +409,4 @@ export default class BattleScene extends Phaser.Scene {
     this.errorText = 0;
     this.enemySpawnThreshold = 5500;
   }
-
-
-
 }
