@@ -15,6 +15,8 @@ export default class Bootloader extends Phaser.Scene {
     this.load.image("stars1", "../assets/img/stars1.png");
     this.load.image("stars2", "../assets/img/stars2.png");
     this.load.image("Enemy", "./assets/img/sprites/enemy.png");
+    this.load.image("Enemy2", "./assets/img/sprites/enemy2.png");
+    this.load.image("Enemy3", "./assets/img/sprites/enemy3.png");
     this.load.image("logo", "../assets/img/planetMenu.png");
     this.load.image("dmg2", "./assets/img/sprites/powerUpDmg.png");
     this.load.image("planetGameOver", "./assets/img/PlanetGameOver.png");
