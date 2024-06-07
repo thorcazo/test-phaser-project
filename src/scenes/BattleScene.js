@@ -12,7 +12,7 @@ export default class BattleScene extends Phaser.Scene {
   enemigosEnPantalla;
 
   enemySpawnThreshold = 0; // Umbral inicial
-  reduceThresholdInterval = 5000; // Intervalo de reducción (2 segundos)
+  reduceThresholdInterval = 10000; // Intervalo de reducción (2 segundos)
   minSpawnThreshold = 200; // Umbral mínimo para evitar que el juego sea imposible
 
   palabras = [];
@@ -154,7 +154,7 @@ export default class BattleScene extends Phaser.Scene {
           const angle = Phaser.Math.Angle.Between(this.Player.x, this.Player.y, enemy.x, enemy.y);
 
           if (this.scorePlayer > 100) {
-            this.bulletVelocity = 3000;
+            this.bulletVelocity = 2000;
           }
 
 
@@ -412,7 +412,7 @@ export default class BattleScene extends Phaser.Scene {
       if (this.enemySpawnThreshold < this.minSpawnThreshold) {
         this.enemySpawnThreshold = this.minSpawnThreshold;
       }
-      //console.log('umbral spawn: ' + this.enemySpawnThreshold);
+      console.log('umbral spawn: ' + this.enemySpawnThreshold);
     } else {
       //console.log('Umbral de spawn mínimo alcanzado');
     }
