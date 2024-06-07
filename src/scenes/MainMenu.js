@@ -25,11 +25,6 @@ class MainMenu extends Phaser.Scene {
 
   create() {
 
-
-    
-
-
-
     this.scene.launch('UIScene');
 
     // Reproducir la música de intro
@@ -66,7 +61,7 @@ class MainMenu extends Phaser.Scene {
     this.logo.setScale(0.7);
 
     // Botón de inicio de partida
-    let startButton = this.add.text(this.title.x - 128, this.title.y + 50, 'START', {
+    let startButton = this.add.text(this.title.x - 280, this.title.y + 50, 'START', {
       fill: '#fff',
       fontFamily: 'PressStart2P',
       fontSize: '35px',
@@ -88,9 +83,33 @@ class MainMenu extends Phaser.Scene {
     startButton.setInteractive();
     startButton.on('pointerdown', () => {
       this.startGame()
-
     });
 
+
+    //NOTE: CREDITOS
+    // Botón de créditos
+    let creditsButton = this.add.text(startButton.x + 240, startButton.y, 'CREDITS', {
+      fill: '#fff',
+      fontFamily: 'PressStart2P',
+      fontSize: '35px',
+      shadow: {
+        offsetX: 4,
+        offsetY: 4,
+        color: '#082EF7',
+        blur: 0,
+        stroke: false,
+        fill: true
+      },
+      padding: {
+        x: 20,
+        y: 25
+      },
+    });
+
+    creditsButton.setInteractive();
+    creditsButton.on('pointerdown', () => {
+      this.showCredits();
+    });
 
 
     // Agregar input de texto
@@ -118,6 +137,12 @@ class MainMenu extends Phaser.Scene {
     this.audioManager.stop('intro');
     // this.audioManager.play('BattleMusic');
     this.scene.start('BattleScene', { datos: this.datos, audioManager: this.audioManager });
+  }
+
+  showCredits() {
+    // Aquí puedes definir lo que sucede cuando se hace clic en el botón de créditos
+    this.audioManager.stop('intro');
+    this.scene.start('CreditsScene', { audioManager: this.audioManager });
   }
 }
 
