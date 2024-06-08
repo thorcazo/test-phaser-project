@@ -323,22 +323,21 @@ export default class BattleScene extends Phaser.Scene {
     this.currentWordText.setText(this.currentWord);
   }
 
-
-
   async cargarDatos() {
     const datos = await getWordsEnemies();
     if (datos) {
       this.wordsColors = datos;
-
-      console.log(this.wordsColors)
-
-      // Asignar las palabras y colores desde Firestore
+      console.log(this.wordsColors);
 
       this.palabras = this.wordsColors.filter(item => item.difficulty === "easy").map(item => item.word);
 
-      if (this.scorePlayer > 100) {
-        this.palabras = this.wordsColors.filter(item => item.difficulty === "normal").map(item => item.word);
-      }
+      this.time.addEvent({
+        delay: 1000,
+        callback: this.actualizarDificultad,
+        callbackScope: this,
+        loop: true
+      });
+
 
       this.colors = this.wordsColors.map(item => item.color);
     } else {
@@ -348,6 +347,13 @@ export default class BattleScene extends Phaser.Scene {
     const dataEnemies = await getDataEnemies();
     this.lowEnemies = dataEnemies.filter(enemy => enemy.difficulty === "low");
     this.mediumEnemies = dataEnemies.filter(enemy => enemy.difficulty === "medium");
+  }
+
+
+  actualizarDificultad() {
+    if (this.scorePlayer > 100) {
+      this.palabras = this.wordsColors.filter(item => item.difficulty === "normal").map(item => item.word);
+    }
   }
 
   createEnemy() {
