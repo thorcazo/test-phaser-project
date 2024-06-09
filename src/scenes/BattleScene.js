@@ -43,18 +43,10 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   preload() {
-    this.audioManager.play('BackgroundAmbient');
-
-
   }
   async create() {
 
     this.audioManager.play('BattleMusic');
-    this.audioManager.play('BackgroundAmbient');
-
-
-
-
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
 
@@ -62,7 +54,6 @@ export default class BattleScene extends Phaser.Scene {
     this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars1').setOrigin(0, 0).setAlpha(0.3);
     this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2').setOrigin(0, 0);
 
-    /*Cargar musica del archivo llamado "battleMusic" -> Cargará la canción de la escena */
 
     /* Mostrar ScorePlayer en la parte de arriba izquierda */
     this.scoreText = this.add.text(50, 40, "PUNTUACIÓN: " + this.scorePlayer, {
@@ -86,7 +77,9 @@ export default class BattleScene extends Phaser.Scene {
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
 
     /* Marco para currentWordText */
-    this.bgCurrentWord = this.add.image(200, this.game.config.height - 100, 'bgCurrentWord');
+    this.borderBg = this.add.rectangle(200, this.game.config.height - 100, 260, 70, 0xffffff); // Aquí 0x000000 es el color negro
+    this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0x000000); // Aquí 0x000000 es el color negro
+
 
     this.currentWordText = this.add.text(this.bgCurrentWord.x, this.bgCurrentWord.y + 10, "", {
       font: "24px PressStart2P",
@@ -161,11 +154,12 @@ export default class BattleScene extends Phaser.Scene {
       }
       this.enemies.getChildren().forEach((enemy) => {
         if (this.currentWord === enemy.wordText.text) {
+          this.audioManager.play('bulletShot');
           const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet").setScale(0.05);
           const angle = Phaser.Math.Angle.Between(this.Player.x, this.Player.y, enemy.x, enemy.y);
 
           if (this.scorePlayer > 100) {
-            this.bulletVelocity = 2000;
+            this.bulletVelocity = 1300;
           }
 
           bullet.setVelocity(Math.cos(angle) * this.bulletVelocity, Math.sin(angle) * this.bulletVelocity);
@@ -317,12 +311,15 @@ export default class BattleScene extends Phaser.Scene {
       const isKeyCorrect = this.enemies.getChildren().some((enemy) => enemy.wordText.text.startsWith(this.currentWord + event.key));
       if (isKeyCorrect) {
         this.audioManager.play('NumKey');
-        this.audioManager.setVolume('NumKey', 0.5);
         this.currentWord += event.key;
       } else {
         if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
           this.currentWord = "";
           this.audioManager.play('WrongKey');
+            this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0xff0000);
+            this.time.delayedCall(300, () => {
+            this.bgCurrentWord.destroy();
+            }, [], this);
           this.scorePlayer -= 2; // Restar puntos
           this.errorText += 1; // Aumentar el contador de errores
           if (this.scorePlayer < 0) {

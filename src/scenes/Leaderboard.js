@@ -131,7 +131,8 @@ export default class leaderboardScene extends Phaser.Scene {
         await addScore(this.playerData.nombreJugador, this.playerData.navesDestruidas, this.playerData.erroresCometidos, this.playerData.puntuacionTotal);
 
         this.scene.stop();
-        this.scene.start('Gameover', { playerData: this.playerData });
+        this.scene.start('Gameover', { playerData: this.playerData, audioManager: this.audioManager });
+
       } else {
         console.log('El campo de nombre está vacío.');
       }

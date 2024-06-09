@@ -93,7 +93,8 @@ export default class UIScene extends Phaser.Scene {
 
   transitionTo(sceneKey) {
     this.scene.stop('BattleScene');
-    this.scene.stop('Gameover');
+
+    this.scene.stop('Gameover', { audioManager: this.audioManager });
     this.scene.start(sceneKey);
   }
 
@@ -128,7 +129,7 @@ export default class UIScene extends Phaser.Scene {
 
   /* VERSION:   texto informativo de la version del juego que aparece en el lado abajo a la derecha */
   versionGame() {
-    this.add.text(this.cameras.main.width - 100, this.cameras.main.height - 50, 'v0.7.5', {
+    this.add.text(this.cameras.main.width - 100, this.cameras.main.height - 50, 'v0.7.9', {
       fill: '#fff',
       padding: 10,
       backgroundColor: '#000'

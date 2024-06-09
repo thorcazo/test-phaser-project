@@ -42,10 +42,12 @@ export default class Bootloader extends Phaser.Scene {
     this.audioManager.load('intro', './assets/sounds/intro.ogg');
     this.audioManager.load('BattleMusic', './assets/sounds/BattleMusic.ogg');
     this.NumKey = this.audioManager.load('NumKey', './assets/sounds/NumKey.mp3');
-    this.audioManager.load('WrongKey', './assets/sounds/WrongKey.wav');
+    this.audioManager.load('WrongKey', './assets/sounds/WrongKey.ogg');
     this.audioManager.load('BackgroundAmbient', './assets/sounds/BackgroundSFXAmbient.mp3');
     this.audioManager.load('naveDestruida', './assets/sounds/naveDestruida.ogg');
     this.audioManager.load('damagedShip', './assets/sounds/damagedShip.ogg');
+    this.audioManager.load('gameOver', './assets/sounds/gameOver.ogg');
+    this.audioManager.load('bulletShot', './assets/sounds/bulletShot.ogg');
 
 
     // Cargar imagen del cursor
@@ -73,11 +75,13 @@ export default class Bootloader extends Phaser.Scene {
   addAllSound() {
     this.audioManager.add('intro', { loop: true, volume: 0.5 });
     this.audioManager.add('BattleMusic', { loop: true, volume: 0.5 });
-    this.audioManager.add('NumKey', { loop: false });
+    this.audioManager.add('NumKey', { loop: false, volume: 1.5});
     this.audioManager.add('WrongKey', { loop: false, volume: 1.5 })
     this.audioManager.add('BackgroundAmbient', { loop: true, volume: 1 });
     this.audioManager.add('naveDestruida', { loop: false });
-    this.audioManager.add('damagedShip', { loop: false, volume: 1.5});
+    this.audioManager.add('damagedShip', { loop: false, volume: 1.5 });
+    this.audioManager.add('gameOver', { loop: true, volume: 1.5 });
+    this.audioManager.add('bulletShot', { loop: false, volume: 1.5 });
   }
 
 }
