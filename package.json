@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite  --port 4321 --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "firebase": "npm run build && firebase deploy --only hosting"
   },
   "devDependencies": {
     "vite": "^5.2.0"

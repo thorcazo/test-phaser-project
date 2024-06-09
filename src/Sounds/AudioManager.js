@@ -78,6 +78,15 @@ class AudioManager {
     }
   }
 
+  // En tu AudioManager
+  setVolume(key, volume) {
+    let sound = this.sounds[key];
+    if (sound) {
+      sound.volume = volume;
+    }
+  }
+
+
 }
 
 export default AudioManager;

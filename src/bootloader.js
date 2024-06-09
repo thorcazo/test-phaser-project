@@ -39,12 +39,13 @@ export default class Bootloader extends Phaser.Scene {
     this.load.image("mainMenuButton", "./assets/img/mainMenuButton.png");
 
     // Precargar audios
-    this.audioManager.load('intro', './assets/sounds/intro.mp3');
-    this.audioManager.load('BattleMusic', './assets/sounds/BattleMusic.mp3');
+    this.audioManager.load('intro', './assets/sounds/intro.ogg');
+    this.audioManager.load('BattleMusic', './assets/sounds/BattleMusic.ogg');
     this.audioManager.load('BulletShot', './assets/sounds/bulletShot.wav');
     this.audioManager.load('HitDamage', './assets/sounds/HitDamage.wav');
-    this.audioManager.load('NumKey', './assets/sounds/NumKey.wav');
+    this.NumKey = this.audioManager.load('NumKey', './assets/sounds/NumKey.mp3');
     this.audioManager.load('WrongKey', './assets/sounds/WrongKey.wav');
+    this.audioManager.load('BackgroundAmbient', './assets/sounds/BackgroundSFXAmbient.mp3');
 
 
     // Cargar imagen del cursor

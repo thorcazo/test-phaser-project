@@ -36,12 +36,25 @@ export default class BattleScene extends Phaser.Scene {
 
     /* si BattleMusic esta sinlenciado entonces desinlenciar */
     if (this.audioManager.isPlaying('BattleMusic')) {
-      this.audioManager.unmute('BattleMusic');
+      this.battleMusic = this.audioManager.unmute('BattleMusic');
 
     }
+
   }
 
+  preload() {
+    this.audioManager.setVolume('BattleMusic', 0.5);
+    this.audioManager.play('BackgroundAmbient');
+
+
+  }
   async create() {
+
+    this.audioManager.play('BattleMusic');
+    this.audioManager.play('BackgroundAmbient');
+
+
+
 
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
@@ -51,7 +64,6 @@ export default class BattleScene extends Phaser.Scene {
     this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2').setOrigin(0, 0);
 
     /*Cargar musica del archivo llamado "battleMusic" -> Cargará la canción de la escena */
-    this.audioManager.play('BattleMusic');
 
     /* Mostrar ScorePlayer en la parte de arriba izquierda */
     this.scoreText = this.add.text(50, 40, "PUNTUACIÓN: " + this.scorePlayer, {
@@ -304,6 +316,7 @@ export default class BattleScene extends Phaser.Scene {
       const isKeyCorrect = this.enemies.getChildren().some((enemy) => enemy.wordText.text.startsWith(this.currentWord + event.key));
       if (isKeyCorrect) {
         this.audioManager.play('NumKey');
+        this.audioManager.setVolume('NumKey', 0.5);
         this.currentWord += event.key;
       } else {
         if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
