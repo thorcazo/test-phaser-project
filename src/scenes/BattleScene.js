@@ -315,10 +315,11 @@ export default class BattleScene extends Phaser.Scene {
         if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
           this.currentKey = null;
           this.audioManager.play('WrongKey');
-            this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0xff0000).setAlpha(0.5);
-            this.time.delayedCall(100, () => {
-            this.bgCurrentWord.destroy();
-            }, [], this);
+
+          this.destroyErrorBg();
+
+
+
           this.scorePlayer -= 2; // Restar puntos
           this.errorText += 1; // Aumentar el contador de errores
           if (this.scorePlayer < 0) {
@@ -452,5 +453,24 @@ export default class BattleScene extends Phaser.Scene {
     this.scorePlayer = 0;
     this.errorText = 0;
     this.enemySpawnThreshold = 5000;
+  }
+
+  destroyErrorBg() {
+    if (this.bgCurrentWordError) {
+      this.bgCurrentWordError.destroy();
+    }
+
+    this.bgCurrentWordError = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0xff0000).setAlpha(0.6);
+
+    this.time.addEvent({
+      delay: 100,
+      callback: () => {
+        if (this.bgCurrentWordError) {
+          this.bgCurrentWordError.destroy();
+          this.bgCurrentWordError = null;
+        }
+      },
+      callbackScope: this,
+    });
   }
 }
