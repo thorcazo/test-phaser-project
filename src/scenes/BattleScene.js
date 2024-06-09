@@ -39,7 +39,6 @@ export default class BattleScene extends Phaser.Scene {
       this.battleMusic = this.audioManager.unmute('BattleMusic');
 
     }
-
   }
 
   preload() {
@@ -314,10 +313,10 @@ export default class BattleScene extends Phaser.Scene {
         this.currentWord += event.key;
       } else {
         if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
-          this.currentWord = "";
+          this.currentKey = null;
           this.audioManager.play('WrongKey');
-            this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0xff0000);
-            this.time.delayedCall(300, () => {
+            this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0xff0000).setAlpha(0.5);
+            this.time.delayedCall(100, () => {
             this.bgCurrentWord.destroy();
             }, [], this);
           this.scorePlayer -= 2; // Restar puntos
@@ -440,7 +439,7 @@ export default class BattleScene extends Phaser.Scene {
       if (this.enemySpawnThreshold < this.minSpawnThreshold) {
         this.enemySpawnThreshold = this.minSpawnThreshold;
       }
-      //console.log('umbral spawn: ' + this.enemySpawnThreshold);
+      console.log('umbral spawn: ' + this.enemySpawnThreshold);
     } else {
       //console.log('Umbral de spawn mínimo alcanzado');
     }
@@ -452,6 +451,6 @@ export default class BattleScene extends Phaser.Scene {
     this.enemiesKilled = 0;
     this.scorePlayer = 0;
     this.errorText = 0;
-    this.enemySpawnThreshold = 5500;
+    this.enemySpawnThreshold = 5000;
   }
 }
