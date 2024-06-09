@@ -4,20 +4,20 @@ import { addDataEnemies } from "./firestore.js";
 
 const dataEnemy = [
   // Enemigos de dificultad baja (low)
-  { type: "Enemy1", health: "50", difficulty: "low", speed: "50", points: "3" },
-  { type: "Enemy2", health: "50", difficulty: "low", speed: "50", points: "3" },
-  { type: "Enemy3", health: "50", difficulty: "low", speed: "50", points: "3" },
-  { type: "Enemy4", health: "100", difficulty: "low", speed: "70", points: "5" },
-  { type: "Enemy5", health: "100", difficulty: "low", speed: "70", points: "5" },
-  { type: "Enemy6", health: "100", difficulty: "low", speed: "100", points: "5" },
+  { type: "Enemy1", health: "50", difficulty: "low", speed: "75", points: "3" },
+  { type: "Enemy2", health: "50", difficulty: "low", speed: "75", points: "3" },
+  { type: "Enemy3", health: "50", difficulty: "low", speed: "75", points: "3" },
+  { type: "Enemy4", health: "100", difficulty: "low", speed: "75", points: "5" },
+  { type: "Enemy5", health: "100", difficulty: "low", speed: "75", points: "5" },
+  { type: "Enemy6", health: "100", difficulty: "low", speed: "95", points: "5" },
 
   // Enemigos de dificultad media (medium)
-  { type: "Enemy7", health: "100", difficulty: "medium", speed: "90", points: "7" },
-  { type: "Enemy8", health: "100", difficulty: "medium", speed: "100", points: "7" },
-  { type: "Enemy9", health: "100", difficulty: "medium", speed: "100", points: "7" },
-  { type: "Enemy10", health: "150", difficulty: "medium", speed: "110", points: "10" },
-  { type: "Enemy11", health: "150", difficulty: "medium", speed: "110", points: "10" },
-  { type: "Enemy12", health: "150", difficulty: "medium", speed: "110", points: "10" },
+  { type: "Enemy7", health: "100", difficulty: "medium", speed: "85", points: "7" },
+  { type: "Enemy8", health: "100", difficulty: "medium", speed: "85", points: "7" },
+  { type: "Enemy9", health: "100", difficulty: "medium", speed: "95", points: "7" },
+  { type: "Enemy10", health: "150", difficulty: "medium", speed: "95", points: "10" },
+  { type: "Enemy11", health: "150", difficulty: "medium", speed: "95", points: "10" },
+  { type: "Enemy12", health: "150", difficulty: "medium", speed: "95", points: "10" },
 
   // Enemigos de dificultad alta (hard)
   { type: "Enemy13", health: "200", difficulty: "hard", speed: "140", points: "30" },

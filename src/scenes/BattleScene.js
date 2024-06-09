@@ -43,7 +43,6 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   preload() {
-    this.audioManager.setVolume('BattleMusic', 0.5);
     this.audioManager.play('BackgroundAmbient');
 
 
@@ -199,6 +198,7 @@ export default class BattleScene extends Phaser.Scene {
         if (object.wordText.text === bullet.currentWord) {
           bullet.destroy();
           object.health -= bullet.damage;
+          this.audioManager.play('damagedShip');
           object.setTint(0xff0000);
           this.time.addEvent({
             delay: 40,
@@ -223,6 +223,7 @@ export default class BattleScene extends Phaser.Scene {
           });
           this.randomizarPalabra(object);
           if (object.health <= 0) {
+            this.audioManager.play('naveDestruida');
             object.wordText.destroy();
             object.destroy();
             this.enemiesKilled += 1;
