@@ -52,6 +52,32 @@ export default class BattleScene extends Phaser.Scene {
 
     this.audioManager.play('BattleMusic');
     this.audioManager.play('BackgroundAmbient');
+    this.load.spritesheet('spark', 'public/assets/img/sprites/spark.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+      startFrame: 0,
+      endFrame: 6,
+    });
+    this.anims.create({
+      key: 'spark',
+      frames: this.anims.generateFrameNumbers('spark', { start: 0, end: 6 }),
+      frameRate: 24,
+      repeat: 0,
+    });
+    this.load.spritesheet('explosion', 'public/assets/img/sprites/explosion.png', {
+      frameWidth: 48,
+      frameHeight: 48,
+      startFrame: 0,
+      endFrame: 6,
+    });
+    this.anims.create({
+      key: 'explosion',
+      frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 6 }),
+      frameRate: 24,
+      repeat: 0,
+    });
+
+
 
 
 
@@ -197,6 +223,13 @@ export default class BattleScene extends Phaser.Scene {
     if (bullet.type !== object.texture.key) {
       if (object.texture.key.startsWith("Enemy")) {
         if (object.wordText.text === bullet.currentWord) {
+          // Get the position of the bullet or enemy, depending on which one is not destroyed
+          const collisionPosition = bullet.active ? bullet.getCenter() : object.getCenter();
+          const spark = this.add.sprite(collisionPosition.x, collisionPosition.y, 'spark');
+          spark.play('spark');
+          spark.on('animationcomplete', () => {
+            spark.destroy();
+          });
           bullet.destroy();
           object.health -= bullet.damage;
           object.setTint(0xff0000);
@@ -223,6 +256,11 @@ export default class BattleScene extends Phaser.Scene {
           });
           this.randomizarPalabra(object);
           if (object.health <= 0) {
+            const explosion = this.add.sprite(object.x, object.y, 'explosion').setScale(1.9);
+            explosion.play('explosion');
+            explosion.on('animationcomplete', () => {
+              explosion.destroy();
+            });
             object.wordText.destroy();
             object.destroy();
             this.enemiesKilled += 1;

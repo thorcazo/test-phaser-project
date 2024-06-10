@@ -32,6 +32,18 @@ export default class Bootloader extends Phaser.Scene {
     this.load.image("marcoFondoGameOver", "./assets/img/marcoFondo.png");
     this.load.image('bgCurrentWord', './assets/img/bgCurrentWord.png');
     this.load.image('buttonClose', './assets/img/buttonClose.png');
+    this.load.spritesheet('spark', "./assets/img/sprites/spark.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+      startFrame: 0,
+      endFrame: 6,
+    });
+    this.load.spritesheet('explosion', "./assets/img/sprites/explosion.png", {
+      frameWidth: 48,
+      frameHeight: 48,
+      startFrame: 0,
+      endFrame: 6,
+    });
 
 
     // buttons
