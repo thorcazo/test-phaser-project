@@ -26,12 +26,15 @@ export default class CreditsScene extends Phaser.Scene {
       Agradecimientos Especiales:
       - Luis Miguel - Profesor
 
-      Fuentes de los Assets:
-      - Itch.io:
-       - Autor: Autor del Asset
+      Assets visuales:
+      - Medimon Games (Itch.io) - 'PIXEL SPACESHIPS shoot'em ups' bajo licencia CC-BY 4.0
 
       Música:
-      - Suno.ia - Generador de Música
+      - AnalogStudios (Itch.io) - 'Brackey's  platformer bundle' Bajo licencia CC0
+
+      Efectos de sonido:
+      - RottingPizels (Itch.io) - Varios assets bajo licencia CC0
+
     `;
 
     this.credits = this.add.text(
