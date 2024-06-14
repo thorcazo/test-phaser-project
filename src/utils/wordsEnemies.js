@@ -13,7 +13,7 @@
 import { addWordsEnemies } from './firestore.js';
 
 
-const colors = ['#236FE0', '#E02350', '#602389', '#E9C300', '#E02389'];
+const colors = ['#236FE0', '#E02350', '#602389', '#E06723', '#E02389', '#14B505'];
 
 const wordsEnemies = [
   // Easy
