@@ -65,6 +65,11 @@ class AudioManager {
     this.scene.sound.mute = false;
   }
 
+  /* Ismuted */
+  isMuted(){
+    return this.scene.sound.mute;
+  }
+
   // isPlaying
   isPlaying(key) {
     return this.sounds[key] && this.sounds[key].isPlaying;

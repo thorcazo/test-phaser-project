@@ -1,4 +1,5 @@
 import { getTopPlayers } from '../utils/firestore.js';
+import AudioManager from '../Sounds/AudioManager.js';
 
 export default class Gameover extends Phaser.Scene {
   constructor() {
@@ -19,11 +20,27 @@ export default class Gameover extends Phaser.Scene {
     }
 
     this.audioManager = data.audioManager;
+    try {
+      this.audioManager.play('gameOver');
+
+
+    } catch (e) {
+      console.log('Error', e);
+    }
+
+
   }
 
   async create() {
     this.scene.launch('UIScene');
     this.scene.stop('BattleScene');
+    // Verificar si audioManager está definido
+    if (this.audioManager) {
+      console.log('Reproduciendo audio de gameOver')
+      this.audioManager.play('gameOver');
+    } else {
+      console.error('AudioManager no está definido');
+    }
 
     // Obtener los datos de los mejores jugadores
     const players = await getTopPlayers();
@@ -119,7 +136,7 @@ export default class Gameover extends Phaser.Scene {
     button.on('pointerdown', () => {
       this.scene.stop('Gameover');
       /* desmutear todos los sonidos */
-      
+
       this.scene.start(sceneKey);
 
       /* resetear datos */
@@ -128,7 +145,7 @@ export default class Gameover extends Phaser.Scene {
     });
     buttonText.on('pointerdown', () => {
       this.scene.stop('Gameover');
-      
+
       this.scene.start(sceneKey);
 
       /* resetear datos */

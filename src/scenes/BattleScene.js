@@ -39,23 +39,42 @@ export default class BattleScene extends Phaser.Scene {
       this.battleMusic = this.audioManager.unmute('BattleMusic');
 
     }
-
   }
 
-  preload() {
-    this.audioManager.setVolume('BattleMusic', 0.5);
-    this.audioManager.play('BackgroundAmbient');
 
 
-  }
+
+
   async create() {
 
+    /* Añadir los sprites de animaciones para las colisiones y la nave destruida */
+    this.load.spritesheet('spark', 'public/assets/img/sprites/spark.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+      startFrame: 0,
+      endFrame: 6,
+    });
+    this.anims.create({
+      key: 'spark',
+      frames: this.anims.generateFrameNumbers('spark', { start: 0, end: 6 }),
+      frameRate: 24,
+      repeat: 0,
+    });
+    this.load.spritesheet('explosion', 'public/assets/img/sprites/explosion.png', {
+      frameWidth: 48,
+      frameHeight: 48,
+      startFrame: 0,
+      endFrame: 6,
+    });
+    this.anims.create({
+      key: 'explosion',
+      frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 6 }),
+      frameRate: 24,
+      repeat: 0,
+    });
+
+
     this.audioManager.play('BattleMusic');
-    this.audioManager.play('BackgroundAmbient');
-
-
-
-
     /* IMAGEN FONDO */
     this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0);
 
@@ -63,10 +82,9 @@ export default class BattleScene extends Phaser.Scene {
     this.stars = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars1').setOrigin(0, 0).setAlpha(0.3);
     this.stars2 = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'stars2').setOrigin(0, 0);
 
-    /*Cargar musica del archivo llamado "battleMusic" -> Cargará la canción de la escena */
 
     /* Mostrar ScorePlayer en la parte de arriba izquierda */
-    this.scoreText = this.add.text(50, 40, "PUNTUACIÓN: " + this.scorePlayer, {
+    this.scoreText = this.add.text(150, 40, "PUNTUACIÓN: " + this.scorePlayer, {
       font: "16px PressStart2P",
       fill: "#fff",
     });
@@ -87,7 +105,9 @@ export default class BattleScene extends Phaser.Scene {
     // OPCIÓN DE DEBUG PARA VER LA PALABRA ACTIVA
 
     /* Marco para currentWordText */
-    this.bgCurrentWord = this.add.image(200, this.game.config.height - 100, 'bgCurrentWord');
+    this.borderBg = this.add.rectangle(200, this.game.config.height - 100, 260, 70, 0xffffff); // Aquí 0x000000 es el color negro
+    this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0x1C142A); // Aquí 0x000000 es el color negro
+
 
     this.currentWordText = this.add.text(this.bgCurrentWord.x, this.bgCurrentWord.y + 10, "", {
       font: "24px PressStart2P",
@@ -162,11 +182,12 @@ export default class BattleScene extends Phaser.Scene {
       }
       this.enemies.getChildren().forEach((enemy) => {
         if (this.currentWord === enemy.wordText.text) {
+          this.audioManager.play('bulletShot');
           const bullet = this.physics.add.image(this.Player.x, this.Player.y, "Bullet").setScale(0.05);
           const angle = Phaser.Math.Angle.Between(this.Player.x, this.Player.y, enemy.x, enemy.y);
 
           if (this.scorePlayer > 100) {
-            this.bulletVelocity = 2000;
+            this.bulletVelocity = 1300;
           }
 
           bullet.setVelocity(Math.cos(angle) * this.bulletVelocity, Math.sin(angle) * this.bulletVelocity);
@@ -197,8 +218,17 @@ export default class BattleScene extends Phaser.Scene {
     if (bullet.type !== object.texture.key) {
       if (object.texture.key.startsWith("Enemy")) {
         if (object.wordText.text === bullet.currentWord) {
+          //  Get the position of the bullet or enemy, depending on which one is not destroyed
+          const collisionPosition = bullet.active ? bullet.getCenter() : object.getCenter();
+          const spark = this.add.sprite(collisionPosition.x, collisionPosition.y, 'spark');
+          spark.play('spark');
+          spark.on('animationcomplete', () => {
+            spark.destroy();
+          });
+
           bullet.destroy();
           object.health -= bullet.damage;
+          this.audioManager.play('damagedShip');
           object.setTint(0xff0000);
           this.time.addEvent({
             delay: 40,
@@ -223,6 +253,14 @@ export default class BattleScene extends Phaser.Scene {
           });
           this.randomizarPalabra(object);
           if (object.health <= 0) {
+
+            const explosion = this.add.sprite(object.x, object.y, 'explosion').setScale(1.9);
+            explosion.play('explosion');
+            explosion.on('animationcomplete', () => {
+              explosion.destroy();
+            });
+
+            this.audioManager.play('naveDestruida');
             object.wordText.destroy();
             object.destroy();
             this.enemiesKilled += 1;
@@ -316,12 +354,16 @@ export default class BattleScene extends Phaser.Scene {
       const isKeyCorrect = this.enemies.getChildren().some((enemy) => enemy.wordText.text.startsWith(this.currentWord + event.key));
       if (isKeyCorrect) {
         this.audioManager.play('NumKey');
-        this.audioManager.setVolume('NumKey', 0.5);
         this.currentWord += event.key;
       } else {
         if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
-          this.currentWord = "";
+          this.currentKey = null;
           this.audioManager.play('WrongKey');
+
+          this.destroyErrorBg();
+
+
+
           this.scorePlayer -= 2; // Restar puntos
           this.errorText += 1; // Aumentar el contador de errores
           if (this.scorePlayer < 0) {
@@ -340,8 +382,6 @@ export default class BattleScene extends Phaser.Scene {
     const datos = await getWordsEnemies();
     if (datos) {
       this.wordsColors = datos;
-      console.log(this.wordsColors);
-
       this.palabras = this.wordsColors.filter(item => item.difficulty === "easy").map(item => item.word);
 
       this.time.addEvent({
@@ -442,7 +482,7 @@ export default class BattleScene extends Phaser.Scene {
       if (this.enemySpawnThreshold < this.minSpawnThreshold) {
         this.enemySpawnThreshold = this.minSpawnThreshold;
       }
-      //console.log('umbral spawn: ' + this.enemySpawnThreshold);
+      console.log('umbral spawn: ' + this.enemySpawnThreshold);
     } else {
       //console.log('Umbral de spawn mínimo alcanzado');
     }
@@ -454,6 +494,25 @@ export default class BattleScene extends Phaser.Scene {
     this.enemiesKilled = 0;
     this.scorePlayer = 0;
     this.errorText = 0;
-    this.enemySpawnThreshold = 5500;
+    this.enemySpawnThreshold = 5000;
+  }
+
+  destroyErrorBg() {
+    if (this.bgCurrentWordError) {
+      this.bgCurrentWordError.destroy();
+    }
+
+    this.bgCurrentWordError = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0xff0000).setAlpha(0.6);
+
+    this.time.addEvent({
+      delay: 100,
+      callback: () => {
+        if (this.bgCurrentWordError) {
+          this.bgCurrentWordError.destroy();
+          this.bgCurrentWordError = null;
+        }
+      },
+      callbackScope: this,
+    });
   }
 }

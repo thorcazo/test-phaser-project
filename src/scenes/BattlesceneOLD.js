@@ -257,7 +257,6 @@ export default class BattleScene extends Phaser.Scene {
           this.projectiles.add(bullet);
 
           /** Activar sonido BulletShot */
-          this.audioManager.play('BulletShot');
           // ********************************* 
           this.Player.angle = angle * (180 / Math.PI) + 90;
           this.currentWord = "";
