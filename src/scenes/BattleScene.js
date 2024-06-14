@@ -84,7 +84,7 @@ export default class BattleScene extends Phaser.Scene {
 
 
     /* Mostrar ScorePlayer en la parte de arriba izquierda */
-    this.scoreText = this.add.text(50, 40, "PUNTUACIÓN: " + this.scorePlayer, {
+    this.scoreText = this.add.text(150, 40, "PUNTUACIÓN: " + this.scorePlayer, {
       font: "16px PressStart2P",
       fill: "#fff",
     });
@@ -106,7 +106,7 @@ export default class BattleScene extends Phaser.Scene {
 
     /* Marco para currentWordText */
     this.borderBg = this.add.rectangle(200, this.game.config.height - 100, 260, 70, 0xffffff); // Aquí 0x000000 es el color negro
-    this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0x000000); // Aquí 0x000000 es el color negro
+    this.bgCurrentWord = this.add.rectangle(200, this.game.config.height - 100, 250, 60, 0x1C142A); // Aquí 0x000000 es el color negro
 
 
     this.currentWordText = this.add.text(this.bgCurrentWord.x, this.bgCurrentWord.y + 10, "", {
@@ -382,8 +382,6 @@ export default class BattleScene extends Phaser.Scene {
     const datos = await getWordsEnemies();
     if (datos) {
       this.wordsColors = datos;
-      console.log(this.wordsColors);
-
       this.palabras = this.wordsColors.filter(item => item.difficulty === "easy").map(item => item.word);
 
       this.time.addEvent({
