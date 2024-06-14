@@ -1,6 +1,5 @@
 import AudioManager from "./Sounds/AudioManager";
 
-
 export default class Bootloader extends Phaser.Scene {
   constructor() {
     super({ key: "Bootloader" });
@@ -33,10 +32,30 @@ export default class Bootloader extends Phaser.Scene {
     this.load.image('bgCurrentWord', './assets/img/bgCurrentWord.png');
     this.load.image('buttonClose', './assets/img/buttonClose.png');
 
+    /* Animaciones para las bullets y las colisiones */
+    this.load.spritesheet('spark', "./assets/img/sprites/spark.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+      startFrame: 0,
+      endFrame: 6,
+    });
+    this.load.spritesheet('explosion', "./assets/img/sprites/explosion.png", {
+      frameWidth: 48,
+      frameHeight: 48,
+      startFrame: 0,
+      endFrame: 6,
+    });
 
     // buttons
     this.load.image("newgameButton", "./assets/img/newGameButton.png");
     this.load.image("mainMenuButton", "./assets/img/mainMenuButton.png");
+
+
+    // Icons Speaker -> Estos iconos son para silenciar de forma facil en cualquier momento todos los sonidos
+    this.load.image("speakerOn", "./assets/img/ui/speakerOn.png");
+    this.load.image("speakerOff", "./assets/img/ui/speakerOff.png");
+
+
 
     // Precargar audios
     this.audioManager.load('intro', './assets/sounds/intro.ogg');
@@ -48,7 +67,6 @@ export default class Bootloader extends Phaser.Scene {
     this.audioManager.load('damagedShip', './assets/sounds/damagedShip.ogg');
     this.audioManager.load('gameOver', './assets/sounds/gameOver.ogg');
     this.audioManager.load('bulletShot', './assets/sounds/bulletShot.ogg');
-
 
     // Cargar imagen del cursor
     this.load.image("cursor", "./assets/img/Cursor/cursor.png");
@@ -64,18 +82,13 @@ export default class Bootloader extends Phaser.Scene {
   }
   create() {
     this.input.setDefaultCursor('url(./assets/img/cursor.png), pointer');
-
-
   }
-
-
   update() { }
-
 
   addAllSound() {
     this.audioManager.add('intro', { loop: true, volume: 0.5 });
     this.audioManager.add('BattleMusic', { loop: true, volume: 0.5 });
-    this.audioManager.add('NumKey', { loop: false, volume: 1.5});
+    this.audioManager.add('NumKey', { loop: false, volume: 1.5 });
     this.audioManager.add('WrongKey', { loop: false, volume: 1.5 })
     this.audioManager.add('BackgroundAmbient', { loop: true, volume: 1 });
     this.audioManager.add('naveDestruida', { loop: false });
