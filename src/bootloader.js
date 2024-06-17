@@ -65,8 +65,13 @@ export default class Bootloader extends Phaser.Scene {
     this.audioManager.load('BackgroundAmbient', './assets/sounds/BackgroundSFXAmbient.mp3');
     this.audioManager.load('naveDestruida', './assets/sounds/naveDestruida.ogg');
     this.audioManager.load('damagedShip', './assets/sounds/damagedShip.ogg');
-    this.audioManager.load('gameOver', './assets/sounds/gameOver.ogg');
+    this.audioManager.load('gameoverMusic', './assets/sounds/gameover.ogg');
     this.audioManager.load('bulletShot', './assets/sounds/bulletShot.ogg');
+    this.audioManager.load('NumKeyLeaderboard', './assets/sounds/NumKeyLeaderboard.mp3');
+    this.audioManager.load('backspace', './assets/sounds/backspace.mp3');
+    this.audioManager.load('pause', './assets/sounds/pause.mp3');
+    this.audioManager.load('enter', './assets/sounds/enter.mp3');
+    this.audioManager.load('close', './assets/sounds/close.mp3');
 
     // Cargar imagen del cursor
     this.load.image("cursor", "./assets/img/Cursor/cursor.png");
@@ -93,8 +98,13 @@ export default class Bootloader extends Phaser.Scene {
     this.audioManager.add('BackgroundAmbient', { loop: true, volume: 1 });
     this.audioManager.add('naveDestruida', { loop: false });
     this.audioManager.add('damagedShip', { loop: false, volume: 1.5 });
-    this.audioManager.add('gameOver', { loop: true, volume: 1.5 });
+    this.audioManager.add('gameoverMusic', { loop: true, volume: 1.5 });
     this.audioManager.add('bulletShot', { loop: false, volume: 1.5 });
+    this.audioManager.add('NumKeyLeaderboard', { loop: false, volume: 0.5 });
+    this.audioManager.add('backspace', { loop: false, volume: 1 });
+    this.audioManager.add('pause', { loop: false, volume: 1 });
+    this.audioManager.add('enter', { loop: false, volume: 1 });
+    this.audioManager.add('close', { loop: false, volume: 1 });
   }
 
 }

@@ -21,9 +21,25 @@ export default class leaderboardScene extends Phaser.Scene {
       console.log('Error', e);
     }
     console.log('leaderboardScene', this.playerData);
+
+
+  }
+
+  preload() {
+    this.load.audio('NumKeyLeaderboard', './assets/sounds/NumKeyLeaderboard.mp3');
+    this.load.audio('backspace', './assets/sounds/backspace.mp3');
+    this.load.audio('enter', './assets/sounds/enter.mp3');
+    // this.load.audio('close', './assets/sounds/close.mp3');
+
   }
 
   create() {
+    this.audioManager.pauseAll(); // Pausar cualquier música anterior
+    this.audioManager.add('NumKeyLeaderboard', { volume: 0.5, loop: false });
+    this.audioManager.add('backspace', { volume: 1, loop: false });
+    this.audioManager.add('enter', { volume: 1, loop: false });
+    this.audioManager.add('close', { volume: 1, loop: false });
+
     /* Variables para los texto, font-size, space, colors */
     let title_size = '22px';
     let text_size = '16px';
@@ -38,7 +54,7 @@ export default class leaderboardScene extends Phaser.Scene {
     let width_input = 382;
     let height_input = 39;
 
-    this.audioManager.pauseAll();
+    //this.audioManager.pauseAll();
 
     this.border = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, width_board, height_board, '0x' + color_white);
     this.background = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height / 2, this.border.width - 10, this.border.height - 10, '0x' + color_bg);
@@ -112,7 +128,7 @@ export default class leaderboardScene extends Phaser.Scene {
     }).setOrigin(0.5).setInteractive();
 
     // Crear el botón de cerrar
-    this.closeButton = this.add.text(this.saveButton.x + 200, this.saveButton.y, 'CERRAR', {
+    this.closeButton = this.add.text(this.saveButton.x + 200, this.saveButton.y, 'CANCELAR', {
       fontSize: title_size,
       fontFamily: 'PressStart2P',
       color: '#' + color_white,
@@ -121,6 +137,7 @@ export default class leaderboardScene extends Phaser.Scene {
     }).setOrigin(0.5).setInteractive();
 
     this.saveButton.on('pointerdown', async () => {
+      this.audioManager.play('enter');
       if (this.currentInput.length > 0) {
         console.log('Nombre guardado:', this.currentInput);
         this.playerData.nombreJugador = this.currentInput;
@@ -139,9 +156,10 @@ export default class leaderboardScene extends Phaser.Scene {
     });
 
 
-    this.closeButton.on('pointerdown', () => {
+    this.closeButton.on('pointerdown', async () => {
+      this.audioManager.play('close');
       this.scene.stop();
-      this.scene.start('Gameover', { playerData: this.playerData });
+      this.scene.start('Gameover', { playerData: this.playerData, audioManager: this.audioManager });
     });
 
     // Escuchar eventos de teclado
@@ -151,12 +169,17 @@ export default class leaderboardScene extends Phaser.Scene {
   handleKeyInput(event) {
     if (event.keyCode >= Phaser.Input.Keyboard.KeyCodes.A && event.keyCode <= Phaser.Input.Keyboard.KeyCodes.Z) {
       // Solo aceptar letras
+      this.audioManager.play('NumKeyLeaderboard');
       if (this.currentInput.length < 5) {
         this.currentInput += event.key.toUpperCase();
+        this.audioManager.play('NumKeyLeaderboard');
+
+
         this.inputText.setText(this.currentInput);
       }
     } else if (event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE && this.currentInput.length > 0) {
       // Manejar la tecla de borrado
+      this.audioManager.play('backspace');
       this.currentInput = this.currentInput.slice(0, -1);
       this.inputText.setText(this.currentInput);
     }

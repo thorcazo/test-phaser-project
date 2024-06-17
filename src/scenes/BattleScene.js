@@ -280,7 +280,7 @@ export default class BattleScene extends Phaser.Scene {
               };
 
               this.scene.pause('BattleScene');
-              this.audioManager.stop('BattleMusic');
+              //this.audioManager.stop('BattleMusic');
 
               const topPlayers = getTopPlayers();
 

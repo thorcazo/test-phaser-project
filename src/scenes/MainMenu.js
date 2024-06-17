@@ -34,6 +34,9 @@ class MainMenu extends Phaser.Scene {
       this.audioManager.stop('BattleMusic');
     }
 
+    this.audioManager.add('enter', { volume: 1, loop: false });
+
+
     // Fondo de pantalla
     this.bg = this.add.image(this.centerX, this.centerY, 'bg');
     this.bg.setOrigin(0.5, 0.5);
@@ -68,7 +71,7 @@ class MainMenu extends Phaser.Scene {
       shadow: {
         offsetX: 4,
         offsetY: 4,
-        color: '#082EF7',
+        color: '#236FE0',
         blur: 0,
         stroke: false,
         fill: true
@@ -82,7 +85,39 @@ class MainMenu extends Phaser.Scene {
 
     startButton.setInteractive();
     startButton.on('pointerdown', () => {
+      this.audioManager.play('enter');
       this.startGame()
+    });
+
+    /* hover startButton */
+    startButton.on('pointerover', () => {
+      this.audioManager.play('NumKey');
+      startButton.setStyle({
+
+        shadow: {
+          offsetX: 4,
+          offsetY: 4,
+          color: '#E02350',
+          blur: 0,
+          stroke: false,
+          fill: true
+        },
+
+
+      });
+    });
+
+    startButton.on('pointerout', () => {
+      startButton.setStyle({
+        shadow: {
+          offsetX: 4,
+          offsetY: 4,
+          color: '#082EF7',
+          blur: 0,
+          stroke: false,
+          fill: true
+        },
+      });
     });
 
 
@@ -95,7 +130,7 @@ class MainMenu extends Phaser.Scene {
       shadow: {
         offsetX: 4,
         offsetY: 4,
-        color: '#082EF7',
+        color: '#236FE0',
         blur: 0,
         stroke: false,
         fill: true
@@ -107,6 +142,38 @@ class MainMenu extends Phaser.Scene {
     });
 
     creditsButton.setInteractive();
+
+
+    /* hover creditsButton */
+    creditsButton.on('pointerover', () => {
+      this.audioManager.play('NumKey');
+      creditsButton.setStyle({
+        shadow: {
+          offsetX: 4,
+          offsetY: 4,
+          color: '#E02350',
+          blur: 0,
+          stroke: false,
+          fill: true
+        },
+      });
+    });
+
+    creditsButton.on('pointerout', () => {
+
+      creditsButton.setStyle({
+        shadow: {
+          offsetX: 4,
+          offsetY: 4,
+          color: '#082EF7',
+          blur: 0,
+          stroke: false,
+          fill: true
+        },
+      });
+    });
+
+
     creditsButton.on('pointerdown', () => {
       this.showCredits();
     });

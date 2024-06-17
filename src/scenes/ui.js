@@ -8,12 +8,24 @@ export default class UIScene extends Phaser.Scene {
     this.audioManager = new AudioManager(this);
   }
 
-  preload() { }
+  preload() {
+
+    this.load.audio('enter', './assets/sounds/enter.mp3');
+    this.load.audio('BattleMusic', './assets/sounds/BattleMusic.mp3');
+
+
+  }
 
 
 
 
   create() {
+
+    this.audioManager.add('enter', { volume: 1, loop: false });
+    this.audioManager.add('BattleMusic', { volume: 0.4, loop: true });
+
+
+
     this.versionGame();
     this.createPauseButton(400, 50);
     this.createSpeakerButton(50, 50);
@@ -58,7 +70,10 @@ export default class UIScene extends Phaser.Scene {
 
       // Agregar listener para la tecla ESPACIO
       this.input.keyboard.on('keydown-SPACE', () => {
+
         this.togglePause();
+
+
 
       });
     }
@@ -67,14 +82,19 @@ export default class UIScene extends Phaser.Scene {
   togglePause() {
     const battleScene = this.scene.get('BattleScene');
     if (!battleScene.scene.isPaused()) {
-
-      battleScene.scene.pause();
-      this.audioManager.pauseAll();
-
       this.backgroundPause.setVisible(true);
       this.borderBackgroundPause.setVisible(true);
       this.textPause.setVisible(true);
       this.textMessagePause.setVisible(true);
+      battleScene.scene.pause();
+
+      this.audioManager.play('enter');
+
+      this.time.delayedCall(250, () => {
+        this.audioManager.pauseAll();
+      });
+
+
 
     } else {
 
@@ -154,6 +174,7 @@ export default class UIScene extends Phaser.Scene {
       this.audioManager.unmuteAll();
       this.speakerButton.setTexture('speakerOn');
     } else {
+
       this.audioManager.muteAll();
       this.speakerButton.setTexture('speakerOff');
     }
