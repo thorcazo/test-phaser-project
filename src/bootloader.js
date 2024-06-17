@@ -94,15 +94,15 @@ export default class Bootloader extends Phaser.Scene {
   update() { }
 
   addAllSound() {
-    this.audioManager.add('intro', { loop: true, volume: 0.4 });
-    this.audioManager.add('BattleMusic', { loop: true, volume: 0.4 });
+    this.audioManager.add('intro', { loop: true, volume: 0.2 });
+    this.audioManager.add('BattleMusic', { loop: true, volume: 0.2 });
     this.audioManager.add('NumKey', { loop: false, volume: 1 });
-    this.audioManager.add('WrongKey', { loop: false, volume: 1.5 })
+    this.audioManager.add('WrongKey', { loop: false, volume: 1 })
     this.audioManager.add('BackgroundAmbient', { loop: true, volume: 1 });
     this.audioManager.add('naveDestruida', { loop: false });
-    this.audioManager.add('damagedShip', { loop: false, volume: 1.5 });
-    this.audioManager.add('gameoverMusic', { loop: true, volume: 1.5 });
-    this.audioManager.add('bulletShot', { loop: false, volume: 1.5 });
+    this.audioManager.add('damagedShip', { loop: false, volume: 1.2 });
+    this.audioManager.add('gameoverMusic', { loop: true, volume: 1.2 });
+    this.audioManager.add('bulletShot', { loop: false, volume: 1.2 });
     this.audioManager.add('NumKeyLeaderboard', { loop: false, volume: 0.5 });
     this.audioManager.add('backspace', { loop: false, volume: 1 });
     this.audioManager.add('pause', { loop: false, volume: 1 });

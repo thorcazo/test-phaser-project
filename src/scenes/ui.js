@@ -89,25 +89,28 @@ export default class UIScene extends Phaser.Scene {
 
     const battleScene = this.scene.get('BattleScene');
     if (!battleScene.scene.isPaused()) {
+      this.audioManager.play('enter');
+      
       this.backgroundPause.setVisible(true);
       this.borderBackgroundPause.setVisible(true);
       this.textPause.setVisible(true);
       this.textMessagePause.setVisible(true);
       battleScene.scene.pause();
 
-      this.audioManager.play('enter');
 
-      this.time.delayedCall(250, () => {
+      this.time.delayedCall(200, () => {
         this.audioManager.pauseAll();
+
       });
     } else {
-      battleScene.scene.resume();
-
-      this.audioManager.resumeAll();
-      this.backgroundPause.setVisible(false);
-      this.borderBackgroundPause.setVisible(false);
-      this.textPause.setVisible(false);
-      this.textMessagePause.setVisible(false);
+      this.time.delayedCall(200, () => {
+        battleScene.scene.resume();
+        this.audioManager.resumeAll();
+        this.backgroundPause.setVisible(false);
+        this.borderBackgroundPause.setVisible(false);
+        this.textPause.setVisible(false);
+        this.textMessagePause.setVisible(false);
+      });
     }
   }
 
