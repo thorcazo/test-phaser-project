@@ -7,6 +7,10 @@ export default class Bootloader extends Phaser.Scene {
   }
 
   preload() {
+    /* Cursor */
+    this.load.image('cursor', './assets/img/Cursor/arrow.png');
+
+
     this.load.image("Player", "../assets/img/sprites/player.png");
     this.load.image("Bullet", "../assets/img/sprites/bullet.png");
     this.load.image('button', './assets/img/button.png');

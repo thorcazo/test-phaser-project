@@ -47,6 +47,7 @@ export default class BattleScene extends Phaser.Scene {
 
   async create() {
 
+
     /* Añadir los sprites de animaciones para las colisiones y la nave destruida */
     this.load.spritesheet('spark', 'public/assets/img/sprites/spark.png', {
       frameWidth: 32,

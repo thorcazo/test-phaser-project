@@ -16,10 +16,9 @@ export default class UIScene extends Phaser.Scene {
 
   }
 
-
-
-
   create() {
+
+    this.cursor = this.input.setDefaultCursor('url(assets/img/Cursor/arrow.png), pointer');
 
     this.audioManager.add('enter', { volume: 1, loop: false });
     this.audioManager.add('BattleMusic', { volume: 0.4, loop: true });
@@ -107,49 +106,6 @@ export default class UIScene extends Phaser.Scene {
       this.textMessagePause.setVisible(false);
     }
   }
-
-  // createGameOverButton(x, y) {
-  //   this.add.text(x, y, 'GAMEOVER', {
-  //     fill: '#fff',
-  //     padding: 10,
-  //     backgroundColor: '#000'
-  //   }).setInteractive()
-  //     .on('pointerdown', () => {
-  //       this.transitionTo('Gameover');
-  //     });
-  // }
-
-  // createLeaderboardButton(x, y) {
-  //   this.add.text(x, y, 'LEADERBOARD', {
-  //     fill: '#fff',
-  //     padding: 10,
-  //     backgroundColor: '#000'
-  //   }).setInteractive()
-  //     .on('pointerdown', () => {
-  //       this.audioManager.stop('intro');
-  //       this.scene.start('leaderboardScene', { audioManager: this.audioManager });
-  //     });
-  // }
-
-  // createMainMenuButton(x, y) {
-  //   this.add.text(x, y, 'MAIN MENU', {
-  //     fill: '#fff',
-  //     padding: 10,
-  //     backgroundColor: '#000'
-  //   }).setInteractive()
-  //     .on('pointerdown', () => {
-  //       this.transitionTo('MainMenu');
-  //     });
-  // }
-
-  // transitionTo(sceneKey) {
-  //   this.scene.stop('BattleScene');
-
-  //   this.scene.stop('Gameover', { audioManager: this.audioManager });
-  //   this.scene.start(sceneKey);
-  // }
-
-
 
 
   /* VERSION:   texto informativo de la version del juego que aparece en el lado abajo a la derecha */

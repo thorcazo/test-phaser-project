@@ -28,7 +28,7 @@ const config = {
   },
   input: {
     mouse: {
-      cursor: 'url(./assets/img/Cursor/cursor.png), pointer'
+      cursor: 'url(./assets/img/Cursor/arrow.png), pointer'
     }
   }
 };
