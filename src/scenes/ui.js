@@ -21,6 +21,8 @@ export default class UIScene extends Phaser.Scene {
 
     this.audioManager.add('enter', { volume: 1, loop: false });
     this.audioManager.add('BattleMusic', { volume: 0.4, loop: true });
+    this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
 
 
 
@@ -78,6 +80,13 @@ export default class UIScene extends Phaser.Scene {
   }
 
   togglePause() {
+    const leaderboardScene = this.scene.get('leaderboardScene');
+
+    if (leaderboardScene && leaderboardScene.scene.isActive()) {
+      // Si la escena de leaderboard está activa, no hacemos nada
+      return;
+    }
+
     const battleScene = this.scene.get('BattleScene');
     if (!battleScene.scene.isPaused()) {
       this.backgroundPause.setVisible(true);
@@ -91,11 +100,7 @@ export default class UIScene extends Phaser.Scene {
       this.time.delayedCall(250, () => {
         this.audioManager.pauseAll();
       });
-
-
-
     } else {
-
       battleScene.scene.resume();
 
       this.audioManager.resumeAll();
@@ -105,6 +110,7 @@ export default class UIScene extends Phaser.Scene {
       this.textMessagePause.setVisible(false);
     }
   }
+
 
 
   /* VERSION:   texto informativo de la version del juego que aparece en el lado abajo a la derecha */

@@ -13,7 +13,7 @@ const config = {
   width: 1280,
   height: 720,
   parent: "container",
-  backgroundColor: '#d3d3d3',
+  backgroundColor: '#1C142A',
   scene: [Bootloader, MainMenu, BattleScene, UIScene, Gameover, leaderboardScene, CreditsScene],
   physics: {
     default: 'arcade',

@@ -94,7 +94,7 @@ export default class Bootloader extends Phaser.Scene {
   update() { }
 
   addAllSound() {
-    this.audioManager.add('intro', { loop: true, volume: 0.6 });
+    this.audioManager.add('intro', { loop: true, volume: 0.4 });
     this.audioManager.add('BattleMusic', { loop: true, volume: 0.4 });
     this.audioManager.add('NumKey', { loop: false, volume: 1 });
     this.audioManager.add('WrongKey', { loop: false, volume: 1.5 })

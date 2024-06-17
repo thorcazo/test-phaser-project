@@ -280,13 +280,18 @@ export default class BattleScene extends Phaser.Scene {
                 puntuacionTotal: this.scorePlayer ? this.scorePlayer : 0
               };
 
-              this.scene.pause('BattleScene');
+              this.scene.stop('BattleScene');
               //this.audioManager.stop('BattleMusic');
 
               const topPlayers = getTopPlayers();
 
               topPlayers.then((players) => {
                 if (players.length < 10 || battleSceneData.puntuacionTotal > players[players.length - 1].totalScore) {
+
+                  this.scene.stop('BattleScene');
+
+                  // Lanzar leaderboardScene
+
                   this.scene.launch('leaderboardScene', { playerData: battleSceneData });
                 } else {
                   this.scene.launch('Gameover', { playerData: battleSceneData });

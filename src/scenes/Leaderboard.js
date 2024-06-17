@@ -40,6 +40,10 @@ export default class leaderboardScene extends Phaser.Scene {
     this.audioManager.add('enter', { volume: 1, loop: false });
     this.audioManager.add('close', { volume: 1, loop: false });
 
+
+
+
+
     /* Variables para los texto, font-size, space, colors */
     let title_size = '22px';
     let text_size = '16px';
