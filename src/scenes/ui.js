@@ -18,7 +18,6 @@ export default class UIScene extends Phaser.Scene {
 
   create() {
 
-    this.cursor = this.input.setDefaultCursor('url(assets/img/Cursor/arrow.png), pointer');
 
     this.audioManager.add('enter', { volume: 1, loop: false });
     this.audioManager.add('BattleMusic', { volume: 0.4, loop: true });

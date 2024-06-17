@@ -84,16 +84,6 @@ class MainMenu extends Phaser.Scene {
     });
 
     startButton.setInteractive();
-
-    /* hover startButton */
-    startButton.on('pointerover', () => {
-      this.cursor = this.input.setDefaultCursor('url(assets/img/Cursor/arrowHover.png), pointer');
-    })
-
-    startButton.on('pointerout', () => {
-      this.cursor = this.input.setDefaultCursor('url(assets/img/Cursor/arrow.png), pointer');
-    });
-
     startButton.on('pointerdown', () => {
       this.audioManager.play('enter');
       this.startGame()
@@ -153,14 +143,7 @@ class MainMenu extends Phaser.Scene {
 
     creditsButton.setInteractive();
 
-    /* hover para creditsButton */
-    creditsButton.on('pointerover', () => {
-      this.cursor = this.input.setDefaultCursor('url(assets/img/Cursor/arrowHover.png), pointer');
-    });
 
-    creditsButton.on('pointerout', () => {
-      this.cursor = this.input.setDefaultCursor('url(assets/img/Cursor/arrow.png), pointer');
-    });
 
 
 
