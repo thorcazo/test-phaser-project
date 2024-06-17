@@ -351,20 +351,21 @@ export default class BattleScene extends Phaser.Scene {
       // Eliminar la última letra de currentWord
       this.currentWord = this.currentWord.slice(0, -1);
     } else {
-      this.currentKey = event.key;
-      const isKeyCorrect = this.enemies.getChildren().some((enemy) => enemy.wordText.text.startsWith(this.currentWord + event.key));
+      const keyPressed = event.key.toLowerCase();
+      this.currentKey = keyPressed;
+
+      // Convertir currentWord y keyPressed a minúsculas para la comparación
+      const isKeyCorrect = this.enemies.getChildren().some((enemy) =>
+        enemy.wordText.text.toLowerCase().startsWith((this.currentWord + keyPressed).toLowerCase())
+      );
+
       if (isKeyCorrect) {
         this.audioManager.play('NumKey');
-        this.currentWord += event.key;
+        this.currentWord += keyPressed;
       } else {
         if (this.currentWord !== "") { // Solo reproduce el sonido si hay una palabra actual
-          this.currentKey = null;
           this.audioManager.play('WrongKey');
-
           this.destroyErrorBg();
-
-
-
           this.scorePlayer -= 2; // Restar puntos
           this.errorText += 1; // Aumentar el contador de errores
           if (this.scorePlayer < 0) {
@@ -375,8 +376,8 @@ export default class BattleScene extends Phaser.Scene {
       }
     }
 
-    // Actualizar el texto de currentWord
-    this.currentWordText.setText(this.currentWord);
+    // Actualizar el texto de currentWord a minúsculas
+    this.currentWordText.setText(this.currentWord.toLowerCase());
   }
 
   async cargarDatos() {
