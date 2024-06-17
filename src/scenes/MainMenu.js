@@ -123,7 +123,7 @@ class MainMenu extends Phaser.Scene {
 
     //NOTE: CREDITOS
     // Botón de créditos
-    let creditsButton = this.add.text(startButton.x + 240, startButton.y, 'CREDITS', {
+    let creditsButton = this.add.text(startButton.x + 240, startButton.y, 'CRÉDITOS', {
       fill: '#fff',
       fontFamily: 'PressStart2P',
       fontSize: '35px',

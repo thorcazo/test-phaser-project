@@ -17,43 +17,52 @@ export default class CreditsScene extends Phaser.Scene {
 
     // Configurar el texto de créditos
     const creditsText = `
-      TYPE SPACE
+      --- TYPE SPACE ---
 
-      Desarrolladores:
-      - Alberto González
-      - David Pastor
+      DESARROLLADO POR
+      Alberto González
+      David Pastor
 
-      Agradecimientos Especiales:
-      - Luis Miguel - Profesor
+      AGREDECIMIENTOS
+      Luis Miguel - Profesor
+      Amigos y familiares que han probado el juego
 
-      Assets visuales:
-      - Medimon Games (Itch.io) - 'PIXEL SPACESHIPS shoot'em ups' bajo licencia CC-BY 4.0
+      ASSETS VISUALES:
+      Medimon Games (Itch.io)
+      'PIXEL SPACESHIPS shoot'em ups' bajo licencia CC-BY 4.0
 
-      Música:
-      - AnalogStudios (Itch.io) - 'Brackey's  platformer bundle' Bajo licencia CC0
+      MÚSICA
+      Tallbeard Studios (itch.io) 
+      Three Red Hearts Pixel War 1 y Pixel War 2 bajo licencia CC0
 
-      Efectos de sonido:
-      - RottingPizels (Itch.io) - Varios assets bajo licencia CC0
+      EFECTOS DE SONIDO DE COLISIONES:
+      Brackeys' Platformer Bundle (itch.io)  bajo licencia CC0
+
+      EFECTOS DE SONIDOS TECLADO y BOTONES: 
+      Autor: noahkuehne (itch.io) bajo licencia CC0
+
+      GRACIAS POR JUGAR!
 
     `;
 
     this.credits = this.add.text(
-      this.cameras.main.centerX - 80,
+      this.cameras.main.centerX - 50,
       this.cameras.main.height + 50,
       creditsText,
       {
         fontFamily: 'PressStart2P',
-        fontSize: '24px',
+        fontSize: '16px',
         fill: '#fff',
-        align: 'center'
+        align: 'center',
+        lineSpacing: 5,
       }
     ).setOrigin(0.5, 0.5);
 
     // Configurar la animación de desplazamiento
     this.tweens.add({
       targets: this.credits,
-      y: this.cameras.main.centerY - 80,
-      duration: 8000,
+      y: this.cameras.main.centerY - 50,
+      duration: 5000,
       ease: 'Linear',
       onComplete: () => {
         this.showMainMenuButton();
@@ -66,16 +75,32 @@ export default class CreditsScene extends Phaser.Scene {
 
   showMainMenuButton() {
     // Crear el botón de "Menu principal"
-    const buttonText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 250, 'Menu principal', {
+    const buttonText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 250, 'Volver a MENÚ PRINCIPAL', {
       fontFamily: 'PressStart2P',
       fontSize: '24px',
       fill: '#fff',
-      backgroundColor: 'red',
+      backgroundColor: '#236FE0',
       padding: {
-        x: 20,
-        y: 10
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10
       }
     }).setOrigin(0.5, 0.5).setInteractive();
+
+    /* Hover buttonText */
+    buttonText.on('pointerover', () => {
+      buttonText.setStyle({ fill: '#236FE0' });
+      buttonText.setBackgroundColor('#fff');
+    });
+
+    /* Hover out buttonText */
+    buttonText.on('pointerout', () => {
+      buttonText.setStyle({ fill: '#fff' });
+      buttonText.setBackgroundColor('#236FE0');
+    });
+
+
 
     buttonText.on('pointerdown', () => {
       this.scene.start('MainMenu');
