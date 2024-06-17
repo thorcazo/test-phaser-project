@@ -488,8 +488,6 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-
-
   resetData() {
     this.enemiesKilled = 0;
     this.scorePlayer = 0;
