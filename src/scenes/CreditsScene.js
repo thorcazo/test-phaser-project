@@ -41,7 +41,7 @@ export default class CreditsScene extends Phaser.Scene {
       EFECTOS DE SONIDOS TECLADO y BOTONES: 
       Autor: noahkuehne (itch.io) bajo licencia CC0
 
-      GRACIAS POR JUGAR!
+      ¡GRACIAS POR JUGAR!
 
     `;
 
