@@ -1,5 +1,5 @@
 # TYPE SPACE
-![Type Start](https://github.com/thorcazo/test-phaser-project/assets/45442766/2d12503e-789e-49ac-977d-65d74b4c147e)
+![Type Start](https://github.com/thorcazo/test-phaser-project/assets/45442766/6c2eb854-62cf-44c9-b961-0fbf371d97c9)
 
 ### Descripción
 **TYPE SPACE** es un videojuego web desarrollado como proyecto final del Curso de FP de Desarrollo de Aplicaciones Web en el IES José Planes. En este juego, los jugadores deben derrotar naves enemigas escribiendo correctamente las palabras asignadas a cada nave. Es un juego educativo y divertido que mejora las habilidades de mecanografía del jugador.
