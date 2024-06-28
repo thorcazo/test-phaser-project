@@ -7,12 +7,8 @@ export default class Bootloader extends Phaser.Scene {
   }
 
   preload() {
-    /* Cursor */
-
-
     this.load.image("Player", "../assets/img/sprites/player.png");
     this.load.image("Bullet", "../assets/img/sprites/bullet.png");
-    this.load.image('button', './assets/img/button.png');
     this.load.image("bg", "../assets/img/bg.png");
     this.load.image("stars1", "../assets/img/stars1.png");
     this.load.image("stars2", "../assets/img/stars2.png");
@@ -33,7 +29,7 @@ export default class Bootloader extends Phaser.Scene {
     this.load.image("planetGameOver", "./assets/img/PlanetGameOver.png");
     this.load.image("marcoFondoGameOver", "./assets/img/marcoFondo.png");
     this.load.image('bgCurrentWord', './assets/img/bgCurrentWord.png');
-    this.load.image('buttonClose', './assets/img/buttonClose.png');
+
 
     /* Animaciones para las bullets y las colisiones */
     this.load.spritesheet('spark', "./assets/img/sprites/spark.png", {
@@ -54,9 +50,13 @@ export default class Bootloader extends Phaser.Scene {
     this.load.image("mainMenuButton", "./assets/img/mainMenuButton.png");
 
 
+    /* UI
+    ========================== */
     // Icons Speaker -> Estos iconos son para silenciar de forma facil en cualquier momento todos los sonidos
     this.load.image("speakerOn", "./assets/img/ui/speakerOn.png");
     this.load.image("speakerOff", "./assets/img/ui/speakerOff.png");
+    this.load.image("linkedin", "./assets/img/ui/linkedin.png");
+    this.load.image("github", "./assets/img/ui/github.png");
 
 
 
@@ -75,9 +75,6 @@ export default class Bootloader extends Phaser.Scene {
     this.audioManager.load('pause', './assets/sounds/pause.mp3');
     this.audioManager.load('enter', './assets/sounds/enter.mp3');
     this.audioManager.load('close', './assets/sounds/close.mp3');
-
-    // Cargar imagen del cursor
-    this.load.image("cursor", "./assets/img/Cursor/cursor.png");
 
     // Escuchar el evento de finalización de carga
     this.load.on("complete", () => {
